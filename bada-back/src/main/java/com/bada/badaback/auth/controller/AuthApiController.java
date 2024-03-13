@@ -3,11 +3,13 @@ package com.bada.badaback.auth.controller;
 import com.bada.badaback.auth.dto.AuthJoinRequestDto;
 import com.bada.badaback.auth.dto.AuthSignUpRequestDto;
 import com.bada.badaback.auth.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Auth", description = "AuthController API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
