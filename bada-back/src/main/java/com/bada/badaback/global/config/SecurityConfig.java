@@ -33,10 +33,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
                                 .requestMatchers(
-                                        AntPathRequestMatcher.antMatcher("/api/auth/**")
-                                ).permitAll()
-                                .requestMatchers(
-                                        AntPathRequestMatcher.antMatcher("/h2-console/**")
+                                        AntPathRequestMatcher.antMatcher("/h2-console/**"),
+                                        AntPathRequestMatcher.antMatcher("/api/auth/**"),
+                                        AntPathRequestMatcher.antMatcher("/swagger-ui/**"),
+                                        AntPathRequestMatcher.antMatcher("/api-docs/**")
                                 ).permitAll()
                 );
 
