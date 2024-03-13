@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
                                 .requestMatchers(
-                                        AntPathRequestMatcher.antMatcher("/login/**")
+                                        AntPathRequestMatcher.antMatcher("/api/auth/**")
                                 ).permitAll()
                                 .requestMatchers(
                                         AntPathRequestMatcher.antMatcher("/h2-console/**")
