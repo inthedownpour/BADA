@@ -13,3 +13,7 @@ spring:
     hikari:
       jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
       username: sa
+
+  #application-secret.yml
+  profiles:
+    include: secret
