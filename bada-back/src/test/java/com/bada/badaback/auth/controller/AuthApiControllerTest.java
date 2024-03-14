@@ -2,6 +2,7 @@ package com.bada.badaback.auth.controller;
 
 import com.bada.badaback.auth.dto.AuthJoinRequestDto;
 import com.bada.badaback.auth.dto.AuthSignUpRequestDto;
+import com.bada.badaback.auth.dto.LoginResponseDto;
 import com.bada.badaback.common.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -10,9 +11,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.BDDMockito.given;
+import static com.bada.badaback.feature.TokenFixture.ACCESS_TOKEN;
+import static com.bada.badaback.feature.TokenFixture.REFRESH_TOKEN;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -27,7 +29,13 @@ class AuthApiControllerTest extends ControllerTest {
         @DisplayName("회원가입에 성공한다")
         void success() throws Exception {
             // given
-            given(authService.signup(any(), any(), any(), any(), anyInt(), any(), any())).willReturn(1L);
+            LoginResponseDto loginResponseDto = createLoginResponseDto();
+            doReturn(1L)
+                    .when(authService)
+                    .signup(any(), any(), any(), any(), anyInt(), any(), any());
+            doReturn(loginResponseDto)
+                    .when(authService)
+                    .login(anyLong());
 
             // when
             final AuthSignUpRequestDto request = createAuthSignUpRequestDto();
@@ -53,7 +61,13 @@ class AuthApiControllerTest extends ControllerTest {
         @DisplayName("회원가입에 성공한다")
         void success() throws Exception {
             // given
-            given(authService.signup(any(), any(), any(), any(), anyInt(), any(), any())).willReturn(1L);
+            LoginResponseDto loginResponseDto = createLoginResponseDto();
+            doReturn(1L)
+                    .when(authService)
+                    .signup(any(), any(), any(), any(), anyInt(), any(), any());
+            doReturn(loginResponseDto)
+                    .when(authService)
+                    .login(anyLong());
 
             // when
             final AuthJoinRequestDto request = createAuthJoinRequestDto();
@@ -78,6 +92,10 @@ class AuthApiControllerTest extends ControllerTest {
     private AuthJoinRequestDto createAuthJoinRequestDto() {
         return new AuthJoinRequestDto(SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(), "NAVER",
                 SUNKYOUNG.getIsParent(), SUNKYOUNG.getProfileUrl(), "인증코드");
+    }
+
+    private LoginResponseDto createLoginResponseDto() {
+        return new LoginResponseDto(1L, SUNKYOUNG.getName(), ACCESS_TOKEN, REFRESH_TOKEN);
     }
 }
 
