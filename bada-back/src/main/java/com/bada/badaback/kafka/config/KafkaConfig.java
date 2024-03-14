@@ -1,4 +1,4 @@
-package com.ssafy.bada.badaback.kafka.config;
+package com.bada.badaback.kafka.config;
 
 import com.ssafy.bada.badaback.kafka.dto.AlarmDto;
 import java.util.HashMap;

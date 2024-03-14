@@ -1,14 +1,9 @@
-package com.ssafy.bada.badaback.kafka.service;
+package com.bada.badaback.kafka.service;
 
-import com.ssafy.bada.badaback.kafka.dto.AlarmDto;
 import com.ssafy.bada.badaback.kafka.repository.EmitterRepository;
-import java.io.IOException;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Service
 @Slf4j
