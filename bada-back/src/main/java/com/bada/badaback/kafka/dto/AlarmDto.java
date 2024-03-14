@@ -1,4 +1,4 @@
-package com.ssafy.bada.badaback.kafka.dto;
+package com.bada.badaback.kafka.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

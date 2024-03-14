@@ -1,4 +1,4 @@
-package com.ssafy.bada.badaback.kafka.repository;
+package com.bada.badaback.kafka.repository;
 
 import java.util.HashMap;
 import java.util.Map;

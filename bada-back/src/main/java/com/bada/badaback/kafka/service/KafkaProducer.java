@@ -1,4 +1,4 @@
-package com.ssafy.bada.badaback.kafka.service;
+package com.bada.badaback.kafka.service;
 
 import com.ssafy.bada.badaback.kafka.dto.AlarmDto;
 import lombok.RequiredArgsConstructor;
