@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum SocialType implements EnumStandard {
     NAVER("NAVER"),
-    KAKAO("KAKAO");
+    KAKAO("KAKAO"),
+    CHILD("CHILD")
+    ;
 
     private final String socialType;
 
