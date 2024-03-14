@@ -37,7 +37,7 @@ public class Member extends BaseTimeEntity {
     @Column(length = 500)
     private String profileUrl;
 
-    @Column(unique = true, length = 20, nullable = false)
+    @Column(length = 20, nullable = false)
     private String familyCode;
 
     @Builder
@@ -56,6 +56,10 @@ public class Member extends BaseTimeEntity {
     public static Member createMember(String name, String phone, String email, SocialType social, int isParent,
                                       String profileUrl, String familyCode) {
         return new Member(name, phone, email, social, isParent, profileUrl, familyCode);
+    }
+
+    public void updateChildEmail(String ChildEmail) {
+        this.email = ChildEmail;
     }
 
     public String getRoleKey() {

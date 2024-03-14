@@ -2,10 +2,11 @@ package com.bada.badaback.auth.controller;
 
 import com.bada.badaback.auth.dto.AuthJoinRequestDto;
 import com.bada.badaback.auth.dto.AuthSignUpRequestDto;
+import com.bada.badaback.auth.dto.LoginResponseDto;
 import com.bada.badaback.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,18 +18,19 @@ public class AuthApiController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Long> signup(@RequestBody AuthSignUpRequestDto requestDto) {
-        System.out.println(requestDto);
+    public ResponseEntity<LoginResponseDto> signup(@RequestBody @Valid AuthSignUpRequestDto requestDto) {
         Long memberId = authService.signup(requestDto.name(), requestDto.phone(), requestDto.email(),
                 requestDto.social(), requestDto.isParent(), requestDto.profileUrl(), requestDto.familyName());
-        return new ResponseEntity<>(memberId, HttpStatus.OK);
+        LoginResponseDto responseDto = authService.login(memberId);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Long> join(@RequestBody AuthJoinRequestDto requestDto) {
+    public ResponseEntity<LoginResponseDto> join(@RequestBody @Valid AuthJoinRequestDto requestDto) {
         Long memberId = authService.join(requestDto.name(), requestDto.phone(), requestDto.email(),
-                requestDto.social(), requestDto.isParent(), requestDto.profileUrl(), requestDto.authCode());
-        return new ResponseEntity<>(memberId, HttpStatus.OK);
+                requestDto.social(), requestDto.isParent(), requestDto.profileUrl(), requestDto.code());
+        LoginResponseDto responseDto = authService.login(memberId);
+        return ResponseEntity.ok(responseDto);
     }
 
 }
