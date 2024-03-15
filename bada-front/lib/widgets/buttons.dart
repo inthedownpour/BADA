@@ -85,6 +85,7 @@ class Button714_300 extends StatefulWidget {
   final double imageHeight;
   final double padRight;
   final double padBottom;
+  final void Function()? onPressed;
 
   const Button714_300({
     super.key,
@@ -96,6 +97,7 @@ class Button714_300 extends StatefulWidget {
     this.imageHeight = 50,
     this.padRight = 10,
     this.padBottom = 10,
+    this.onPressed,
   });
 
   @override
@@ -119,7 +121,7 @@ class _Button714_300State extends State<Button714_300> {
 
     return ElevatedButton(
       style: style,
-      onPressed: () {},
+      onPressed: widget.onPressed,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

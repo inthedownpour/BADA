@@ -13,7 +13,6 @@ class MainViewModel {
     isLogined = await _socialLogin.login();
     if (isLogined) {
       debugPrint('login success');
-      user = await UserApi.instance.me();
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:bada/login/login_platform.dart';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/login/initial_screen.dart';
 import 'package:bada/screens/main/main_screen.dart';
@@ -44,7 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
               // 아이디가 데이터베이스에 없는 경우
               GestureDetector(
                 onTap: () async {
-                  await profileProvider.initProfile();
+                  LoginPlatform loginPlatform = LoginPlatform.kakao;
+                  await profileProvider.initProfile(loginPlatform);
                   // await viewModel.login();
                   // setState(() {});
 
@@ -67,6 +69,39 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: Image.asset(
                   'assets/img/kakao_login.png',
+                  width: 200,
+                  height: 50,
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              GestureDetector(
+                onTap: () async {
+                  LoginPlatform loginPlatform = LoginPlatform.naver;
+                  await profileProvider.initProfile(loginPlatform);
+                  // await viewModel.login();
+                  // setState(() {});
+
+                  if (profileProvider.isLogined) {
+                    // if(id 비교해서 데이터베이스에 없으면)
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const InitialScreen(),
+                      ),
+                    );
+                    // else if (id 비교해서 데이터베이스에 있으면)
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const HomeScreen(),
+                    //   ),
+                    // );
+                  }
+                },
+                child: Image.asset(
+                  'assets/img/naver_login.png',
                   width: 200,
                   height: 50,
                 ),

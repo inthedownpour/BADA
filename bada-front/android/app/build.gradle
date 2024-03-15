@@ -50,8 +50,6 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        buildConfigField "String", "API_KEY", "\"9d4c295f031b5c1f50269e353e895e12\""
-        manifestPlaceholders = [apiKeyValue: "9d4c295f031b5c1f50269e353e895e12"]
     }
 
     buildTypes {
@@ -67,4 +65,14 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Android 관련
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // TMap SDK
+    implementation files('libs/com.skt.Tmap_1.75.jar')
+}
