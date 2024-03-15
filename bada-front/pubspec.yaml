@@ -47,8 +47,8 @@ flutter:
     - assets/icons/
     - assets/gif/
     - assets/lottie/
-    - assets/config/
-    - .env
+    - assets/dummydata/
+
 
   fonts:
     - family: Pretendard

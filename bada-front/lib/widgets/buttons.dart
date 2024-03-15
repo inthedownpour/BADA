@@ -1,4 +1,9 @@
+import 'package:bada/screens/login/create_group.dart';
+import 'package:bada/widgets/switch.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Button330_220 extends StatefulWidget {
   final String label;
@@ -195,6 +200,7 @@ class Button281_77 extends StatefulWidget {
   final String? navigateTo;
   final Color backgroundColor, foregroundColor;
   final void Function()? onPressed;
+  final bool isSelected;
 
   const Button281_77({
     super.key,
@@ -203,6 +209,7 @@ class Button281_77 extends StatefulWidget {
     this.foregroundColor = Colors.white,
     this.navigateTo,
     this.onPressed,
+    this.isSelected = false,
   });
   @override
   State<Button281_77> createState() => _Button281_77State();
@@ -214,8 +221,10 @@ class _Button281_77State extends State<Button281_77> {
     final ButtonStyle style = ElevatedButton.styleFrom(
       elevation: 5,
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      backgroundColor: widget.backgroundColor,
-      foregroundColor: widget.foregroundColor,
+      backgroundColor:
+          widget.isSelected ? widget.backgroundColor : Colors.white,
+      foregroundColor:
+          widget.isSelected ? widget.foregroundColor : widget.backgroundColor,
       textStyle: const TextStyle(fontSize: 16),
       fixedSize: const Size(130, 30),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -225,6 +234,104 @@ class _Button281_77State extends State<Button281_77> {
       style: style,
       onPressed: widget.onPressed,
       child: widget.label,
+    );
+  }
+}
+
+class Button300_115 extends StatefulWidget {
+  final Widget label;
+  final String? navigateTo;
+  final Color backgroundColor, foregroundColor;
+  final void Function()? onPressed;
+  final bool isSelected;
+
+  const Button300_115({
+    super.key,
+    required this.label,
+    this.backgroundColor = const Color(0xff696DFF),
+    this.foregroundColor = Colors.white,
+    this.navigateTo,
+    this.onPressed,
+    this.isSelected = false,
+  });
+  @override
+  State<Button300_115> createState() => _Button300_115State();
+}
+
+class _Button300_115State extends State<Button300_115> {
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle style = ElevatedButton.styleFrom(
+      elevation: 5,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      backgroundColor:
+          widget.isSelected ? widget.backgroundColor : Colors.white,
+      foregroundColor:
+          widget.isSelected ? widget.foregroundColor : widget.backgroundColor,
+      textStyle: const TextStyle(fontSize: 16),
+      fixedSize: const Size(150, 60),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+    );
+
+    return ElevatedButton(
+      style: style,
+      onPressed: widget.onPressed,
+      child: widget.label,
+    );
+  }
+}
+
+class AlarmSettingButton extends StatefulWidget {
+  final Widget label;
+  final String? stoptime;
+  final Color backgroundColor, foregroundColor;
+  final void Function()? onPressed;
+  final bool ischecked;
+
+  const AlarmSettingButton({
+    super.key,
+    required this.label,
+    this.backgroundColor = Colors.white,
+    this.foregroundColor = const Color(0xff696DFF),
+    this.stoptime,
+    this.onPressed,
+    this.ischecked = true,
+  });
+  @override
+  State<AlarmSettingButton> createState() => _AlarmSettingButtonState();
+}
+
+class _AlarmSettingButtonState extends State<AlarmSettingButton> {
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle style = ElevatedButton.styleFrom(
+      elevation: 5,
+      padding: const EdgeInsets.all(20),
+      backgroundColor: widget.backgroundColor,
+      foregroundColor: widget.foregroundColor,
+      textStyle: const TextStyle(fontSize: 22),
+      fixedSize: const Size(368, 80),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    );
+
+    return ElevatedButton(
+      style: style,
+      onPressed: widget.onPressed,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              widget.label,
+            ],
+          ),
+          const Column(
+            children: [
+              Text('스위치 들어갈 자리'),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

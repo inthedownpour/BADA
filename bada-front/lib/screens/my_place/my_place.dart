@@ -14,19 +14,10 @@ class MyPlace extends StatelessWidget {
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
-        color: Colors.white,
         child: const Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  '편집',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
-              ],
+              children: [Text('편집')],
             ),
           ],
         ),
