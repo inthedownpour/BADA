@@ -1,14 +1,32 @@
+import 'dart:developer';
+
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/main/my_family.dart';
 import 'package:bada/screens/main/my_place.dart';
 import 'package:bada/screens/main/settings.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final platform = const MethodChannel("testing.flutter.android");
+
+  Future<void> _showActivity() async {
+    try {
+      await platform.invokeMethod('showActivity');
+    } on PlatformException catch (e) {
+      log("Error : $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +102,9 @@ class HomeScreen extends StatelessWidget {
                 Button714_300(
                   label: '경로 추천 받기',
                   buttonImage: Image.asset('assets/img/map-phone.png'),
+                  onPressed: () {
+                    _showActivity();
+                  },
                 ),
                 const SizedBox(
                   height: 15,
