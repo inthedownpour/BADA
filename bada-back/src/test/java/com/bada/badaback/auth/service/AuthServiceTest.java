@@ -21,7 +21,7 @@ public class AuthServiceTest extends ServiceTest {
     @DisplayName("회원가입에 성공한다(새로운 가족 그룹 생성)")
     void signup() {
         // when
-        Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", 1,null, "우리가족");
+        Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", null, "우리가족");
 
         // then
         Member findMember = memberRepository.findById(saveMemberId).orElseThrow();
@@ -40,7 +40,7 @@ public class AuthServiceTest extends ServiceTest {
     @DisplayName("회원가입에 성공한다(기존 가족 그룹 가입)")
     void join() {
         // when
-        Long saveMemberId = authService.join("심지연", "010-2222-2222","def@naver.com", "KAKAO", 1,null, "AWESDF");
+        Long saveMemberId = authService.join("심지연", "010-2222-2222","def@naver.com", "KAKAO", null, "AWESDF");
 
         // then
         Member findMember = memberRepository.findById(saveMemberId).orElseThrow();
@@ -56,10 +56,29 @@ public class AuthServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("아이 회원가입에 성공한다(기존 가족 그룹 가입)")
+    void joinChild() {
+        // when
+        Long saveMemberId = authService.joinChild("심지연", "010-2222-2222", null, "AWESDF");
+
+        // then
+        Member findMember = memberRepository.findById(saveMemberId).orElseThrow();
+        assertAll(
+                () -> assertThat(findMember.getName()).isEqualTo("심지연"),
+                () -> assertThat(findMember.getPhone()).isEqualTo("010-2222-2222"),
+                () -> assertThat(findMember.getEmail()).isNotNull(),
+                () -> assertThat(findMember.getSocial()).isEqualTo(SocialType.CHILD),
+                () -> assertThat(findMember.getIsParent()).isEqualTo(0),
+                () -> assertThat(findMember.getProfileUrl()).isEqualTo(null),
+                () -> assertThat(findMember.getFamilyCode()).isEqualTo("AWESDF") // 인증코드 생성구현 이후 변경예정
+        );
+    }
+
+    @Test
     @DisplayName("로그인에 성공한다")
     void login() {
         // when
-        Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", 1,null, "AB1111");
+        Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", null, "AB1111");
         LoginResponseDto loginResponseDto = authService.login(saveMemberId);
 
         // then

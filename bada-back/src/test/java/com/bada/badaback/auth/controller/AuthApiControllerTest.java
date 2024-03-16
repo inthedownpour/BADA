@@ -32,7 +32,7 @@ class AuthApiControllerTest extends ControllerTest {
             LoginResponseDto loginResponseDto = createLoginResponseDto();
             doReturn(1L)
                     .when(authService)
-                    .signup(any(), any(), any(), any(), anyInt(), any(), any());
+                    .signup(any(), any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
                     .login(anyLong());
@@ -64,7 +64,7 @@ class AuthApiControllerTest extends ControllerTest {
             LoginResponseDto loginResponseDto = createLoginResponseDto();
             doReturn(1L)
                     .when(authService)
-                    .signup(any(), any(), any(), any(), anyInt(), any(), any());
+                    .signup(any(), any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
                     .login(anyLong());
@@ -86,12 +86,12 @@ class AuthApiControllerTest extends ControllerTest {
 
     private AuthSignUpRequestDto createAuthSignUpRequestDto() {
         return new AuthSignUpRequestDto(SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(), "NAVER",
-                SUNKYOUNG.getIsParent(), SUNKYOUNG.getProfileUrl(), SUNKYOUNG.getFamilyCode());
+                SUNKYOUNG.getProfileUrl(), SUNKYOUNG.getFamilyCode());
     }
 
     private AuthJoinRequestDto createAuthJoinRequestDto() {
         return new AuthJoinRequestDto(SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(), "NAVER",
-                SUNKYOUNG.getIsParent(), SUNKYOUNG.getProfileUrl(), "인증코드");
+                SUNKYOUNG.getProfileUrl(), "인증코드");
     }
 
     private LoginResponseDto createLoginResponseDto() {
