@@ -1,5 +1,6 @@
 package com.bada.badaback.common;
 
+import com.bada.badaback.auth.domain.AuthCodeRepository;
 import com.bada.badaback.auth.domain.TokenRepository;
 import com.bada.badaback.member.domain.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -18,6 +19,9 @@ public class ServiceTest {
 
     @Autowired
     protected TokenRepository tokenRepository;
+
+    @Autowired
+    protected AuthCodeRepository authCodeRepository;
 
     @AfterEach
     void clearDatabase() {
