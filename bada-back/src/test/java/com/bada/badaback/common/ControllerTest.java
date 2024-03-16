@@ -1,7 +1,10 @@
 package com.bada.badaback.common;
 
 import com.bada.badaback.auth.controller.AuthApiController;
+import com.bada.badaback.auth.controller.AuthCodeApiController;
 import com.bada.badaback.auth.controller.TokenReissueApiController;
+import com.bada.badaback.auth.service.AuthCodeFindService;
+import com.bada.badaback.auth.service.AuthCodeService;
 import com.bada.badaback.auth.service.AuthService;
 import com.bada.badaback.auth.service.TokenReissueService;
 import com.bada.badaback.global.config.SecurityConfig;
@@ -27,7 +30,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 @ImportAutoConfiguration(SecurityConfig.class)
 @WebMvcTest({
         AuthApiController.class,
-        TokenReissueApiController.class
+        TokenReissueApiController.class,
+        AuthCodeApiController.class
 })
 @WithMockUser("test")
 public abstract class ControllerTest {
@@ -67,6 +71,11 @@ public abstract class ControllerTest {
     @MockBean
     protected JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+    @MockBean
+    protected AuthCodeService authCodeService;
+
+    @MockBean
+    protected AuthCodeFindService authCodeFindService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);
