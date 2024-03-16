@@ -1,5 +1,6 @@
 package com.bada.badaback.auth.controller;
 
+import com.bada.badaback.auth.dto.AuthJoinChildRequestDto;
 import com.bada.badaback.auth.dto.AuthJoinRequestDto;
 import com.bada.badaback.auth.dto.AuthSignUpRequestDto;
 import com.bada.badaback.auth.dto.LoginResponseDto;
@@ -20,7 +21,7 @@ public class AuthApiController {
     @PostMapping("/signup")
     public ResponseEntity<LoginResponseDto> signup(@RequestBody @Valid AuthSignUpRequestDto requestDto) {
         Long memberId = authService.signup(requestDto.name(), requestDto.phone(), requestDto.email(),
-                requestDto.social(), requestDto.isParent(), requestDto.profileUrl(), requestDto.familyName());
+                requestDto.social(), requestDto.profileUrl(), requestDto.familyName());
         LoginResponseDto responseDto = authService.login(memberId);
         return ResponseEntity.ok(responseDto);
     }
@@ -28,7 +29,14 @@ public class AuthApiController {
     @PostMapping("/join")
     public ResponseEntity<LoginResponseDto> join(@RequestBody @Valid AuthJoinRequestDto requestDto) {
         Long memberId = authService.join(requestDto.name(), requestDto.phone(), requestDto.email(),
-                requestDto.social(), requestDto.isParent(), requestDto.profileUrl(), requestDto.code());
+                requestDto.social(), requestDto.profileUrl(), requestDto.code());
+        LoginResponseDto responseDto = authService.login(memberId);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @PostMapping("/joinChild")
+    public ResponseEntity<LoginResponseDto> joinChild(@RequestBody @Valid AuthJoinChildRequestDto requestDto) {
+        Long memberId = authService.joinChild(requestDto.name(), requestDto.phone(), requestDto.profileUrl(), requestDto.code());
         LoginResponseDto responseDto = authService.login(memberId);
         return ResponseEntity.ok(responseDto);
     }
