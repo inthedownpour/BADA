@@ -19,6 +19,7 @@ public class AuthService {
     private final MemberFindService memberFindService;
     private final JwtProvider jwtProvider;
     private final TokenService tokenService;
+    private final AuthCodeFindService authCodeFindService;
 
     @Transactional
     public Long signup(String name, String phone, String email, String social, String profileUrl,
@@ -30,10 +31,6 @@ public class AuthService {
             // 임시로 familyName을 familyCode 자리에 넣었음
             Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, familyName);
             memberId = memberRepository.save(member).getId();
-
-            String accessToken = jwtProvider.createAccessToken(memberId, member.getRole());
-            String refreshToken = jwtProvider.createRefreshToken(memberId, member.getRole());
-            tokenService.synchronizeRefreshToken(member.getId(), refreshToken);
         }
 
         return memberId;
@@ -42,11 +39,14 @@ public class AuthService {
     @Transactional
     public Long join(String name, String phone, String email, String social, String profileUrl,
                        String code){
+        // 인증 코드 유효성 체크
+        String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
+
         Long memberId = AlreadyMember(email, social);
         if(memberId == null) {
 
-            // 인증번호 유효성 검사 API 구현 후 authCode 기반으로 찾은 familyCode를 저장하도록 수정할 예정
-            Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, code);
+            // 패밀리 코드 생성 메서드 구현 후 인증코드로 찾은 패밀리 코드 저장하도록 수정할 예정
+            Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, findFamilyCode);
             memberId = memberRepository.save(member).getId();
         }
 
@@ -55,7 +55,11 @@ public class AuthService {
 
     @Transactional
     public Long joinChild(String name, String phone, String profileUrl, String code){
-        Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, code);
+        // 인증 코드 유효성 체크
+        String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
+
+        // 패밀리 코드 생성 메서드 구현 후 인증코드로 찾은 패밀리 코드 저장하도록 수정할 예정
+        Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode);
 
         return memberRepository.save(member).getId();
     }
@@ -76,6 +80,7 @@ public class AuthService {
         return LoginResponseDto.builder()
                 .memberId(member.getId())
                 .name(member.getName())
+                .familyCode(member.getFamilyCode())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
