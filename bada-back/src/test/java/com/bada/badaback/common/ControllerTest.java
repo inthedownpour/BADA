@@ -7,6 +7,8 @@ import com.bada.badaback.auth.service.AuthCodeFindService;
 import com.bada.badaback.auth.service.AuthCodeService;
 import com.bada.badaback.auth.service.AuthService;
 import com.bada.badaback.auth.service.TokenReissueService;
+import com.bada.badaback.family.service.FamilyFindService;
+import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.global.config.SecurityConfig;
 import com.bada.badaback.global.security.JwtAccessDeniedHandler;
 import com.bada.badaback.global.security.JwtAuthenticationEntryPoint;
@@ -76,6 +78,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected AuthCodeFindService authCodeFindService;
+
+    @MockBean
+    protected FamilyService familyService;
+
+    @MockBean
+    protected FamilyFindService familyFindService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);
