@@ -1,6 +1,9 @@
 package com.bada.badaback.auth.service;
 
 import com.bada.badaback.auth.dto.LoginResponseDto;
+import com.bada.badaback.family.domain.Family;
+import com.bada.badaback.family.service.FamilyFindService;
+import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.global.security.JwtProvider;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.domain.MemberRepository;
@@ -20,6 +23,7 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final TokenService tokenService;
     private final AuthCodeFindService authCodeFindService;
+    private final FamilyService familyService;
 
     @Transactional
     public Long signup(String name, String phone, String email, String social, String profileUrl,
@@ -27,9 +31,9 @@ public class AuthService {
         Long memberId = AlreadyMember(email, social);
 
         if(memberId == null) {
-            // 패밀리 생성 메소드 구현 이후 패밀리코드를 넣도록 수정 예정
-            // 임시로 familyName을 familyCode 자리에 넣었음
-            Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, familyName);
+            String familyCode = familyService.create(familyName);
+
+            Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, familyCode);
             memberId = memberRepository.save(member).getId();
         }
 
@@ -45,7 +49,6 @@ public class AuthService {
         Long memberId = AlreadyMember(email, social);
         if(memberId == null) {
 
-            // 패밀리 코드 생성 메서드 구현 후 인증코드로 찾은 패밀리 코드 저장하도록 수정할 예정
             Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, findFamilyCode);
             memberId = memberRepository.save(member).getId();
         }
@@ -57,8 +60,6 @@ public class AuthService {
     public Long joinChild(String name, String phone, String profileUrl, String code){
         // 인증 코드 유효성 체크
         String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
-
-        // 패밀리 코드 생성 메서드 구현 후 인증코드로 찾은 패밀리 코드 저장하도록 수정할 예정
         Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode);
 
         return memberRepository.save(member).getId();
