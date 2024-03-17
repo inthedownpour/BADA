@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class Alarm extends StatefulWidget {
-  final String iconType, context, time;
-
+  final String context, time;
+  final int iconType;
   const Alarm({
     super.key,
     required this.iconType,
@@ -16,6 +16,19 @@ class Alarm extends StatefulWidget {
 }
 
 class _AlarmState extends State<Alarm> {
+  String getIconPath(int iconType) {
+    switch (iconType) {
+      case 1:
+        return 'assets/lottie/departure.json';
+
+      case 2:
+        return 'assets/lottie/arrival3.json';
+
+      default:
+        return 'assets/lottie/arrival2.json';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,7 +44,7 @@ class _AlarmState extends State<Alarm> {
           SizedBox(
             width: 50,
             height: 50,
-            child: Lottie.asset(widget.iconType),
+            child: Lottie.asset(getIconPath(widget.iconType)),
           ),
           const SizedBox(width: 30),
           SizedBox(

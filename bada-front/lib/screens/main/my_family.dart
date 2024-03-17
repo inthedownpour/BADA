@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bada/screens/my_family/fam_member.dart';
+import 'package:bada/screens/main/my_family/fam_member.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
