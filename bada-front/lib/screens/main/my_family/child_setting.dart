@@ -2,32 +2,35 @@ import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
 class ChildeSetting extends StatelessWidget {
-  const ChildeSetting({super.key});
+  final String name;
+  const ChildeSetting({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('이름 수정'),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
-            CircleAvatar(
+            const CircleAvatar(
               radius: 100,
             ),
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
-            InputChip(label: Text('hi')),
-            SizedBox(
+            InputChip(label: Text(name)),
+            const SizedBox(
               height: 170,
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Button300_115(label: Text('완료')),
