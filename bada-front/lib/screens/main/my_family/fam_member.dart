@@ -1,15 +1,20 @@
-import 'package:bada/screens/my_family/alarm_list.dart';
-import 'package:bada/screens/my_family/child_setting.dart';
+import 'package:bada/screens/main/my_family/alarm_list.dart';
+import 'package:bada/screens/main/my_family/child_setting.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
-class FamilyMember extends StatelessWidget {
+class FamilyMember extends StatefulWidget {
   final String name;
   const FamilyMember({
     super.key,
     required this.name,
   });
 
+  @override
+  State<FamilyMember> createState() => _FamilyMemberState();
+}
+
+class _FamilyMemberState extends State<FamilyMember> {
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -30,7 +35,7 @@ class FamilyMember extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  name,
+                  widget.name,
                   style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(width: 10),
@@ -40,7 +45,7 @@ class FamilyMember extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const AlarmList(),
+                        builder: (context) => AlarmList(name: widget.name),
                       ),
                     );
                   },
@@ -58,7 +63,7 @@ class FamilyMember extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ChildeSetting(),
+                        builder: (context) => ChildeSetting(name: widget.name),
                       ),
                     );
                   },

@@ -1,6 +1,6 @@
-import 'package:bada/screens/setting/alarm_setting.dart';
-import 'package:bada/screens/setting/setting_list.dart';
-import 'package:bada/screens/setting/terms_of_policy.dart';
+import 'package:bada/screens/main/setting/alarm_setting.dart';
+import 'package:bada/screens/main/setting/setting_list.dart';
+import 'package:bada/screens/main/setting/terms_of_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 

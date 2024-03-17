@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MyTermsWidget extends StatelessWidget {
+class TermsOfPolicy extends StatelessWidget {
   final String termsText = '''
 제 1 조 (목적)
 본 약관은 주식회사 카카오(이하 "회사")가 제공하는 사물위치정보 및 위치기반 서비스(이하, 위치정보 서비스)에 대해 회사와 서비스를 이용하는 이용자간의 권리·의무 및 책임사항, 기타 필요한 사항 규정을 목적으로 합니다.
@@ -84,14 +85,23 @@ class MyTermsWidget extends StatelessWidget {
 성명 : 김연지
 대표전화 : 1577-3754 (유료)
 ''';
-
-  const MyTermsWidget({super.key});
+  const TermsOfPolicy({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(8.0),
-      child: Text(termsText),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('이용 약관'),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+      ),
+      body: Container(
+        color: Colors.white,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(10),
+          child: Text(termsText),
+        ),
+      ),
     );
   }
 }
