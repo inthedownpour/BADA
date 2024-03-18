@@ -1,7 +1,7 @@
 package com.bada.badaback.kafka.controller;
 
-import com.ssafy.bada.badaback.kafka.dto.AlarmDto;
-import com.ssafy.bada.badaback.kafka.service.KafkaProducer;
+import com.bada.badaback.kafka.dto.AlarmDto;
+import com.bada.badaback.kafka.service.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
