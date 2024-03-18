@@ -13,9 +13,11 @@ import com.bada.badaback.global.config.SecurityConfig;
 import com.bada.badaback.global.security.JwtAccessDeniedHandler;
 import com.bada.badaback.global.security.JwtAuthenticationEntryPoint;
 import com.bada.badaback.global.security.JwtProvider;
+import com.bada.badaback.member.controller.MemberApiController;
 import com.bada.badaback.member.controller.MemberListApiController;
 import com.bada.badaback.member.service.MemberFindService;
 import com.bada.badaback.member.service.MemberListService;
+import com.bada.badaback.member.service.MemberService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +38,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
         AuthApiController.class,
         TokenReissueApiController.class,
         AuthCodeApiController.class,
-        MemberListApiController.class
+        MemberListApiController.class,
+        MemberApiController.class
 })
 @WithMockUser("test")
 public abstract class ControllerTest {
@@ -90,6 +93,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected MemberListService memberListService;
+
+    @MockBean
+    protected MemberService memberService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);
