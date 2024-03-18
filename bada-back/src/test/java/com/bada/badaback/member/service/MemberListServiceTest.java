@@ -1,10 +1,8 @@
 package com.bada.badaback.member.service;
 
 import com.bada.badaback.common.ServiceTest;
-import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.dto.MemberResponseDto;
-import com.bada.badaback.member.exception.MemberErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,6 @@ import java.util.List;
 
 import static com.bada.badaback.feature.MemberFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("Member [Service Layer] -> MemberListService 테스트")
@@ -37,7 +34,7 @@ public class MemberListServiceTest extends ServiceTest {
     @DisplayName("가족코드로 패밀리를 조회한다")
     void findById() {
         // when
-        List<MemberResponseDto> familyList = memberListService.familyList(memberList[0].getId(), memberList[0].getFamilyCode());
+        List<MemberResponseDto> familyList = memberListService.familyList(memberList[0].getId());
 
         // then
         assertAll(
