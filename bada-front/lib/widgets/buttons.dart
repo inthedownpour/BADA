@@ -378,12 +378,15 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
           child: Row(
             children: [
               Image.asset(
                 'assets/img/whistle.png',
                 height: 50,
+              ),
+              const SizedBox(
+                width: 10,
               ),
               Expanded(
                 child: Column(
@@ -404,7 +407,10 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                     ),
                   );
                 },
-                child: const Icon(Icons.arrow_forward_ios_rounded),
+                child: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 15,
+                ),
               ),
             ],
           ),
