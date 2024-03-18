@@ -1,4 +1,5 @@
 import 'package:bada/models/my_place_model.dart';
+import 'package:bada/screens/main/my_place/map_search.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +39,14 @@ class MyPlace extends StatefulWidget {
 class _MyPlaceState extends State<MyPlace> {
   late Future<List<Place>> myPlaces;
 
-  void _addNewPlace() {}
+  void _addNewPlace() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const MapSearch(),
+      ),
+    );
+  }
 
   @override
   void initState() {

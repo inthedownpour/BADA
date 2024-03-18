@@ -1,29 +1,24 @@
 import 'package:bada/provider/profile_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:bada/screens/login/login_screen.dart';
 import 'package:bada/screens/loading_screen.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await dotenv.load(fileName: '.env');
+  AuthRepository.initialize(appKey: dotenv.env['KAKAO_MAP_API'] ?? '');
   // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
   WidgetsFlutterBinding.ensureInitialized();
-  // await dotenv.load(fileName: ".env");
-  // String appKey = dotenv.get("APP_KEY");
   KakaoSdk.init(
     nativeAppKey: '9d4c295f031b5c1f50269e353e895e12',
   );
-
-  // String? url = await receiveKakaoScheme();
-  // // url에 커스텀 URL 스킴이 할당됩니다. 할당된 스킴의 활용 코드를 작성합니다.
-
-  // kakaoSchemeStream.listen((url) {
-  //   // url에 커스텀 URL 스킴이 할당됩니다. 할당된 스킴의 활용 코드를 작성합니다.
-  // }, onError: (e) {
-  //   // 에러 상황의 예외 처리 코드를 작성합니다.
-  // });
 
   runApp(
     MultiProvider(
@@ -36,15 +31,21 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // Initialization logic with mandatory 1-second delay
-  Future<void> initializeApp() async {
-    // Perform initialization tasks here
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
-    // Force a 1-second delay
-    await Future.delayed(const Duration(seconds: 0));
+class _MyAppState extends State<MyApp> {
+  Future<void> initializeApp() async {
+    await Future.delayed(const Duration(seconds: 2));
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

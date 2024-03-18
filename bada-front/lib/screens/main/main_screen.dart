@@ -4,6 +4,7 @@ import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/main/my_family.dart';
 import 'package:bada/screens/main/my_place.dart';
 import 'package:bada/screens/main/settings.dart';
+import 'package:bada/screens/main/testing/testing.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -123,6 +124,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => const Settings(),
+                          ),
+                        );
+                      },
+                    ),
+                    Button330_220(
+                      label: '테스트 전용',
+                      buttonImage: Lottie.asset('assets/lottie/settings.json'),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Test(),
                           ),
                         );
                       },
