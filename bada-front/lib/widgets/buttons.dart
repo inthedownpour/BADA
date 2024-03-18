@@ -1,5 +1,4 @@
 import 'package:bada/screens/login/create_group.dart';
-import 'package:bada/screens/main/my_place/my_place_detail.dart';
 import 'package:bada/widgets/switch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -334,81 +333,6 @@ class _AlarmSettingButtonState extends State<AlarmSettingButton> {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class MyPlaceButton extends StatefulWidget {
-  final String label;
-  final String? navigateTo;
-  final Color backgroundColor, foregroundColor;
-  final void Function()? onPressed;
-
-  const MyPlaceButton({
-    super.key,
-    required this.label,
-    this.backgroundColor = const Color(0xff696DFF),
-    this.foregroundColor = Colors.white,
-    this.navigateTo,
-    this.onPressed,
-  });
-  @override
-  State<MyPlaceButton> createState() => _MyPlaceButtonState();
-}
-
-class _MyPlaceButtonState extends State<MyPlaceButton> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        width: 368,
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 5,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Image.asset(
-                'assets/img/whistle.png',
-                height: 50,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('이름: ${widget.label}'),
-                    const Text('주소: 대전광역시 유성구 덕명로 26'),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          PlaceDetail(placeName: widget.label),
-                    ),
-                  );
-                },
-                child: const Icon(Icons.arrow_forward_ios_rounded),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
