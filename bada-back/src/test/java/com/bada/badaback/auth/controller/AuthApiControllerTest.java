@@ -32,7 +32,7 @@ class AuthApiControllerTest extends ControllerTest {
             LoginResponseDto loginResponseDto = createLoginResponseDto();
             doReturn(1L)
                     .when(authService)
-                    .signup(any(), any(), any(), any(), anyInt(), any(), any());
+                    .signup(any(), any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
                     .login(anyLong());
@@ -64,7 +64,39 @@ class AuthApiControllerTest extends ControllerTest {
             LoginResponseDto loginResponseDto = createLoginResponseDto();
             doReturn(1L)
                     .when(authService)
-                    .signup(any(), any(), any(), any(), anyInt(), any(), any());
+                    .join(any(), any(), any(), any(), any(), any());
+            doReturn(loginResponseDto)
+                    .when(authService)
+                    .login(anyLong());
+
+            // when
+            final AuthJoinRequestDto request = createAuthJoinRequestDto();
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .post(BASE_URL)
+                    .contentType(APPLICATION_JSON)
+                    .content(convertObjectToJson(request));
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isOk()
+                    );
+        }
+    }
+
+    @Nested
+    @DisplayName("아이 회원가입(기존 가족 그룹 가입) API [POST /api/auth/joinChild]")
+    class joinChild {
+        private static final String BASE_URL = "/api/auth/joinChild";
+
+        @Test
+        @DisplayName("회원가입에 성공한다")
+        void success() throws Exception {
+            // given
+            LoginResponseDto loginResponseDto = createLoginResponseDto();
+            doReturn(1L)
+                    .when(authService)
+                    .joinChild(any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
                     .login(anyLong());
@@ -86,16 +118,16 @@ class AuthApiControllerTest extends ControllerTest {
 
     private AuthSignUpRequestDto createAuthSignUpRequestDto() {
         return new AuthSignUpRequestDto(SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(), "NAVER",
-                SUNKYOUNG.getIsParent(), SUNKYOUNG.getProfileUrl(), SUNKYOUNG.getFamilyCode());
+                SUNKYOUNG.getProfileUrl(), "우리가족");
     }
 
     private AuthJoinRequestDto createAuthJoinRequestDto() {
         return new AuthJoinRequestDto(SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(), "NAVER",
-                SUNKYOUNG.getIsParent(), SUNKYOUNG.getProfileUrl(), "인증코드");
+                SUNKYOUNG.getProfileUrl(), "인증코드");
     }
 
     private LoginResponseDto createLoginResponseDto() {
-        return new LoginResponseDto(1L, SUNKYOUNG.getName(), ACCESS_TOKEN, REFRESH_TOKEN);
+        return new LoginResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getFamilyCode(), ACCESS_TOKEN, REFRESH_TOKEN);
     }
 }
 

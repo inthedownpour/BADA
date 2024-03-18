@@ -1,6 +1,8 @@
 package com.bada.badaback.common;
 
+import com.bada.badaback.auth.domain.AuthCodeRepository;
 import com.bada.badaback.auth.domain.TokenRepository;
+import com.bada.badaback.family.domain.FamilyRepository;
 import com.bada.badaback.member.domain.MemberRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +20,12 @@ public class ServiceTest {
 
     @Autowired
     protected TokenRepository tokenRepository;
+
+    @Autowired
+    protected AuthCodeRepository authCodeRepository;
+
+    @Autowired
+    protected FamilyRepository familyRepository;
 
     @AfterEach
     void clearDatabase() {
