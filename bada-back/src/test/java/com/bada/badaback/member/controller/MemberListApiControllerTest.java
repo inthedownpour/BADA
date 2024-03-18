@@ -1,6 +1,7 @@
 package com.bada.badaback.member.controller;
 
 import com.bada.badaback.common.ControllerTest;
+import com.bada.badaback.member.dto.MemberListResponseDto;
 import com.bada.badaback.member.dto.MemberResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -48,11 +49,11 @@ public class MemberListApiControllerTest extends ControllerTest {
         }
     }
 
-    private List<MemberResponseDto> createBoardListResponses() {
+    private MemberListResponseDto createBoardListResponses() {
         List<MemberResponseDto> memberList = new ArrayList<>();
         memberList.add(new MemberResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getIsParent(), SUNKYOUNG.getProfileUrl(), 0));
         memberList.add(new MemberResponseDto(2L, JIYEON.getName(), JIYEON.getPhone(), JIYEON.getIsParent(), JIYEON.getProfileUrl(), 0));
         memberList.add(new MemberResponseDto(3L, YONGJUN.getName(), YONGJUN.getPhone(), YONGJUN.getIsParent(), YONGJUN.getProfileUrl(), 0));
-        return memberList;
+        return new MemberListResponseDto(memberList);
     }
 }
