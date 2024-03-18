@@ -2,6 +2,7 @@ package com.bada.badaback.member.service;
 
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.domain.MemberRepository;
+import com.bada.badaback.member.dto.MemberListResponseDto;
 import com.bada.badaback.member.dto.MemberResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class MemberListService {
     private final MemberFindService memberFindService;
 
     @Transactional
-    public List<MemberResponseDto> familyList(Long memberId) {
+    public MemberListResponseDto familyList(Long memberId) {
         Member findMember = memberFindService.findById(memberId);
 
         List<Member> memberList = memberRepository.familyList(findMember.getFamilyCode());
@@ -35,6 +36,6 @@ public class MemberListService {
                     .build();
             familyList.add(memberResponseDto);
         }
-        return familyList;
+        return new MemberListResponseDto(familyList);
     }
 }
