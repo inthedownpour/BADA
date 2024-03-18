@@ -1,6 +1,6 @@
 package com.bada.badaback.kafka.service;
 
-import com.ssafy.bada.badaback.kafka.dto.AlarmDto;
+import com.bada.badaback.kafka.dto.AlarmDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

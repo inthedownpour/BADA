@@ -1,6 +1,6 @@
 package com.bada.badaback.kafka.service;
 
-import com.ssafy.bada.badaback.kafka.dto.AlarmDto;
+import com.bada.badaback.kafka.dto.AlarmDto;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

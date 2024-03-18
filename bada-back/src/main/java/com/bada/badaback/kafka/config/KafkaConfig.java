@@ -1,6 +1,6 @@
 package com.bada.badaback.kafka.config;
 
-import com.ssafy.bada.badaback.kafka.dto.AlarmDto;
+import com.bada.badaback.kafka.dto.AlarmDto;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
