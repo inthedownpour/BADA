@@ -20,7 +20,7 @@ public class FamilyRepositoryTest extends RepositoryTest {
 
     @BeforeEach
     void setup() {
-        family = familyRepository.save(FAMILY_0.toFamily());
+        family = familyRepository.save(FAMILY_0.toFamily("AB1111"));
     }
 
     @Test
