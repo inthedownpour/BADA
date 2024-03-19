@@ -2,6 +2,7 @@ package com.bada.badaback.auth.service;
 
 import com.bada.badaback.auth.domain.AuthCode;
 import com.bada.badaback.auth.domain.AuthCodeRepository;
+import com.bada.badaback.auth.dto.AuthCodeResponseDto;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.service.MemberFindService;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +39,11 @@ public class AuthCodeService {
     }
 
     @Transactional
-    public String readCode(Long memberId) {
+    public AuthCodeResponseDto readCode(Long memberId) {
         Member findMember = memberFindService.findById(memberId);
         AuthCode findAuthCode = authCodeFindService.findByMemberId(findMember.getId());
 
-        return findAuthCode.getCode();
+        return AuthCodeResponseDto.from(findAuthCode);
     }
 
     private String createRandomCode() {
