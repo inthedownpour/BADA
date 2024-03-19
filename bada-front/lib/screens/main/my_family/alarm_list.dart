@@ -1,6 +1,5 @@
 import 'package:bada/widgets/alarm.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class AlarmList extends StatelessWidget {
   final String name;

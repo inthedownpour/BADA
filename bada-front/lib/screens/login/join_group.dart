@@ -1,5 +1,4 @@
 import 'package:bada/widgets/buttons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class JoinFamily extends StatelessWidget {
@@ -49,7 +48,7 @@ class JoinFamily extends StatelessWidget {
                       ),
                       borderSide: BorderSide(
                         color: const Color(0xff696DFF).withOpacity(0.4),
-                      )),
+                      ),),
                   labelText: '작성해주세요',
                 ),
               ),

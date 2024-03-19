@@ -1,10 +1,5 @@
-import 'package:bada/screens/login/create_group.dart';
 import 'package:bada/screens/main/my_place/my_place_detail.dart';
-import 'package:bada/widgets/switch.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Button330_220 extends StatefulWidget {
   final String label;

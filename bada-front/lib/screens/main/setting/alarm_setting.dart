@@ -1,4 +1,3 @@
-import 'package:bada/widgets/alarm.dart';
 import 'package:flutter/material.dart';
 
 class AlarmSetting extends StatelessWidget {

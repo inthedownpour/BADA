@@ -24,7 +24,6 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
-        // 다른 프로바이더들...
       ],
       child: const MyApp(),
     ),

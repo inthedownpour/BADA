@@ -1,14 +1,22 @@
+import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/main/setting/alarm_setting.dart';
 import 'package:bada/screens/main/setting/setting_list.dart';
 import 'package:bada/screens/main/setting/terms_of_policy.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
-class Settings extends StatelessWidget {
+class Settings extends StatefulWidget {
   const Settings({super.key});
 
   @override
+  State<Settings> createState() => _SettingsState();
+}
+
+class _SettingsState extends State<Settings> {
+  @override
   Widget build(BuildContext context) {
+    final userData = Provider.of<ProfileProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('설정'),
@@ -31,13 +39,13 @@ class Settings extends StatelessWidget {
                     border: Border.all(color: Colors.black12),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('김싸피'),
-                      Text('010-1234-5678'),
-                      Text('email@email.com'),
-                      Text('가입일: 어제오늘'),
+                      Text(userData.name!),
+                      const Text('010-1234-5678'),
+                      Text(userData.email!),
+                      const Text('가입일: 어제오늘'),
                     ],
                   ),
                 ),

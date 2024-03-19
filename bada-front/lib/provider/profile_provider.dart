@@ -8,14 +8,16 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 class ProfileProvider extends ChangeNotifier {
   ProfileProvider();
 
-  String? _nickname;
-  String? _profileImage;
-  String? _email;
+  String? _nickname, _profileImage, _email, _name, _phoneNumber, _social;
   bool _isLogined = false;
 
   String? get nickname => _nickname;
   String? get profileImage => _profileImage;
   String? get email => _email;
+  String? get name => _name;
+  String? get phoneNumber => _phoneNumber;
+  String? get social => _social;
+
   bool get isLogined => _isLogined;
 
   Future<void> initProfile(LoginPlatform loginPlatform) async {
@@ -43,6 +45,7 @@ class ProfileProvider extends ChangeNotifier {
       _profileImage = user.kakaoAccount?.profile?.profileImageUrl;
       _email = user.kakaoAccount?.email;
       _isLogined = true;
+      _social = 'KAKAO';
       notifyListeners();
     } catch (e) {
       debugPrint('initProfile error: $e');
@@ -55,9 +58,12 @@ class ProfileProvider extends ChangeNotifier {
       await naverLogin.login();
       NaverAccountResult result = await FlutterNaverLogin.currentAccount();
       _nickname = result.nickname;
+      _name = result.name;
+      _phoneNumber = result.mobile;
       _profileImage = result.profileImage;
       _email = result.email;
       _isLogined = true;
+      _social = 'NAVER';
       notifyListeners();
     } catch (e) {
       debugPrint('initProfile error: $e');
