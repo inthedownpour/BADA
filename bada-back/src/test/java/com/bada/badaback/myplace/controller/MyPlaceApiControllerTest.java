@@ -78,9 +78,9 @@ public class MyPlaceApiControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("마이 플레이스 정보 수정 API 테스트 [PATCH /api/myplace]")
+    @DisplayName("마이 플레이스 정보 수정 API 테스트 [PATCH /api/myplace/{myPlaceId}]")
     class updateMyPlace {
-        private static final String BASE_URL = "/api/myplace";
+        private static final String BASE_URL = "/api/myplace/{myPlaceId}";
         private static final Long MYPLACE_ID = 1L;
 
         @Test
