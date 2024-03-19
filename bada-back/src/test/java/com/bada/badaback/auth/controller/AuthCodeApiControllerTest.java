@@ -3,20 +3,15 @@ package com.bada.badaback.auth.controller;
 import com.bada.badaback.auth.dto.AuthCodeResponseDto;
 import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ControllerTest;
-import com.bada.badaback.member.dto.MemberDetailResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDateTime;
-
-import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
 import static com.bada.badaback.feature.TokenFixture.BEARER_TOKEN;
 import static com.bada.badaback.feature.TokenFixture.REFRESH_TOKEN;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
