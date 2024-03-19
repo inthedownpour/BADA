@@ -1,5 +1,6 @@
 package com.bada.badaback.auth.controller;
 
+import com.bada.badaback.auth.dto.AuthCodeResponseDto;
 import com.bada.badaback.auth.service.AuthCodeService;
 import com.bada.badaback.global.annotation.ExtractPayload;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,8 +26,7 @@ public class AuthCodeApiController {
     }
 
     @GetMapping("/authcode")
-    public ResponseEntity<String> readCode(@ExtractPayload Long memberId) {
-        String code = authCodeService.readCode(memberId);
-        return new ResponseEntity<>(code, HttpStatus.OK);
+    public ResponseEntity<AuthCodeResponseDto> readCode(@ExtractPayload Long memberId) {
+        return new ResponseEntity<>(authCodeService.readCode(memberId), HttpStatus.OK);
     }
 }
