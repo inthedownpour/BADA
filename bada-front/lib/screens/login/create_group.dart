@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bada/functions/secure_storage.dart';
 import 'package:bada/screens/main/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:bada/provider/profile_provider.dart';
@@ -22,6 +23,7 @@ class CreateFamily extends StatefulWidget {
 class _CreateFamilyState extends State<CreateFamily> {
   // Step 2: Use a TextEditingController to manage TextField input.
   final TextEditingController _familyNameController = TextEditingController();
+  final TokenStorage _tokenStorage = TokenStorage();
 
   @override
   void dispose() {
@@ -121,7 +123,14 @@ class _CreateFamilyState extends State<CreateFamily> {
     );
 
     if (response.statusCode == 200) {
-      Navigator.push(
+      final responseBody = json.decode(response.body);
+      final accessToken = responseBody['accessToken'];
+      final refreshToken = responseBody['refreshToken'];
+
+      // Use the TokenStorage class to save the tokens
+      final tokenStorage = TokenStorage();
+      await tokenStorage.saveToken(accessToken, refreshToken);
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (context) => const HomeScreen(),

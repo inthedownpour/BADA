@@ -31,6 +31,7 @@ dependencies:
   provider: ^6.1.2
   flutter_naver_login: ^1.8.0
   image_picker: ^1.0.7
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
