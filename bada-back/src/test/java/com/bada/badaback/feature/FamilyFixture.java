@@ -7,14 +7,13 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum FamilyFixture {
-    FAMILY_0("AB1111", "우리가족"),
-    FAMILY_1("AB2222", "우리가족")
+    FAMILY_0("우리 가족"),
+    FAMILY_1("우리 가족")
     ;
 
-    private final String familyCode;
     private final String familyName;
 
-    public Family toFamily() {
+    public Family toFamily(String familyCode) {
         return Family.createFamily(familyCode, familyName);
     }
 }

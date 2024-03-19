@@ -2,10 +2,14 @@ package com.bada.badaback.family.service;
 
 import com.bada.badaback.family.domain.Family;
 import com.bada.badaback.family.domain.FamilyRepository;
+import com.bada.badaback.member.domain.Member;
+import com.bada.badaback.member.service.MemberFindService;
+import com.bada.badaback.myplace.service.MyPlaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -14,6 +18,8 @@ import java.util.Random;
 public class FamilyService {
     private final FamilyRepository familyRepository;
     private final FamilyFindService familyFindService;
+    private final MyPlaceService myPlaceService;
+    private final MemberFindService memberFindService;
 
     @Transactional
     public String create(String familyName) {
@@ -24,14 +30,28 @@ public class FamilyService {
         }
 
         Family family = Family.createFamily(familyCode, familyName);
-
         return familyRepository.save(family).getFamilyCode();
     }
 
     @Transactional
-    public void delete(String familyCode) {
-        Family findfamily = familyFindService.findByFamilyCode(familyCode);
-        familyRepository.delete(findfamily);
+    public void update(String familyCode, List<String> placeList) {
+        Family findFamily = familyFindService.findByFamilyCode(familyCode);
+        findFamily.updatePlaceList(placeList);
+    }
+
+    @Transactional
+    public void delete(Long memberId, String familyCode) {
+        Member findMember= memberFindService.findById(memberId);
+        Family findFamily = familyFindService.findByFamilyCode(familyCode);
+        List<String> placeList = findFamily.getPlaceList();
+
+        if(placeList != null) {
+            for(String placeId : placeList){
+                myPlaceService.delete(findMember.getId(), Long.valueOf(placeId));
+            }
+        }
+
+        familyRepository.delete(findFamily);
     }
 
     private String createRandomCode() {
