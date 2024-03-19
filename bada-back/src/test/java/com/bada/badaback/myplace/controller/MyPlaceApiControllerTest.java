@@ -59,7 +59,7 @@ public class MyPlaceApiControllerTest extends ControllerTest {
             // given
             doReturn(1L)
                     .when(myPlaceService)
-                    .create(anyLong(), any(), any(), any(), any(), any(), any());
+                    .create(anyLong(), any(), any(), any(), any(), any(), any(), any(), any());
 
             // when
             final MyPlaceRequestDto requestDto = createMyPlaceRequestDto();
@@ -182,7 +182,8 @@ public class MyPlaceApiControllerTest extends ControllerTest {
     }
 
     private MyPlaceRequestDto createMyPlaceRequestDto() {
-        return new MyPlaceRequestDto("집", "35.111111", "127.111111", "SC4", "042-1111-1111", "icon0");
+        return new MyPlaceRequestDto("집", "35.111111", "127.111111", "SC4",
+                "042-1111-1111", "icon0", "지번 주소", "도로명 주소");
     }
 
     private MyPlaceUpdateRequestDto createMyPlaceUpdateRequestDto() {
