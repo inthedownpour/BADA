@@ -23,12 +23,12 @@ public class MyPlaceService {
     private final MyPlaceRepository myPlaceRepository;
 
     @Transactional
-    public Long create(Long memberId, String placeName, String placeLatitude, String placeLongitude,
-                       String placeCategoryCode, String placePhoneNumber, String icon) {
+    public Long create(Long memberId, String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode,
+                       String placePhoneNumber, String icon, String addressName, String addressRoadName) {
         Member findMember = memberFindService.findById(memberId);
 
         MyPlace myPlace = MyPlace.createMyPlace(placeName, placeLatitude, placeLongitude, placeCategoryCode,
-                placePhoneNumber, icon, findMember.getFamilyCode());
+                placePhoneNumber, icon, findMember.getFamilyCode(), addressName, addressRoadName);
         Long myPlaceId = myPlaceRepository.save(myPlace).getId();
 
         Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());

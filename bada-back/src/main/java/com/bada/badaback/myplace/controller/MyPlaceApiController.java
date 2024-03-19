@@ -18,8 +18,8 @@ public class MyPlaceApiController {
 
     @PostMapping
     public ResponseEntity<Void> create(@ExtractPayload Long memberId, @RequestBody MyPlaceRequestDto requestDto) {
-        myPlaceService.create(memberId, requestDto.placeName(), requestDto.placeLatitude(), requestDto.placeLongitude(),
-                requestDto.placeCategoryCode(), requestDto.placePhoneNumber(), requestDto.icon());
+        myPlaceService.create(memberId, requestDto.placeName(), requestDto.placeLatitude(), requestDto.placeLongitude(), requestDto.placeCategoryCode(),
+                requestDto.placePhoneNumber(), requestDto.icon(), requestDto.addressName(), requestDto.addressRoadName());
         return ResponseEntity.ok().build();
     }
 
