@@ -1,5 +1,6 @@
 package com.bada.badaback.auth.controller;
 
+import com.bada.badaback.auth.dto.AuthCodeResponseDto;
 import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +12,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static com.bada.badaback.feature.TokenFixture.BEARER_TOKEN;
 import static com.bada.badaback.feature.TokenFixture.REFRESH_TOKEN;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -98,7 +98,7 @@ public class AuthCodeApiControllerTest extends ControllerTest {
         void success() throws Exception {
             // given
             given(jwtProvider.getId(REFRESH_TOKEN)).willReturn(1L);
-            given(authCodeService.readCode(1L)).willReturn(anyString());
+            given(authCodeService.readCode(1L)).willReturn(readAuthCodeResponseDto());
 
             // when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -111,5 +111,9 @@ public class AuthCodeApiControllerTest extends ControllerTest {
                             status().isOk()
                     );
         }
+    }
+
+    private AuthCodeResponseDto readAuthCodeResponseDto() {
+        return new AuthCodeResponseDto("인증코드");
     }
 }
