@@ -21,7 +21,6 @@ class CreateFamily extends StatefulWidget {
 }
 
 class _CreateFamilyState extends State<CreateFamily> {
-  // Step 2: Use a TextEditingController to manage TextField input.
   final TextEditingController _familyNameController = TextEditingController();
   final TokenStorage _tokenStorage = TokenStorage();
 
@@ -61,7 +60,6 @@ class _CreateFamilyState extends State<CreateFamily> {
                 ],
               ),
               const SizedBox(height: 20),
-              // Step 3: Use the TextEditingController here.
               TextField(
                 controller: _familyNameController,
                 decoration: InputDecoration(

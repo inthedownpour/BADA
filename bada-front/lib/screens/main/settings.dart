@@ -1,8 +1,10 @@
 import 'package:bada/provider/profile_provider.dart';
+import 'package:bada/screens/login/login_screen.dart';
 import 'package:bada/screens/main/setting/alarm_setting.dart';
 import 'package:bada/screens/main/setting/setting_list.dart';
 import 'package:bada/screens/main/setting/terms_of_policy.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 class Settings extends StatefulWidget {
@@ -13,10 +15,22 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  final _storage = const FlutterSecureStorage();
+  Future<Map<String, String?>> _fetchUserData() async {
+    String? name = await _storage.read(key: 'name');
+    String? email = await _storage.read(key: 'email');
+    String? createdAt = await _storage.read(key: 'createdAt');
+    String? phone = await _storage.read(key: 'phone');
+    return {
+      'name': name,
+      'email': email,
+      'createdAt': createdAt,
+      'phone': phone,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<ProfileProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('설정'),
@@ -33,21 +47,23 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 width:
                     double.infinity, // Make the Container fit the screen width
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black12),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(userData.name!),
-                      const Text('010-1234-5678'),
-                      Text(userData.email!),
-                      const Text('가입일: 어제오늘'),
-                    ],
-                  ),
+                child: FutureBuilder<Map<String, String?>>(
+                  future: _fetchUserData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else {
+                      // Data loaded
+                      final data = snapshot.data!;
+                      return _buildUserDetails(data);
+                    }
+                  },
                 ),
               ),
               const SizedBox(
@@ -102,7 +118,16 @@ class _SettingsState extends State<Settings> {
               ),
               const SizedBox(height: 40),
               InkResponse(
-                onTap: () {},
+                onTap: () async {
+                  await Provider.of<ProfileProvider>(context, listen: false)
+                      .logout();
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                },
                 containedInkWell: true,
                 child: const Text(
                   '로그아웃',
@@ -150,6 +175,35 @@ class _SettingsState extends State<Settings> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildUserDetails(Map<String, String?> userData) {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: double.infinity, // Make the Container fit the screen width
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black12),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(userData['name'] ?? '이름 없음'),
+                  Text(userData['phone'] ?? '전화번호 없음'),
+                  Text(userData['email'] ?? '이메일 없음'),
+                  Text('가입일: ${userData['createdAt'] ?? '미등록'}'),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:bada/models/screen_size.dart';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,13 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        Provider<ScreenSizeModel>(
+          create: (_) => ScreenSizeModel(
+            screenWidth: 0,
+            screenHeight: 0,
+          ),
+          lazy: false,
+        ),
       ],
       child: const MyApp(),
     ),

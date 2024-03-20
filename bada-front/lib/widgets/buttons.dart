@@ -1,4 +1,5 @@
 import 'package:bada/screens/main/my_place/my_place_detail.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 
 class Button330_220 extends StatefulWidget {
@@ -35,7 +36,10 @@ class _Button330_220State extends State<Button330_220> {
       backgroundColor: widget.backgroundColor,
       foregroundColor: widget.foregroundColor,
       textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-      fixedSize: const Size(180, 120),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 180,
+        UIhelper.scaleHeight(context) * 120,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
 
@@ -59,8 +63,9 @@ class _Button330_220State extends State<Button330_220> {
                   children: [
                     if (hasImage)
                       SizedBox(
-                        width: widget.imageWidth,
-                        height: widget.imageHeight,
+                        width: UIhelper.scaleWidth(context) * widget.imageWidth,
+                        height:
+                            UIhelper.scaleHeight(context) * widget.imageHeight,
                         child: widget.buttonImage!,
                       ),
                   ],
@@ -111,7 +116,10 @@ class _Button714_300State extends State<Button714_300> {
       backgroundColor: widget.backgroundColor,
       foregroundColor: widget.foregroundColor,
       textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
-      fixedSize: const Size(368, 150),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 368,
+        UIhelper.scaleHeight(context) * 150,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
 
@@ -128,7 +136,7 @@ class _Button714_300State extends State<Button714_300> {
               Text(
                 widget.label,
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: UIhelper.scaleHeight(context) * 10),
               const Text(
                 'CCTV가 많은 길로 아이가 다닐 수 있도록',
                 style: TextStyle(fontSize: 10),
@@ -141,8 +149,8 @@ class _Button714_300State extends State<Button714_300> {
                   children: [
                     if (hasImage)
                       SizedBox(
-                        width: 120,
-                        height: 120,
+                        width: UIhelper.scaleWidth(context) * 120,
+                        height: UIhelper.scaleHeight(context) * 120,
                         child: widget.buttonImage!,
                       ),
                   ],
@@ -181,7 +189,10 @@ class _Button714_150State extends State<Button714_150> {
       backgroundColor: widget.backgroundColor,
       foregroundColor: widget.foregroundColor,
       textStyle: const TextStyle(fontSize: 22),
-      fixedSize: const Size(368, 80),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 368,
+        UIhelper.scaleHeight(context) * 80,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
 
@@ -224,7 +235,8 @@ class _Button281_77State extends State<Button281_77> {
       foregroundColor:
           widget.isSelected ? widget.foregroundColor : widget.backgroundColor,
       textStyle: const TextStyle(fontSize: 16),
-      fixedSize: const Size(130, 30),
+      fixedSize: Size(UIhelper.scaleWidth(context) * 130,
+          UIhelper.scaleHeight(context) * 30),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
 
@@ -267,7 +279,8 @@ class _Button300_115State extends State<Button300_115> {
       foregroundColor:
           widget.isSelected ? widget.foregroundColor : widget.backgroundColor,
       textStyle: const TextStyle(fontSize: 16),
-      fixedSize: const Size(150, 60),
+      fixedSize: Size(UIhelper.scaleWidth(context) * 150,
+          UIhelper.scaleHeight(context) * 60),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     );
 
@@ -308,7 +321,8 @@ class _AlarmSettingButtonState extends State<AlarmSettingButton> {
       backgroundColor: widget.backgroundColor,
       foregroundColor: widget.foregroundColor,
       textStyle: const TextStyle(fontSize: 22),
-      fixedSize: const Size(368, 80),
+      fixedSize: Size(UIhelper.scaleWidth(context) * 368,
+          UIhelper.scaleHeight(context) * 80),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
 
@@ -358,8 +372,8 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
     return InkWell(
       onTap: () {},
       child: Container(
-        width: 368,
-        height: 80,
+        width: UIhelper.scaleWidth(context) * 368,
+        height: UIhelper.scaleHeight(context) * 80,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -378,10 +392,10 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
             children: [
               Image.asset(
                 'assets/img/whistle.png',
-                height: 50,
+                height: UIhelper.scaleHeight(context) * 50,
               ),
-              const SizedBox(
-                width: 10,
+              SizedBox(
+                width: UIhelper.scaleWidth(context) * 10,
               ),
               Expanded(
                 child: Column(

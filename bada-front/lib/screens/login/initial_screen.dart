@@ -32,26 +32,12 @@ class InitialScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            // Button714_150(
 
-            //   label: '가족 그룹 만들기',
-            //   onPressed: () {
-            //     Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => const CreateFamily(),
-            //         ));
-            //   },
-            // ),
             Button714_150(
-              label: const Hero(
-                tag:
-                    'uniqueHeroTag', // Ensure this tag is unique and the same in both places
-                child: Text(
-                  '가족 그룹 만들기',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ), // Match your text style
+              label: const Text(
+                '가족 그룹 만들기',
+                style: TextStyle(
+                  color: Colors.white,
                 ),
               ),
               onPressed: () {
