@@ -54,10 +54,10 @@ public class FamilyServiceTest extends ServiceTest {
     @DisplayName("Family 도착지 목록 수정에 성공한다")
     void updatePlaceList() {
         // when
-        List<String> placeList = new ArrayList<>();
-        placeList.add("1");
-        placeList.add("2");
-        placeList.add("3");
+        List<Long> placeList = new ArrayList<>();
+        placeList.add(1L);
+        placeList.add(2L);
+        placeList.add(3L);
         familyService.update(family.getFamilyCode(), placeList);
         Family findFamily = familyRepository.findByFamilyCode(family.getFamilyCode()).orElseThrow();
 
