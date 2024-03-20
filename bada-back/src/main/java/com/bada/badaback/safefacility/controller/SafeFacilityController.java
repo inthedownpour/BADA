@@ -18,7 +18,7 @@ import java.io.IOException;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/path")
+@RequestMapping("/api/path")
 public class SafeFacilityController {
 
     private final SafeFacilityService safeFacilityService;
