@@ -13,7 +13,14 @@ import com.bada.badaback.global.config.SecurityConfig;
 import com.bada.badaback.global.security.JwtAccessDeniedHandler;
 import com.bada.badaback.global.security.JwtAuthenticationEntryPoint;
 import com.bada.badaback.global.security.JwtProvider;
+import com.bada.badaback.member.controller.MemberApiController;
+import com.bada.badaback.member.controller.MemberListApiController;
 import com.bada.badaback.member.service.MemberFindService;
+import com.bada.badaback.member.service.MemberListService;
+import com.bada.badaback.member.service.MemberService;
+import com.bada.badaback.myplace.controller.MyPlaceApiController;
+import com.bada.badaback.myplace.service.MyPlaceFindService;
+import com.bada.badaback.myplace.service.MyPlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +40,10 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 @WebMvcTest({
         AuthApiController.class,
         TokenReissueApiController.class,
-        AuthCodeApiController.class
+        AuthCodeApiController.class,
+        MemberListApiController.class,
+        MemberApiController.class,
+        MyPlaceApiController.class
 })
 @WithMockUser("test")
 public abstract class ControllerTest {
@@ -84,6 +94,18 @@ public abstract class ControllerTest {
 
     @MockBean
     protected FamilyFindService familyFindService;
+
+    @MockBean
+    protected MemberListService memberListService;
+
+    @MockBean
+    protected MemberService memberService;
+
+    @MockBean
+    protected MyPlaceFindService myPlaceFindService;
+
+    @MockBean
+    protected MyPlaceService myPlaceService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);

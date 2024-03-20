@@ -66,4 +66,9 @@ public class Member extends BaseTimeEntity {
         return this.role.getAuthority();
     }
 
+    public void updateMember(String name, String profileUrl) {
+        this.name = name;
+        this.profileUrl = profileUrl;
+    };
+
 }
