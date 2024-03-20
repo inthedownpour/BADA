@@ -12,6 +12,8 @@ import com.bada.badaback.global.security.JwtAccessDeniedHandler;
 import com.bada.badaback.global.security.JwtAuthenticationEntryPoint;
 import com.bada.badaback.global.security.JwtProvider;
 import com.bada.badaback.member.service.MemberFindService;
+import com.bada.badaback.safefacility.controller.SafeFacilityController;
+import com.bada.badaback.safefacility.service.SafeFacilityService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +33,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 @WebMvcTest({
         AuthApiController.class,
         TokenReissueApiController.class,
-        AuthCodeApiController.class
+        AuthCodeApiController.class,
+        SafeFacilityController.class
 })
 @WithMockUser("test")
 public abstract class ControllerTest {
@@ -76,6 +79,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected AuthCodeFindService authCodeFindService;
+
+    @MockBean
+    protected SafeFacilityService safeFacilityService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);
