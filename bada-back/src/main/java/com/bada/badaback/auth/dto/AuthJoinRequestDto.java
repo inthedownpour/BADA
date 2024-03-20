@@ -10,6 +10,8 @@ public record AuthJoinRequestDto(
         String social,
         String profileUrl,
         @NotBlank(message = "인증코드는 필수입니다.")
-        String code
+        String code,
+        @NotBlank(message = "fcmToken은 필수입니다.")
+        String fcmToken
 ) {
 }

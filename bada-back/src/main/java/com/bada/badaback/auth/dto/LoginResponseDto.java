@@ -8,6 +8,7 @@ public record LoginResponseDto(
         String name,
         String familyCode,
         String accessToken,
-        String refreshToken
+        String refreshToken,
+        String fcmToken
 ) {
 }
