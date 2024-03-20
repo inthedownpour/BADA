@@ -5,16 +5,15 @@ import com.bada.badaback.family.domain.Family;
 import com.bada.badaback.family.exception.FamilyErrorCode;
 import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
+import com.bada.badaback.myplace.domain.MyPlace;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.bada.badaback.feature.FamilyFixture.FAMILY_0;
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
+import static com.bada.badaback.feature.MyPlaceFixture.MYPLACE_0;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -29,11 +28,13 @@ public class FamilyServiceTest extends ServiceTest {
 
     private Member member;
     private Family family;
+    private MyPlace myPlace;
 
     @BeforeEach
     void setup() {
         member = memberRepository.save(SUNKYOUNG.toMember());
         family = familyRepository.save(FAMILY_0.toFamily(member.getFamilyCode()));
+        myPlace = myPlaceRepository.save(MYPLACE_0.toMyPlace(member.getFamilyCode()));
     }
 
     @Test
@@ -54,19 +55,16 @@ public class FamilyServiceTest extends ServiceTest {
     @DisplayName("Family 도착지 목록 수정에 성공한다")
     void updatePlaceList() {
         // when
-        List<Long> placeList = new ArrayList<>();
-        placeList.add(1L);
-        placeList.add(2L);
-        placeList.add(3L);
-        familyService.update(family.getFamilyCode(), placeList);
+        familyService.update(member.getId(), myPlace.getId());
+        familyService.update(member.getId(), myPlace.getId());
         Family findFamily = familyRepository.findByFamilyCode(family.getFamilyCode()).orElseThrow();
 
         // then
         assertAll(
                 () -> assertThat(findFamily.getFamilyCode()).isEqualTo(member.getFamilyCode()),
                 () -> assertThat(findFamily.getFamilyName()).isEqualTo("우리 가족"),
-                () -> assertThat(findFamily.getPlaceList()).size().isEqualTo(3),
-                () -> assertThat(findFamily.getPlaceList().get(0)).isEqualTo("1")
+                () -> assertThat(findFamily.getPlaceList()).size().isEqualTo(1),
+                () -> assertThat(findFamily.getPlaceList().get(0)).isEqualTo(1L)
         );
     }
 
@@ -74,7 +72,7 @@ public class FamilyServiceTest extends ServiceTest {
     @DisplayName("Family 삭제를 성공한다")
     void delete() {
         // when
-        familyService.delete(member.getId(), family.getFamilyCode());
+        familyService.delete(member.getId());
 
         // then
         assertThatThrownBy(() -> familyFindService.findByFamilyCode(family.getFamilyCode()))

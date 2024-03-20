@@ -2,6 +2,7 @@ package com.bada.badaback.family.service;
 
 import com.bada.badaback.family.domain.Family;
 import com.bada.badaback.family.domain.FamilyRepository;
+import com.bada.badaback.family.dto.FamilyPlaceListResponseDto;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.service.MemberFindService;
 import com.bada.badaback.myplace.service.MyPlaceService;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -34,15 +36,23 @@ public class FamilyService {
     }
 
     @Transactional
-    public void update(String familyCode, List<Long> placeList) {
-        Family findFamily = familyFindService.findByFamilyCode(familyCode);
+    public void update(Long memberId, Long myPlaceId) {
+        Member findMember= memberFindService.findById(memberId);
+        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
+        List<Long> placeList = findFamily.getPlaceList();
+        if(placeList != null) {
+            placeList.add(myPlaceId);
+        }
+        else {
+            placeList = new ArrayList<>();
+        }
         findFamily.updatePlaceList(placeList);
     }
 
     @Transactional
-    public void delete(Long memberId, String familyCode) {
+    public void delete(Long memberId) {
         Member findMember= memberFindService.findById(memberId);
-        Family findFamily = familyFindService.findByFamilyCode(familyCode);
+        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
         List<Long> placeList = findFamily.getPlaceList();
 
         if(placeList != null) {
@@ -52,6 +62,15 @@ public class FamilyService {
         }
 
         familyRepository.delete(findFamily);
+    }
+
+    @Transactional
+    public FamilyPlaceListResponseDto myPlaceIdList(Long memberId) {
+        Member findMember= memberFindService.findById(memberId);
+        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
+        return FamilyPlaceListResponseDto.builder()
+                .placeList(findFamily.getPlaceList())
+                .build();
     }
 
     private String createRandomCode() {
