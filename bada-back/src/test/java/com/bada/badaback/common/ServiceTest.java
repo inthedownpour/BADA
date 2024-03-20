@@ -3,6 +3,7 @@ package com.bada.badaback.common;
 import com.bada.badaback.auth.domain.AuthCodeRepository;
 import com.bada.badaback.auth.domain.TokenRepository;
 import com.bada.badaback.member.domain.MemberRepository;
+import com.bada.badaback.safefacility.domain.SafeFacilityRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class ServiceTest {
 
     @Autowired
     protected AuthCodeRepository authCodeRepository;
+
+    @Autowired
+    protected SafeFacilityRepository safeFacilityRepository;
 
     @AfterEach
     void clearDatabase() {
