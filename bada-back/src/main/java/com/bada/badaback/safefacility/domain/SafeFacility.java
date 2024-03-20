@@ -24,4 +24,12 @@ public class SafeFacility {
     @Column(length = 15, nullable = false)
     private Type type;
 
+    public static SafeFacility createSafeFaciclity(String facilityLatitude, String facilityLongitude, Type type){
+        SafeFacility sf = new SafeFacility();
+        sf.facilityLatitude = facilityLatitude;
+        sf.facilityLongitude = facilityLongitude;
+        sf.type = type;
+        return sf;
+    }
+
 }
