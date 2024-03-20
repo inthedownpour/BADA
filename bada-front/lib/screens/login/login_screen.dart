@@ -4,6 +4,7 @@ import 'package:bada/screens/login/initial_screen.dart';
 import 'package:bada/screens/main/main_screen.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -46,6 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
               // 아이디가 데이터베이스에 없는 경우
               GestureDetector(
                 onTap: () async {
+                  print('카카오 로그인할 때 작성 해야하는 kakao sdk 키 해쉬');
+                  print(await KakaoSdk.origin);
+
                   LoginPlatform loginPlatform = LoginPlatform.kakao;
                   await profileProvider.initProfile(loginPlatform);
 
