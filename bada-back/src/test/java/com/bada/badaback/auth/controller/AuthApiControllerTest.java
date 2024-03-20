@@ -1,5 +1,6 @@
 package com.bada.badaback.auth.controller;
 
+import com.bada.badaback.auth.dto.AuthAlreadyRequestDto;
 import com.bada.badaback.auth.dto.AuthJoinRequestDto;
 import com.bada.badaback.auth.dto.AuthSignUpRequestDto;
 import com.bada.badaback.auth.dto.LoginResponseDto;
@@ -116,6 +117,59 @@ class AuthApiControllerTest extends ControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("기존 회원 여부 판단 API [POST /api/auth]")
+    class alreadyMember {
+        private static final String BASE_URL = "/api/auth";
+
+        @Test
+        @DisplayName("기존 회원이 아니라면 아무것도 보내지 않는다")
+        void notAlreadyMember() throws Exception {
+            // given
+            doReturn(null)
+                    .when(authService)
+                    .AlreadyMember(any(), any());
+
+            // when
+            final AuthAlreadyRequestDto request = createAuthAlreadyRequestDto();
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .get(BASE_URL)
+                    .contentType(APPLICATION_JSON)
+                    .content(convertObjectToJson(request));
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isNoContent()
+                    );
+        }
+
+        @Test
+        @DisplayName("기존 회원이라면 조회에 성공한다")
+        void AlreadyMember() throws Exception {
+            // given
+            doReturn(1L)
+                    .when(authService)
+                    .AlreadyMember(any(), any());
+            doReturn(createLoginResponseDto())
+                    .when(authService)
+                    .login(anyLong());
+
+            // when
+            final AuthAlreadyRequestDto request = createAuthAlreadyRequestDto();
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .get(BASE_URL)
+                    .contentType(APPLICATION_JSON)
+                    .content(convertObjectToJson(request));
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isOk()
+                    );
+        }
+    }
+
     private AuthSignUpRequestDto createAuthSignUpRequestDto() {
         return new AuthSignUpRequestDto(SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(), "NAVER",
                 SUNKYOUNG.getProfileUrl(), "우리가족");
@@ -128,6 +182,10 @@ class AuthApiControllerTest extends ControllerTest {
 
     private LoginResponseDto createLoginResponseDto() {
         return new LoginResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getFamilyCode(), ACCESS_TOKEN, REFRESH_TOKEN);
+    }
+
+    private AuthAlreadyRequestDto createAuthAlreadyRequestDto() {
+        return new AuthAlreadyRequestDto("abc@naver.com", "KAKAO");
     }
 }
 
