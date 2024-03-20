@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bada/screens/main/my_family/fam_member.dart';
 import 'package:bada/widgets/buttons.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -51,15 +52,15 @@ class _MyFamilyState extends State<MyFamily> {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              SizedBox(height: UIhelper.scaleHeight(context) * 30),
               Row(
                 children: [
                   Button281_77(
                     label: const Text('아이들'),
                     onPressed: () => _filterFamily(true),
                   ),
-                  const SizedBox(
-                    width: 20,
+                  SizedBox(
+                    width: UIhelper.scaleWidth(context) * 20,
                   ),
                   Button281_77(
                     label: const Text('부모'),
@@ -67,7 +68,7 @@ class _MyFamilyState extends State<MyFamily> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: UIhelper.scaleHeight(context) * 20),
               FutureBuilder(
                 future: userList,
                 builder: (context, snapshot) {

@@ -2,6 +2,7 @@ import 'package:bada/login/login_platform.dart';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/login/initial_screen.dart';
 import 'package:bada/screens/main/main_screen.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,23 +24,24 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 100),
+              SizedBox(height: UIhelper.scaleHeight(context) * 100),
               const Text(
                 '로그인',
                 style: TextStyle(
                   fontSize: 40,
                 ),
               ),
-              const SizedBox(
-                height: 100,
+              SizedBox(
+                height: UIhelper.scaleHeight(context) * 100,
               ),
               Image.asset(
                 'assets/img/bag.png',
-                width: 200,
-                height: 200,
+                width: UIhelper.scaleWidth(context) * 200,
+                height: UIhelper.scaleHeight(context) * 200,
               ),
-              const SizedBox(
-                height: 30,
+
+              SizedBox(
+                height: UIhelper.scaleHeight(context) * 120,
               ),
 
               // 아이디가 데이터베이스에 없는 경우
@@ -67,12 +69,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: Image.asset(
                   'assets/img/kakao_login.png',
-                  width: 200,
-                  height: 50,
+                  width: UIhelper.scaleWidth(context) * 200,
+                  height: UIhelper.scaleHeight(context) * 50,
                 ),
               ),
-              const SizedBox(
-                height: 5,
+              SizedBox(
+                height: UIhelper.scaleHeight(context) * 5,
               ),
               GestureDetector(
                 onTap: () async {
@@ -98,8 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: Image.asset(
                   'assets/img/naver_login.png',
-                  width: 200,
-                  height: 50,
+                  width: UIhelper.scaleWidth(context) * 200,
+                  height: UIhelper.scaleHeight(context) * 50,
                 ),
               ),
 

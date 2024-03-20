@@ -1,6 +1,7 @@
 import 'package:bada/screens/main/my_family/alarm_list.dart';
 import 'package:bada/screens/main/my_family/child_setting.dart';
 import 'package:bada/widgets/buttons.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 
 class FamilyMember extends StatefulWidget {
@@ -33,12 +34,12 @@ class _FamilyMemberState extends State<FamilyMember> {
                   backgroundColor: Colors.black,
                   radius: 35,
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: UIhelper.scaleWidth(context) * 10),
                 Text(
                   widget.name,
                   style: const TextStyle(fontSize: 16),
                 ),
-                const SizedBox(width: 10),
+                SizedBox(width: UIhelper.scaleWidth(context) * 10),
                 Button281_77(
                   label: const Text('알림 기록'),
                   onPressed: () {
@@ -52,7 +53,7 @@ class _FamilyMemberState extends State<FamilyMember> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: UIhelper.scaleHeight(context) * 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

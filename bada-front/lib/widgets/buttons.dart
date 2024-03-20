@@ -235,8 +235,10 @@ class _Button281_77State extends State<Button281_77> {
       foregroundColor:
           widget.isSelected ? widget.foregroundColor : widget.backgroundColor,
       textStyle: const TextStyle(fontSize: 16),
-      fixedSize: Size(UIhelper.scaleWidth(context) * 130,
-          UIhelper.scaleHeight(context) * 30),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 130,
+        UIhelper.scaleHeight(context) * 30,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
 
@@ -279,8 +281,10 @@ class _Button300_115State extends State<Button300_115> {
       foregroundColor:
           widget.isSelected ? widget.foregroundColor : widget.backgroundColor,
       textStyle: const TextStyle(fontSize: 16),
-      fixedSize: Size(UIhelper.scaleWidth(context) * 150,
-          UIhelper.scaleHeight(context) * 60),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 150,
+        UIhelper.scaleHeight(context) * 60,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
     );
 
@@ -321,8 +325,10 @@ class _AlarmSettingButtonState extends State<AlarmSettingButton> {
       backgroundColor: widget.backgroundColor,
       foregroundColor: widget.foregroundColor,
       textStyle: const TextStyle(fontSize: 22),
-      fixedSize: Size(UIhelper.scaleWidth(context) * 368,
-          UIhelper.scaleHeight(context) * 80),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 368,
+        UIhelper.scaleHeight(context) * 80,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
 
@@ -392,7 +398,7 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
             children: [
               Image.asset(
                 'assets/img/whistle.png',
-                height: UIhelper.scaleHeight(context) * 50,
+                height: UIhelper.scaleWidth(context) * 50,
               ),
               SizedBox(
                 width: UIhelper.scaleWidth(context) * 10,

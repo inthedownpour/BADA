@@ -6,6 +6,7 @@ import 'package:bada/screens/main/my_place.dart';
 import 'package:bada/screens/main/settings.dart';
 import 'package:bada/screens/main/testing/testing.dart';
 import 'package:bada/widgets/buttons.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
@@ -44,8 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                const SizedBox(
-                  height: 60,
+                SizedBox(
+                  height: UIhelper.scaleHeight(context) * 60,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -59,8 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 20,
+                SizedBox(
+                  height: UIhelper.scaleHeight(context) * 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       buttonImage: Image.asset(
                         'assets/img/family-button.png',
                       ),
-                      imageWidth: 120,
+                      imageWidth: UIhelper.scaleWidth(context) * 120,
                       padBottom: 0,
                       padRight: 5,
                       onPressed: () {
@@ -100,8 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 15,
+                SizedBox(
+                  height: UIhelper.scaleHeight(context) * 15,
                 ),
                 Button714_300(
                   label: '경로 추천 받기',
@@ -110,8 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     _showActivity();
                   },
                 ),
-                const SizedBox(
-                  height: 15,
+                SizedBox(
+                  height: UIhelper.scaleHeight(context) * 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,8 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    const SizedBox(
-                      width: 10,
+                    SizedBox(
+                      width: UIhelper.scaleWidth(context) * 10,
                     ),
                   ],
                 ),

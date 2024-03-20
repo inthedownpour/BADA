@@ -1,4 +1,5 @@
 import 'package:bada/widgets/alarm.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 
 class AlarmList extends StatelessWidget {
@@ -19,21 +20,21 @@ class AlarmList extends StatelessWidget {
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
-        child: const Center(
+        child: Center(
           child: Column(
             children: [
               Row(
                 children: [
                   SizedBox(
-                    width: 10,
+                    width: UIhelper.scaleWidth(context) * 10,
                   ),
-                  Text(
+                  const Text(
                     '알림',
                     style: TextStyle(fontSize: 18),
                   ),
                 ],
               ),
-              Alarm(
+              const Alarm(
                 iconType: 2,
                 context: '도착함',
                 time: '오전 9:00',

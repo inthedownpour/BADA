@@ -1,3 +1,4 @@
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -102,8 +103,8 @@ class _VerificationCodeState extends State<VerificationCode> {
           .map(
             (char) => Container(
               alignment: Alignment.center,
-              width: 60,
-              height: 80,
+              width: UIhelper.scaleHeight(context) * 60,
+              height: UIhelper.scaleHeight(context) * 80,
               padding: const EdgeInsets.symmetric(
                 vertical: 10.0,
                 horizontal: 15.0,
@@ -127,8 +128,8 @@ class _VerificationCodeState extends State<VerificationCode> {
       codeWidgets = List.generate(
         numberOfBoxes,
         (index) => Container(
-          width: 50,
-          height: 60,
+          width: UIhelper.scaleWidth(context) * 50,
+          height: UIhelper.scaleHeight(context) * 60,
           padding: const EdgeInsets.symmetric(
             vertical: 10.0,
             horizontal: 15.0,
@@ -161,22 +162,22 @@ class _VerificationCodeState extends State<VerificationCode> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 40),
+            SizedBox(height: UIhelper.scaleHeight(context) * 40),
             Row(
               children: [
-                const SizedBox(
-                  width: 20,
+                SizedBox(
+                  width: UIhelper.scaleWidth(context) * 20,
                 ),
                 _buildTimeText(),
               ],
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: UIhelper.scaleHeight(context) * 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: codeWidgets,
             ),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: UIhelper.scaleHeight(context) * 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -189,8 +190,8 @@ class _VerificationCodeState extends State<VerificationCode> {
                   onPressed: _postVerificationCode,
                   child: const Text('발급'),
                 ),
-                const SizedBox(
-                  width: 20,
+                SizedBox(
+                  width: UIhelper.scaleWidth(context) * 20,
                 ),
               ],
             ),
@@ -216,7 +217,7 @@ class _VerificationCodeState extends State<VerificationCode> {
         await _fetchCode();
       } else {}
     } catch (e) {
-      print('씨발?');
+      print('PostVerificationCode $e');
     }
   }
 }

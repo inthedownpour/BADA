@@ -1,6 +1,7 @@
 import 'package:bada/screens/login/create_group.dart';
 import 'package:bada/screens/login/join_group.dart';
 import 'package:bada/widgets/buttons.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 
 class InitialScreen extends StatelessWidget {
@@ -13,17 +14,17 @@ class InitialScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
-            const SizedBox(height: 150),
+            SizedBox(height: UIhelper.scaleHeight(context) * 150),
             const Text(
               '바래다줄게',
               style: TextStyle(fontSize: 40),
             ),
-            const SizedBox(height: 350),
-            const Row(
+            SizedBox(height: UIhelper.scaleHeight(context) * 350),
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(width: 50),
-                Text(
+                SizedBox(width: UIhelper.scaleWidth(context) * 50),
+                const Text(
                   '새로운 그룹을 만들어서 시작해요!',
                   style: TextStyle(
                     color: Color(0xff969DFF),
@@ -31,7 +32,7 @@ class InitialScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: UIhelper.scaleHeight(context) * 20),
 
             Button714_150(
               label: const Text(
@@ -49,7 +50,7 @@ class InitialScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 15),
+            SizedBox(height: UIhelper.scaleHeight(context) * 15),
             Button714_150(
               label: const Text(
                 '그룹 참가하기',
@@ -66,8 +67,8 @@ class InitialScreen extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: UIhelper.scaleHeight(context) * 20,
             ),
             // const Button714_150(label: '그룹 참가하기')
           ],

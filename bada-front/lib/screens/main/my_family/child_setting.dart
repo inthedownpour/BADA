@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bada/widgets/buttons.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -52,10 +53,10 @@ class _ChildeSettingState extends State<ChildeSetting> {
       body: Center(
         child: Column(
           children: [
-            const SizedBox(
-              height: 100,
+            SizedBox(
+              height: UIhelper.scaleHeight(context) * 100,
             ),
-            const SizedBox(height: 100),
+            SizedBox(height: UIhelper.scaleHeight(context) * 100),
             CircleAvatar(
               radius: 100,
               backgroundColor: Colors.grey.withOpacity(0.1),
@@ -66,35 +67,35 @@ class _ChildeSettingState extends State<ChildeSetting> {
                         File(_image!.path),
                         fit: BoxFit.cover,
                       )
-                    : const Icon(
+                    : Icon(
                         Icons.add,
-                        size: 100,
+                        size: UIhelper.scaleHeight(context) * 100,
                         color: Colors.black54,
                       ),
               ),
             ),
-            const SizedBox(
-              height: 50,
+            SizedBox(
+              height: UIhelper.scaleHeight(context) * 50,
             ),
             SizedBox(
-              width: 200,
-              height: 50,
+              width: UIhelper.scaleWidth(context) * 200,
+              height: UIhelper.scaleHeight(context) * 50,
               child: TextField(
                 controller: _controller,
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(
-              height: 170,
+            SizedBox(
+              height: UIhelper.scaleHeight(context) * 170,
             ),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Button300_115(label: Text('완료')),
+                const Button300_115(label: Text('완료')),
                 SizedBox(
-                  width: 20,
+                  width: UIhelper.scaleWidth(context) * 20,
                 ),
-                Button300_115(label: Text('삭제')),
+                const Button300_115(label: Text('삭제')),
               ],
             ),
           ],

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -74,12 +75,12 @@ class _PlaceDetailState extends State<PlaceDetail> {
                     showIconPicker(context);
                   },
                   child: _image != null
-                      ? const CircleAvatar(
-                          radius: 50,
+                      ? CircleAvatar(
+                          radius: UIhelper.scaleHeight(context) * 50,
                         )
-                      : const CircleAvatar(
-                          radius: 50,
-                          child: Text('이미지 들어감'),
+                      : CircleAvatar(
+                          radius: UIhelper.scaleHeight(context) * 50,
+                          child: const Text('이미지 들어감'),
                         ),
                 ),
                 const SizedBox(
@@ -94,12 +95,12 @@ class _PlaceDetailState extends State<PlaceDetail> {
                       child: Row(
                         children: [
                           const Text('이름: '),
-                          const SizedBox(
-                            width: 10,
+                          SizedBox(
+                            width: UIhelper.scaleWidth(context) * 10,
                           ),
                           SizedBox(
-                            width: 200,
-                            height: 50,
+                            width: UIhelper.scaleWidth(context) * 200,
+                            height: UIhelper.scaleHeight(context) * 50,
                             child: TextField(
                               controller: _controller,
                               decoration: const InputDecoration(
@@ -110,16 +111,16 @@ class _PlaceDetailState extends State<PlaceDetail> {
                         ],
                       ),
                     ),
-                    const Row(
+                    Row(
                       children: [
-                        Text('주소: '),
+                        const Text('주소: '),
                         SizedBox(
-                          width: 10,
+                          width: UIhelper.scaleWidth(context) * 10,
                         ),
                         SizedBox(
-                          width: 200,
-                          height: 50,
-                          child: TextField(
+                          width: UIhelper.scaleWidth(context) * 200,
+                          height: UIhelper.scaleHeight(context) * 50,
+                          child: const TextField(
                             decoration: InputDecoration(
                               hintText: ('주소'),
                             ),
@@ -131,8 +132,8 @@ class _PlaceDetailState extends State<PlaceDetail> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 20,
+            SizedBox(
+              height: UIhelper.scaleHeight(context) * 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

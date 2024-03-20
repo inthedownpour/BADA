@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:bada/functions/secure_storage.dart';
 import 'package:bada/screens/main/main_screen.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:http/http.dart' as http;
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/widgets/buttons.dart';
@@ -47,7 +48,7 @@ class _CreateFamilyState extends State<CreateFamily> {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 40),
+              SizedBox(height: UIhelper.scaleHeight(context) * 40),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -60,7 +61,7 @@ class _CreateFamilyState extends State<CreateFamily> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: UIhelper.scaleHeight(context) * 20),
               TextField(
                 controller: _familyNameController,
                 decoration: InputDecoration(
@@ -75,13 +76,13 @@ class _CreateFamilyState extends State<CreateFamily> {
                   labelText: '작성해주세요',
                 ),
               ),
-              const SizedBox(height: 400),
+              SizedBox(height: UIhelper.scaleHeight(context) * 400),
               Button714_150(
                 label: Text(widget.buttonName),
                 onPressed: () {
                   signUp(
                     name: userData.nickname!,
-                    phone: '00101',
+                    phone: userData.phoneNumber!,
                     email: userData.email!,
                     social: userData.social!,
                     familyName: _familyNameController.text,

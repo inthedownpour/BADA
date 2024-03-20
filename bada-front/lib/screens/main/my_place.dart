@@ -1,6 +1,7 @@
 import 'package:bada/models/my_place_model.dart';
 import 'package:bada/screens/main/my_place/map_search.dart';
 import 'package:bada/widgets/buttons.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 
 class PlaceIndicator extends StatelessWidget {
@@ -94,8 +95,8 @@ class _MyPlaceState extends State<MyPlace> {
                           return Column(
                             children: [
                               MyPlaceButton(label: places[index].placeName),
-                              const SizedBox(
-                                height: 5,
+                              SizedBox(
+                                height: UIhelper.scaleHeight(context) * 5,
                               ),
                             ],
                           );
