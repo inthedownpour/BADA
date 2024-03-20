@@ -13,7 +13,10 @@ public record MemberDetailResponseDto(
         String email,
         String social,
         String profileUrl,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String familyCode,
+        int movingState,
+        String fcmToken
 
 ) {
     public static MemberDetailResponseDto from(Member findMember) {
@@ -24,7 +27,10 @@ public record MemberDetailResponseDto(
                 .email(findMember.getEmail())
                 .social(findMember.getSocial().getSocialType())
                 .profileUrl(findMember.getProfileUrl())
+                .familyCode(findMember.getFamilyCode())
                 .createdAt(findMember.getCreatedAt())
+                .movingState(findMember.getMovingState())
+                .fcmToken(findMember.getFcmToken())
                 .build();
     }
 }
