@@ -3,6 +3,7 @@ import 'package:bada/screens/main/my_family/child_setting.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class FamilyMember extends StatefulWidget {
   final String name;
@@ -18,6 +19,24 @@ class FamilyMember extends StatefulWidget {
 }
 
 class _FamilyMemberState extends State<FamilyMember> {
+  String myName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadMyName();
+  }
+
+  void loadMyName() async {
+    const storage = FlutterSecureStorage();
+    String? name = await storage.read(key: 'name');
+    if (name != null) {
+      setState(() {
+        myName = name;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -37,10 +56,20 @@ class _FamilyMemberState extends State<FamilyMember> {
                   radius: 35,
                 ),
                 SizedBox(width: UIhelper.scaleWidth(context) * 10),
-                Text(
-                  '이름 : ${widget.name}',
-                  style: const TextStyle(fontSize: 16),
-                ),
+                // Text(
+                //   '이름 : ${widget.name}',
+                //   style: const TextStyle(fontSize: 16),
+                // ),
+                if (widget.name == myName)
+                  const Text(
+                    '나!',
+                    style: TextStyle(fontSize: 20),
+                  )
+                else
+                  Text(
+                    '이름 : ${widget.name}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 SizedBox(width: UIhelper.scaleWidth(context) * 10),
                 if (widget.isParent == 0) ...[
                   Button281_77(
