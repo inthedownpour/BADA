@@ -16,8 +16,11 @@ import lombok.ToString;
 public class AlarmDto {
 
   private String type;    // 알람 종류 : enum으로 생성하기
-  private String userId;  //
+  private String memberId;  //
   private String familyCode;
   private String content;
+
+  private String latitude;
+  private String longitude;
 
 }
