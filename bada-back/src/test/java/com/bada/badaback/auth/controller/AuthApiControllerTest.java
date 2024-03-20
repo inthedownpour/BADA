@@ -33,7 +33,7 @@ class AuthApiControllerTest extends ControllerTest {
             LoginResponseDto loginResponseDto = createLoginResponseDto();
             doReturn(1L)
                     .when(authService)
-                    .signup(any(), any(), any(), any(), any(), any());
+                    .signup(any(), any(), any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
                     .login(anyLong());
@@ -65,7 +65,7 @@ class AuthApiControllerTest extends ControllerTest {
             LoginResponseDto loginResponseDto = createLoginResponseDto();
             doReturn(1L)
                     .when(authService)
-                    .join(any(), any(), any(), any(), any(), any());
+                    .join(any(), any(), any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
                     .login(anyLong());
@@ -97,7 +97,7 @@ class AuthApiControllerTest extends ControllerTest {
             LoginResponseDto loginResponseDto = createLoginResponseDto();
             doReturn(1L)
                     .when(authService)
-                    .joinChild(any(), any(), any(), any());
+                    .joinChild(any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
                     .login(anyLong());
@@ -172,16 +172,16 @@ class AuthApiControllerTest extends ControllerTest {
 
     private AuthSignUpRequestDto createAuthSignUpRequestDto() {
         return new AuthSignUpRequestDto(SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(), "NAVER",
-                SUNKYOUNG.getProfileUrl(), "우리가족");
+                SUNKYOUNG.getProfileUrl(), "우리가족", SUNKYOUNG.getFcmToken());
     }
 
     private AuthJoinRequestDto createAuthJoinRequestDto() {
         return new AuthJoinRequestDto(SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(), "NAVER",
-                SUNKYOUNG.getProfileUrl(), "인증코드");
+                SUNKYOUNG.getProfileUrl(), "인증코드", SUNKYOUNG.getFcmToken());
     }
 
     private LoginResponseDto createLoginResponseDto() {
-        return new LoginResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getFamilyCode(), ACCESS_TOKEN, REFRESH_TOKEN);
+        return new LoginResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getFamilyCode(), ACCESS_TOKEN, REFRESH_TOKEN, SUNKYOUNG.getFcmToken());
     }
 
     private AuthAlreadyRequestDto createAuthAlreadyRequestDto() {

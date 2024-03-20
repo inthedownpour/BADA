@@ -33,7 +33,7 @@ public class MemberListApiControllerTest extends ControllerTest {
         @DisplayName("가족 목록 조회에 성공한다")
         void success() throws Exception{
             // given
-            doReturn(createBoardListResponses())
+            doReturn(createMemberListResponseDto())
                     .when(memberListService)
                     .familyList(anyLong());
 
@@ -48,11 +48,11 @@ public class MemberListApiControllerTest extends ControllerTest {
         }
     }
 
-    private MemberListResponseDto createBoardListResponses() {
+    private MemberListResponseDto createMemberListResponseDto() {
         List<MemberResponseDto> memberList = new ArrayList<>();
-        memberList.add(new MemberResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getIsParent(), SUNKYOUNG.getProfileUrl(), 0));
-        memberList.add(new MemberResponseDto(2L, JIYEON.getName(), JIYEON.getPhone(), JIYEON.getIsParent(), JIYEON.getProfileUrl(), 0));
-        memberList.add(new MemberResponseDto(3L, YONGJUN.getName(), YONGJUN.getPhone(), YONGJUN.getIsParent(), YONGJUN.getProfileUrl(), 0));
+        memberList.add(new MemberResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getIsParent(), SUNKYOUNG.getProfileUrl(), SUNKYOUNG.getFamilyCode() ,0, SUNKYOUNG.getFcmToken()));
+        memberList.add(new MemberResponseDto(2L, JIYEON.getName(), JIYEON.getPhone(), JIYEON.getIsParent(), JIYEON.getProfileUrl(), SUNKYOUNG.getFamilyCode() , 0, SUNKYOUNG.getFcmToken()));
+        memberList.add(new MemberResponseDto(3L, YONGJUN.getName(), YONGJUN.getPhone(), YONGJUN.getIsParent(), YONGJUN.getProfileUrl(), SUNKYOUNG.getFamilyCode() , 0, SUNKYOUNG.getFcmToken()));
         return new MemberListResponseDto(memberList);
     }
 }

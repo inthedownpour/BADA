@@ -149,7 +149,8 @@ public class MemberApiControllerTest extends ControllerTest {
 
     private MemberDetailResponseDto readMemberDetailResponseDto() {
         return new MemberDetailResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(),
-                SUNKYOUNG.getSocial().getSocialType(), SUNKYOUNG.getProfileUrl(), LocalDateTime.now());
+                SUNKYOUNG.getSocial().getSocialType(), SUNKYOUNG.getProfileUrl(), LocalDateTime.now(), SUNKYOUNG.getFamilyCode(),
+                0, SUNKYOUNG.getFcmToken());
     }
 
     private MemberUpdateRequestDto createMemberUpdateRequestDto() {
