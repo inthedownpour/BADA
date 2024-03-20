@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 200,
               ),
               const SizedBox(
-                height: 120,
+                height: 30,
               ),
 
               // 아이디가 데이터베이스에 없는 경우

@@ -42,8 +42,8 @@ class _SettingsState extends State<Settings> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(userData.name!),
-                      const Text('010-1234-5678'),
+                      Text(userData.nickname!),
+                      Text(userData.phoneNumber!),
                       Text(userData.email!),
                       const Text('가입일: 어제오늘'),
                     ],

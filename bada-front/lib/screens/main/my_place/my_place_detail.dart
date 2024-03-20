@@ -3,7 +3,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class PlaceDetail extends StatefulWidget {
   final String placeName;
@@ -19,10 +21,30 @@ class _PlaceDetailState extends State<PlaceDetail> {
   File? selectedImage;
   late TextEditingController _controller;
 
+  LatLng center = LatLng(33.450701, 126.570667);
+  Set<Marker> markers = {};
+
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.placeName);
+  }
+
+  void _onMapCreated(KakaoMapController controller) {
+    setState(() {
+      markers.add(
+        Marker(
+          markerId: 'searched_location',
+          latLng: center,
+          width: 30,
+          height: 44,
+          offsetX: 15,
+          offsetY: 44,
+          markerImageSrc:
+              'https://w7.pngwing.com/pngs/96/889/png-transparent-marker-map-interesting-places-the-location-on-the-map-the-location-of-the-thumbnail.png',
+        ),
+      );
+    });
   }
 
   @override
@@ -124,6 +146,18 @@ class _PlaceDetailState extends State<PlaceDetail> {
                   child: const Text('삭제'),
                 ),
               ],
+            ),
+            const SizedBox(
+              height: 30,
+            ),
+            SizedBox(
+              height: 300,
+              child: KakaoMap(
+                onMapCreated: _onMapCreated, // onMapCreated 콜백을 등록합니다.
+                markers: markers.toList(), // 주소 마커
+                center: center, // 주소로 받아온 위도, 경도
+                currentLevel: 4,
+              ),
             ),
           ],
         ),

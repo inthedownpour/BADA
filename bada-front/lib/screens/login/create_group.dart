@@ -6,6 +6,7 @@ import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class CreateFamily extends StatefulWidget {
   final String title, buttonName;
