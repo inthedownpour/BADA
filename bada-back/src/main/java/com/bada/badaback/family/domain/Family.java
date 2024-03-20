@@ -1,13 +1,12 @@
 package com.bada.badaback.family.domain;
 
 import com.bada.badaback.global.BaseTimeEntity;
-import com.bada.badaback.global.utils.StringListConverter;
+import com.bada.badaback.global.utils.LongListConverter;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,8 +25,8 @@ public class Family extends BaseTimeEntity {
     @Column(nullable = false, length = 100)
     private String familyName;
 
-    @Convert(converter = StringListConverter.class)
-    private List<String> placeList;
+    @Convert(converter = LongListConverter.class)
+    private List<Long> placeList;
 
     @Builder
     private Family(String familyCode, String familyName) {
@@ -40,7 +39,7 @@ public class Family extends BaseTimeEntity {
         return new Family(familyCode, familyName);
     }
 
-    public void updatePlaceList(List<String> placeList) {
+    public void updatePlaceList(List<Long> placeList) {
         this.placeList = placeList;
     }
 }

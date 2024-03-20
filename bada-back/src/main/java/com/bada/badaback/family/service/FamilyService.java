@@ -34,7 +34,7 @@ public class FamilyService {
     }
 
     @Transactional
-    public void update(String familyCode, List<String> placeList) {
+    public void update(String familyCode, List<Long> placeList) {
         Family findFamily = familyFindService.findByFamilyCode(familyCode);
         findFamily.updatePlaceList(placeList);
     }
@@ -43,11 +43,11 @@ public class FamilyService {
     public void delete(Long memberId, String familyCode) {
         Member findMember= memberFindService.findById(memberId);
         Family findFamily = familyFindService.findByFamilyCode(familyCode);
-        List<String> placeList = findFamily.getPlaceList();
+        List<Long> placeList = findFamily.getPlaceList();
 
         if(placeList != null) {
-            for(String placeId : placeList){
-                myPlaceService.delete(findMember.getId(), Long.valueOf(placeId));
+            for(Long placeId : placeList){
+                myPlaceService.delete(findMember.getId(), placeId);
             }
         }
 
