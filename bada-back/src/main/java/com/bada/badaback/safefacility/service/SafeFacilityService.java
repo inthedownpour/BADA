@@ -4,13 +4,10 @@ import com.bada.badaback.safefacility.domain.Point;
 import com.bada.badaback.safefacility.domain.SafeFacility;
 import com.bada.badaback.safefacility.domain.SafeFacilityRepository;
 import com.bada.badaback.safefacility.dto.SafeFacilityResponseDto;
-import com.uber.h3core.H3Core;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,7 +20,7 @@ public class SafeFacilityService {
     //CCTV 출발 시작 좌표로 가져오기
     //두 지점의 거리를 구하고 그것의 반만큼의 거리를 구한다.
     //todo 경로찾기 알고리즘 구현
-    public SafeFacilityResponseDto getCCTVs(String startX, String startY, String endX, String endY) throws IOException {
+    public SafeFacilityResponseDto getCCTVs(String startX, String startY, String endX, String endY) {
         Point start = Point.builder()
                 .longitude(Double.parseDouble(startX))
                 .latitude(Double.parseDouble(startY))

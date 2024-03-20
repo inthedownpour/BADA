@@ -1,8 +1,6 @@
 package com.bada.badaback.safefacility.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-
 
 public record SafeFacilityRequestDto(
         @NotBlank(message = "출발 longitude는 필수입니다.")

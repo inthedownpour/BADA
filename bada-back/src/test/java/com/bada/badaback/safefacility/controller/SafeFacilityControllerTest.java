@@ -2,7 +2,6 @@ package com.bada.badaback.safefacility.controller;
 
 import com.bada.badaback.common.ControllerTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -15,8 +14,6 @@ import java.util.Map;
 import static com.bada.badaback.feature.TokenFixture.BEARER_TOKEN;
 import static com.bada.badaback.feature.TokenFixture.REFRESH_TOKEN;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @DisplayName("SafeFacilityControllerTest 테스트")
 class SafeFacilityControllerTest extends ControllerTest {
