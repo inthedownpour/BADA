@@ -6,11 +6,11 @@ import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.service.MemberFindService;
 import com.bada.badaback.myplace.domain.MyPlace;
 import com.bada.badaback.myplace.domain.MyPlaceRepository;
+import com.bada.badaback.myplace.dto.MyPlaceDetailResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,20 +23,14 @@ public class MyPlaceService {
     private final MyPlaceRepository myPlaceRepository;
 
     @Transactional
-    public Long create(Long memberId, String placeName, String placeLatitude, String placeLongitude,
-                       String placeCategoryCode, String placePhoneNumber, String icon) {
+    public Long create(Long memberId, String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode,
+                       String placePhoneNumber, String icon, String addressName, String addressRoadName) {
         Member findMember = memberFindService.findById(memberId);
 
         MyPlace myPlace = MyPlace.createMyPlace(placeName, placeLatitude, placeLongitude, placeCategoryCode,
-                placePhoneNumber, icon, findMember.getFamilyCode());
-        Long myPlaceId = myPlaceRepository.save(myPlace).getId();
+                placePhoneNumber, icon, findMember.getFamilyCode(), addressName, addressRoadName);
 
-        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
-        List<String> myplaceList = new ArrayList<>();
-        myplaceList.add(myPlaceId.toString());
-        findFamily.updatePlaceList(myplaceList);
-
-        return myPlaceId;
+        return myPlaceRepository.save(myPlace).getId();
     }
 
     @Transactional
@@ -53,14 +47,22 @@ public class MyPlaceService {
         myPlaceRepository.delete(findMyPlace);
 
         Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
-        List<String> placeList = findFamily.getPlaceList();
+        List<Long> placeList = findFamily.getPlaceList();
         if(placeList != null) {
-            for(String placeId : placeList) {
-                if(!placeId.equals(myPlaceId.toString())) {
+            for(Long placeId : placeList) {
+                if(!placeId.equals(myPlaceId)) {
                     placeList.add(placeId);
                 }
             }
         }
         findFamily.updatePlaceList(placeList);
+    }
+
+    @Transactional
+    public MyPlaceDetailResponseDto read(Long memberId, Long myPlaceId) {
+        Member findMember = memberFindService.findById(memberId);
+        MyPlace findMyPlace = myPlaceFindService.findById(myPlaceId);
+
+        return MyPlaceDetailResponseDto.from(findMyPlace);
     }
 }
