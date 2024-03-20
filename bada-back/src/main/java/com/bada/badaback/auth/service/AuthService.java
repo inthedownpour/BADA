@@ -1,8 +1,6 @@
 package com.bada.badaback.auth.service;
 
 import com.bada.badaback.auth.dto.LoginResponseDto;
-import com.bada.badaback.family.domain.Family;
-import com.bada.badaback.family.service.FamilyFindService;
 import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.global.security.JwtProvider;
 import com.bada.badaback.member.domain.Member;
@@ -87,7 +85,8 @@ public class AuthService {
                 .build();
     }
 
-    private Long AlreadyMember(String email, String social) {
+    @Transactional
+    public Long AlreadyMember(String email, String social) {
         if(memberRepository.existsByEmailAndSocial(email, SocialType.valueOf(social))){
             return memberFindService.findByEmailAndSocial(email, SocialType.valueOf(social)).getId();
         }
