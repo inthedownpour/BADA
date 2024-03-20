@@ -47,8 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.kakao;
                   await profileProvider.initProfile(loginPlatform);
-                  // await viewModel.login();
-                  // setState(() {});
 
                   if (profileProvider.isLogined) {
                     // if(id 비교해서 데이터베이스에 없으면)
@@ -80,8 +78,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.naver;
                   await profileProvider.initProfile(loginPlatform);
-                  // await viewModel.login();
-                  // setState(() {});
 
                   if (profileProvider.isLogined) {
                     // if(id 비교해서 데이터베이스에 없으면)
@@ -127,10 +123,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-// 로그아웃 : viewModel.logout();
-// 로그인 : viewModel.login();
-// 로그인 여부 : viewModel.isLogined
-// 유저 정보 : viewModel.user
-// 유저 정보의 프로필 이미지 : viewModel.user?.kakaoAccount?.profile?.profileImageUrl
-// 유저 정보의 닉네임 : viewModel.user?.kakaoAccount?.profile?.nickname
-// 유저 정보의 이메일 : viewModel.user?.kakaoAccount?.email

@@ -1,6 +1,9 @@
+import 'package:bada/models/screen_size.dart';
 import 'package:bada/provider/profile_provider.dart';
+import 'package:bada/screens/main/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
@@ -24,6 +27,13 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProfileProvider()),
+        Provider<ScreenSizeModel>(
+          create: (_) => ScreenSizeModel(
+            screenWidth: 0,
+            screenHeight: 0,
+          ),
+          lazy: false,
+        ),
       ],
       child: const MyApp(),
     ),
@@ -38,8 +48,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<void> initializeApp() async {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  Future<bool> initializeApp() async {
     await Future.delayed(const Duration(seconds: 2));
+    String? accessToken = await _storage.read(key: 'accessToken');
+    return accessToken != null;
   }
 
   @override
@@ -51,13 +65,18 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'Pretendard'),
-      home: FutureBuilder(
+      home: FutureBuilder<bool>(
         future: initializeApp(),
         builder: (context, snapshot) {
-          // Check if the future is completed
           if (snapshot.connectionState == ConnectionState.done) {
-            // Return the main screen if initialization is complete
-            return const LoginScreen(); // Your main screen widget
+            // Navigate based on the presence of an access token
+            if (snapshot.data == true) {
+              // If token exists, navigate to HomeScreen
+              return const HomeScreen(); // Ensure you have a HomeScreen widget
+            } else {
+              // If token does not exist, navigate to LoginScreen
+              return const LoginScreen();
+            }
           } else {
             // Return the loading screen while waiting
             return const LoadingScreen();
