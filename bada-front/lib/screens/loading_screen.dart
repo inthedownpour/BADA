@@ -44,7 +44,7 @@ class LoadingScreen extends StatelessWidget {
               ),
               Image.asset(
                 'assets/img/whistle.png',
-                width: 200,
+                width: UIhelper.scaleWidth(context) * 200,
               ),
               SizedBox(
                 height: UIhelper.scaleHeight(context) * 130,

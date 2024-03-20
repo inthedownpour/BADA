@@ -1,4 +1,5 @@
 import 'package:bada/widgets/buttons.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 
 class JoinFamily extends StatelessWidget {
@@ -24,7 +25,7 @@ class JoinFamily extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              const SizedBox(height: 40),
+              SizedBox(height: UIhelper.scaleHeight(context) * 40),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -37,22 +38,23 @@ class JoinFamily extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: UIhelper.scaleHeight(context) * 20),
               TextField(
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: const Color(0xff696DFF).withOpacity(0.2),
                   border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(20),
-                      ),
-                      borderSide: BorderSide(
-                        color: const Color(0xff696DFF).withOpacity(0.4),
-                      ),),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                    borderSide: BorderSide(
+                      color: const Color(0xff696DFF).withOpacity(0.4),
+                    ),
+                  ),
                   labelText: '작성해주세요',
                 ),
               ),
-              const SizedBox(height: 400),
+              SizedBox(height: UIhelper.scaleHeight(context) * 400),
               const Button714_150(label: Text('참가하기')),
             ],
           ),

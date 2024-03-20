@@ -3,6 +3,7 @@ import 'package:bada/screens/login/login_screen.dart';
 import 'package:bada/screens/main/setting/alarm_setting.dart';
 import 'package:bada/screens/main/setting/setting_list.dart';
 import 'package:bada/screens/main/setting/terms_of_policy.dart';
+import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -66,8 +67,8 @@ class _SettingsState extends State<Settings> {
                   },
                 ),
               ),
-              const SizedBox(
-                height: 100,
+              SizedBox(
+                height: UIhelper.scaleHeight(context) * 100,
               ),
               InkResponse(
                 onTap: () {
@@ -84,7 +85,7 @@ class _SettingsState extends State<Settings> {
                   style: TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: UIhelper.scaleHeight(context) * 40),
               InkResponse(
                 onTap: () {
                   Navigator.push(
@@ -100,7 +101,7 @@ class _SettingsState extends State<Settings> {
                   style: TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: UIhelper.scaleHeight(context) * 40),
               InkResponse(
                 onTap: () {
                   Navigator.push(
@@ -116,7 +117,7 @@ class _SettingsState extends State<Settings> {
                   style: TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: UIhelper.scaleHeight(context) * 40),
               InkResponse(
                 onTap: () async {
                   await Provider.of<ProfileProvider>(context, listen: false)
@@ -134,7 +135,7 @@ class _SettingsState extends State<Settings> {
                   style: TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: UIhelper.scaleHeight(context) * 40),
               InkResponse(
                 onTap: () {
                   showDialog(
@@ -171,7 +172,7 @@ class _SettingsState extends State<Settings> {
                   style: TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(height: 40),
+              SizedBox(height: UIhelper.scaleHeight(context) * 40),
             ],
           ),
         ),
