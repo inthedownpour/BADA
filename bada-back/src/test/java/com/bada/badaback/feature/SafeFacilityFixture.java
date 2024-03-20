@@ -1,9 +1,6 @@
 package com.bada.badaback.feature;
 
-import com.bada.badaback.safefacility.domain.SafeFacility;
 import com.bada.badaback.safefacility.domain.Type;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

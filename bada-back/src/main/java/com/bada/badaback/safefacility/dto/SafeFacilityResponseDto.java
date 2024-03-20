@@ -1,8 +1,6 @@
 package com.bada.badaback.safefacility.dto;
 
 import com.bada.badaback.safefacility.domain.Point;
-import com.bada.badaback.safefacility.domain.SafeFacility;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
