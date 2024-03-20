@@ -57,13 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         builder: (context) => const InitialScreen(),
                       ),
                     );
-                    // else if (id 비교해서 데이터베이스에 있으면)
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const HomeScreen(),
-                    //   ),
-                    // );
                   }
                 },
                 child: Image.asset(
@@ -81,20 +74,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   await profileProvider.initProfile(loginPlatform);
 
                   if (profileProvider.isLogined) {
-                    // if(id 비교해서 데이터베이스에 없으면)
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const InitialScreen(),
                       ),
                     );
-                    // else if (id 비교해서 데이터베이스에 있으면)
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const HomeScreen(),
-                    //   ),
-                    // );
                   }
                 },
                 child: Image.asset(
@@ -104,8 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
 
-              // 아이디가 데이터베이스에 있는 경우
-              // if (hasId)
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
