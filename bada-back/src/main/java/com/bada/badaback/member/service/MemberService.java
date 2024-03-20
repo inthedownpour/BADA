@@ -18,16 +18,7 @@ public class MemberService {
     @Transactional
     public MemberDetailResponseDto read(Long memberId) {
         Member findMember = memberFindService.findById(memberId);
-
-        return MemberDetailResponseDto.builder()
-                .memberId(findMember.getId())
-                .name(findMember.getName())
-                .phone(findMember.getPhone())
-                .email(findMember.getEmail())
-                .social(findMember.getSocial().getSocialType())
-                .profileUrl(findMember.getProfileUrl())
-                .createdAt(findMember.getCreatedAt())
-                .build();
+        return MemberDetailResponseDto.from(findMember);
     }
 
     @Transactional
