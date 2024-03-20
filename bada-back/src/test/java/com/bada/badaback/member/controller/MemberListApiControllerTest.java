@@ -15,7 +15,6 @@ import java.util.List;
 import static com.bada.badaback.feature.MemberFixture.*;
 import static com.bada.badaback.feature.TokenFixture.BEARER_TOKEN;
 import static com.bada.badaback.feature.TokenFixture.REFRESH_TOKEN;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
