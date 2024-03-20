@@ -46,7 +46,7 @@ public class AuthServiceTest extends ServiceTest {
     @DisplayName("회원가입에 성공한다(새로운 가족 그룹 생성)")
     void signup() {
         // when
-        Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", null, "우리 가족");
+        Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", null, "우리 가족", "fcmToken");
 
         // then
         Member findMember = memberFindService.findById(saveMemberId);
@@ -57,7 +57,9 @@ public class AuthServiceTest extends ServiceTest {
                 () -> assertThat(findMember.getSocial()).isEqualTo(SocialType.NAVER),
                 () -> assertThat(findMember.getIsParent()).isEqualTo(1),
                 () -> assertThat(findMember.getProfileUrl()).isEqualTo(null),
-                () -> assertThat(findMember.getFamilyCode()).isNotNull()
+                () -> assertThat(findMember.getFamilyCode()).isNotNull(),
+                () -> assertThat(findMember.getMovingState()).isEqualTo(0),
+                () -> assertThat(findMember.getFcmToken()).isEqualTo("fcmToken")
         );
     }
 
@@ -65,7 +67,7 @@ public class AuthServiceTest extends ServiceTest {
     @DisplayName("회원가입에 성공한다(기존 가족 그룹 가입)")
     void join() {
         // when
-        Long saveMemberId = authService.join("심지연", "010-2222-2222","def@naver.com", "KAKAO", null, authCode.getCode());
+        Long saveMemberId = authService.join("심지연", "010-2222-2222","def@naver.com", "KAKAO", null, authCode.getCode(), "fcmToken");
 
         // then
         Member findMember = memberFindService.findById(saveMemberId);
@@ -77,7 +79,9 @@ public class AuthServiceTest extends ServiceTest {
                 () -> assertThat(findMember.getSocial()).isEqualTo(SocialType.KAKAO),
                 () -> assertThat(findMember.getIsParent()).isEqualTo(1),
                 () -> assertThat(findMember.getProfileUrl()).isEqualTo(null),
-                () -> assertThat(findMember.getFamilyCode()).isEqualTo(findFamilyCode)
+                () -> assertThat(findMember.getFamilyCode()).isEqualTo(findFamilyCode),
+                () -> assertThat(findMember.getMovingState()).isEqualTo(0),
+                () -> assertThat(findMember.getFcmToken()).isEqualTo("fcmToken")
         );
     }
 
@@ -85,7 +89,7 @@ public class AuthServiceTest extends ServiceTest {
     @DisplayName("아이 회원가입에 성공한다(기존 가족 그룹 가입)")
     void joinChild() {
         // when
-        Long saveMemberId = authService.joinChild("심지연", "010-2222-2222", null, authCode.getCode());
+        Long saveMemberId = authService.joinChild("심지연", "010-2222-2222", null, authCode.getCode(), "fcmToken");
 
         // then
         Member findMember = memberFindService.findById(saveMemberId);
@@ -97,7 +101,9 @@ public class AuthServiceTest extends ServiceTest {
                 () -> assertThat(findMember.getSocial()).isEqualTo(SocialType.CHILD),
                 () -> assertThat(findMember.getIsParent()).isEqualTo(0),
                 () -> assertThat(findMember.getProfileUrl()).isEqualTo(null),
-                () -> assertThat(findMember.getFamilyCode()).isEqualTo(findFamilyCode)
+                () -> assertThat(findMember.getFamilyCode()).isEqualTo(findFamilyCode),
+                () -> assertThat(findMember.getMovingState()).isEqualTo(0),
+                () -> assertThat(findMember.getFcmToken()).isEqualTo("fcmToken")
         );
     }
 
@@ -105,7 +111,7 @@ public class AuthServiceTest extends ServiceTest {
     @DisplayName("로그인에 성공한다")
     void login() {
         // when
-        Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", null, "우리 가족");
+        Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", null, "우리 가족", "fcmToken");
         LoginResponseDto loginResponseDto = authService.login(saveMemberId);
 
         // then
@@ -116,6 +122,7 @@ public class AuthServiceTest extends ServiceTest {
                 () -> assertThat(loginResponseDto.memberId()).isEqualTo(saveMemberId),
                 () -> assertThat(loginResponseDto.name()).isEqualTo("윤선경"),
                 () -> assertThat(loginResponseDto.familyCode()).isEqualTo(findMember.getFamilyCode()),
+                () -> assertThat(loginResponseDto.fcmToken()).isEqualTo(findMember.getFcmToken()),
                 () -> {
                     Token findToken = tokenRepository.findByMemberId(saveMemberId).orElseThrow();
                     assertThat(loginResponseDto.refreshToken()).isEqualTo(findToken.getRefreshToken());
