@@ -19,7 +19,9 @@ import com.bada.badaback.member.service.MemberFindService;
 import com.bada.badaback.member.service.MemberListService;
 import com.bada.badaback.member.service.MemberService;
 import com.bada.badaback.myplace.controller.MyPlaceApiController;
+import com.bada.badaback.myplace.controller.MyPlaceListApiController;
 import com.bada.badaback.myplace.service.MyPlaceFindService;
+import com.bada.badaback.myplace.service.MyPlaceListService;
 import com.bada.badaback.myplace.service.MyPlaceService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +45,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
         AuthCodeApiController.class,
         MemberListApiController.class,
         MemberApiController.class,
-        MyPlaceApiController.class
+        MyPlaceApiController.class,
+        MyPlaceListApiController.class
 })
 @WithMockUser("test")
 public abstract class ControllerTest {
@@ -106,6 +109,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected MyPlaceService myPlaceService;
+
+    @MockBean
+    protected MyPlaceListService myPlaceListService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);

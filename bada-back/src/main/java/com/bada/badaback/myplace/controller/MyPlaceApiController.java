@@ -1,6 +1,8 @@
 package com.bada.badaback.myplace.controller;
 
+import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.global.annotation.ExtractPayload;
+import com.bada.badaback.myplace.dto.MyPlaceDetailResponseDto;
 import com.bada.badaback.myplace.dto.MyPlaceRequestDto;
 import com.bada.badaback.myplace.dto.MyPlaceUpdateRequestDto;
 import com.bada.badaback.myplace.service.MyPlaceService;
@@ -15,11 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/myplace")
 public class MyPlaceApiController {
     private final MyPlaceService myPlaceService;
+    private final FamilyService familyService;
 
     @PostMapping
     public ResponseEntity<Void> create(@ExtractPayload Long memberId, @RequestBody MyPlaceRequestDto requestDto) {
-        myPlaceService.create(memberId, requestDto.placeName(), requestDto.placeLatitude(), requestDto.placeLongitude(),
-                requestDto.placeCategoryCode(), requestDto.placePhoneNumber(), requestDto.icon());
+        Long myPlaceId = myPlaceService.create(memberId, requestDto.placeName(), requestDto.placeLatitude(), requestDto.placeLongitude(), requestDto.placeCategoryCode(),
+                requestDto.placePhoneNumber(), requestDto.icon(), requestDto.addressName(), requestDto.addressRoadName());
+        familyService.update(memberId, myPlaceId);
         return ResponseEntity.ok().build();
     }
 
@@ -33,6 +37,11 @@ public class MyPlaceApiController {
     public ResponseEntity<Void> delete (@ExtractPayload Long memberId, @PathVariable("myPlaceId") Long myPlaceId) {
         myPlaceService.delete(memberId, myPlaceId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{myPlaceId}")
+    public ResponseEntity<MyPlaceDetailResponseDto> readMyPlace(@ExtractPayload Long memberId, @PathVariable("myPlaceId") Long myPlaceId) {
+        return ResponseEntity.ok(myPlaceService.read(memberId, myPlaceId));
     }
 
 }
