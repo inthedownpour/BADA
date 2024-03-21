@@ -8,11 +8,7 @@ import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-<<<<<<< HEAD
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-=======
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
->>>>>>> feature/26-kakaomap-polyline
 import 'package:lottie/lottie.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,18 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-<<<<<<< HEAD
-  final platform = const MethodChannel("testing.flutter.android");
-  final FlutterLocalNotificationsPlugin local =
-      FlutterLocalNotificationsPlugin();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-=======
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
->>>>>>> feature/26-kakaomap-polyline
+  final _storage = const FlutterSecureStorage();
 
   String profileUrl = "";
   @override
