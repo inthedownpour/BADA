@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+    
         android:label="bada"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -15,7 +16,9 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"            
+            android:showWhenLocked="true"
+            android:turnScreenOn="true">
 
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
@@ -46,6 +49,7 @@
                 <data android:scheme="kakao9d4c295f031b5c1f50269e353e895e12" android:host="oauth"/>
             </intent-filter>
         </activity>
+        
         
         <activity
             android:name="com.ssafy.bada.TMapActivity"

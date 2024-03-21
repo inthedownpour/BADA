@@ -17,7 +17,6 @@ void main() async {
 
   await dotenv.load(fileName: '.env');
   AuthRepository.initialize(appKey: dotenv.env['KAKAO_MAP_API'] ?? '');
-  // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
   WidgetsFlutterBinding.ensureInitialized();
   KakaoSdk.init(
     nativeAppKey: '9d4c295f031b5c1f50269e353e895e12',
@@ -69,16 +68,12 @@ class _MyAppState extends State<MyApp> {
         future: initializeApp(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            // Navigate based on the presence of an access token
             if (snapshot.data == true) {
-              // If token exists, navigate to HomeScreen
-              return const HomeScreen(); // Ensure you have a HomeScreen widget
+              return const HomeScreen();
             } else {
-              // If token does not exist, navigate to LoginScreen
               return const LoginScreen();
             }
           } else {
-            // Return the loading screen while waiting
             return const LoadingScreen();
           }
         },
