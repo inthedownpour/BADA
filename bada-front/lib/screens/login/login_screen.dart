@@ -43,8 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 height: UIhelper.scaleHeight(context) * 120,
               ),
-
-              // 아이디가 데이터베이스에 없는 경우
               GestureDetector(
                 onTap: () async {
                   print('카카오 로그인할 때 작성 해야하는 kakao sdk 키 해쉬');
@@ -52,9 +50,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   LoginPlatform loginPlatform = LoginPlatform.kakao;
                   await profileProvider.initProfile(loginPlatform);
-
-                  if (profileProvider.isLogined) {
-                    // if(id 비교해서 데이터베이스에 없으면)
+                  bool hasProfile = await profileProvider.profileDbCheck();
+                  // 아이디가 데이터베이스에 있는 경우
+                  if (hasProfile) {
+                    profileProvider.saveProfileToStorage();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  } else {
+                    // 아이디가 데이터베이스에 없는 경우
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -76,8 +83,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.naver;
                   await profileProvider.initProfile(loginPlatform);
-
-                  if (profileProvider.isLogined) {
+                  bool hasProfile = await profileProvider.profileDbCheck();
+                  if (hasProfile) {
+                    profileProvider.saveProfileToStorage();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  } else {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -91,18 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: UIhelper.scaleWidth(context) * 200,
                   height: UIhelper.scaleHeight(context) * 50,
                 ),
-              ),
-
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
-                  );
-                },
-                child: const Text('메인 가기'),
               ),
             ],
           ),

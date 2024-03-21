@@ -18,12 +18,12 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   final _storage = const FlutterSecureStorage();
   Future<Map<String, String?>> _fetchUserData() async {
-    String? name = await _storage.read(key: 'name');
+    String? nickname = await _storage.read(key: 'nickname');
     String? email = await _storage.read(key: 'email');
     String? createdAt = await _storage.read(key: 'createdAt');
     String? phone = await _storage.read(key: 'phone');
     return {
-      'name': name,
+      'nickname': nickname,
       'email': email,
       'createdAt': createdAt,
       'phone': phone,

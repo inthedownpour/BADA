@@ -7,6 +7,8 @@ import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class CreateFamily extends StatefulWidget {
   final String title, buttonName;
@@ -23,7 +25,10 @@ class CreateFamily extends StatefulWidget {
 
 class _CreateFamilyState extends State<CreateFamily> {
   final TextEditingController _familyNameController = TextEditingController();
-  final TokenStorage _tokenStorage = TokenStorage();
+
+  Future<String?> getFcmToken() async {
+    return await FirebaseMessaging.instance.getToken();
+  }
 
   @override
   void dispose() {
@@ -78,15 +83,23 @@ class _CreateFamilyState extends State<CreateFamily> {
               SizedBox(height: UIhelper.scaleHeight(context) * 400),
               Button714_150(
                 label: Text(widget.buttonName),
-                onPressed: () {
-                  signUp(
-                    name: userData.nickname!,
-                    phone: userData.phoneNumber!,
-                    email: userData.email!,
-                    social: userData.social!,
-                    familyName: _familyNameController.text,
-                    profileUrl: userData.profileImage!,
-                  );
+                onPressed: () async {
+                  final fcmToken = await getFcmToken(); // FCM 토큰 얻기
+                  if (fcmToken != null) {
+                    debugPrint('FCM 토큰: $fcmToken');
+                    signUp(
+                      name: userData.nickname!,
+                      phone: 'userData.phone!',
+                      email: userData.email!,
+                      social: userData.social!,
+                      familyName: _familyNameController.text,
+                      profileUrl: userData.profileImage!,
+                      fcmToken: fcmToken, // FCM 토큰을 signUp 함수에 전달
+                    );
+                  } else {
+                    // FCM 토큰을 얻지 못한 경우의 처리
+                    debugPrint('FCM 토큰을 얻지 못했습니다.');
+                  }
                 },
               ),
             ],
@@ -101,8 +114,9 @@ class _CreateFamilyState extends State<CreateFamily> {
     required String phone,
     required String email,
     required String social,
-    String? profileUrl,
+    required String profileUrl,
     required String familyName,
+    required String fcmToken,
   }) async {
     final Uri url = Uri.parse('https://j10b207.p.ssafy.io/api/auth/signup');
 
@@ -118,6 +132,7 @@ class _CreateFamilyState extends State<CreateFamily> {
         'social': social,
         'profileUrl': profileUrl,
         'familyName': familyName,
+        'fcmToken': fcmToken,
       }),
     );
 
@@ -129,6 +144,7 @@ class _CreateFamilyState extends State<CreateFamily> {
       // Use the TokenStorage class to save the tokens
       final tokenStorage = TokenStorage();
       await tokenStorage.saveToken(accessToken, refreshToken);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -137,7 +153,7 @@ class _CreateFamilyState extends State<CreateFamily> {
       );
     } else {
       // Handle failure
-      print('Failed to sign up: ${response.body}');
+      debugPrint('Failed to sign up: ${response.body}');
     }
   }
 }
