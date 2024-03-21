@@ -39,7 +39,7 @@ public class AuthApiController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<LoginResponseDto> alreadyMember(@RequestBody @Valid AuthAlreadyRequestDto requestDto) {
         Long memberId = authService.AlreadyMember(requestDto.email(), requestDto.social());
         if(memberId == null){
