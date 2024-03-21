@@ -2,13 +2,8 @@ package com.bada.badaback.feature;
 
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.state.domain.State;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import static com.bada.badaback.feature.MemberFixture.YONGJUN;
 
 @Getter
 @RequiredArgsConstructor

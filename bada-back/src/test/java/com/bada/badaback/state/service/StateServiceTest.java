@@ -10,8 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.bada.badaback.feature.MemberFixture.JIYEON;
-import static com.bada.badaback.feature.MemberFixture.YONGJUN;
+import static com.bada.badaback.feature.MemberFixture.*;
 import static com.bada.badaback.feature.StateFixture.STATE1;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
@@ -25,21 +24,20 @@ class StateServiceTest extends ServiceTest {
 
     private static Member parent;
     private static Member child;
+    private static Member stranger;
     private static State state;
 
 
     @BeforeEach
     void setUp() {
         parent = memberRepository.save(JIYEON.toMember());
+        stranger = memberRepository.save(HWIWON.toMember());
         child = memberRepository.save(YONGJUN.toMember());
-//        state = stateRepository.save(STATE1.toState(child));
+        stateService.createState(STATE1.getStartLatitude(), STATE1.getStartLongitude(), STATE1.getEndLatitude(), STATE1.getEndLongitude(), STATE1.getNowLatitude(), STATE1.getNowLongitude(), child.getId());
     }
 
     @Test
     void createState() {
-        //when
-        stateService.createState(STATE1.getStartLatitude(), STATE1.getStartLongitude(), STATE1.getEndLatitude(), STATE1.getEndLongitude(), STATE1.getNowLatitude(), STATE1.getNowLongitude(), child.getId());
-
         //then
         State findState = stateFindService.findByMember(child);
         assertAll(
@@ -55,9 +53,6 @@ class StateServiceTest extends ServiceTest {
 
     @Test
     void findStateByMemberId() {
-        //given
-        stateService.createState(STATE1.getStartLatitude(), STATE1.getStartLongitude(), STATE1.getEndLatitude(), STATE1.getEndLongitude(), STATE1.getNowLatitude(), STATE1.getNowLongitude(), child.getId());
-
         //when
         StateResponseDto responseDto = stateService.findStateByMemberId(parent.getId(), child.getId());
 
@@ -74,10 +69,14 @@ class StateServiceTest extends ServiceTest {
     }
 
     @Test
-    void modifyState() {
-        //given
-        stateService.createState(STATE1.getStartLatitude(), STATE1.getStartLongitude(), STATE1.getEndLatitude(), STATE1.getEndLongitude(), STATE1.getNowLatitude(), STATE1.getNowLongitude(), child.getId());
+    void strangerFindStateByMemberId() {
+        //then
+        assertThatThrownBy(()->stateService.findStateByMemberId(stranger.getId(), child.getId()))
+                .isInstanceOf(BaseException.class).hasMessage(StateErrorCode.NOT_FAMILY.getMessage());
+    }
 
+    @Test
+    void modifyState() {
         //when
         stateService.modifyState(child.getId(),"36.421716","127.387829");
 
@@ -96,9 +95,6 @@ class StateServiceTest extends ServiceTest {
 
     @Test
     void deleteState() {
-        //given
-        stateService.createState(STATE1.getStartLatitude(), STATE1.getStartLongitude(), STATE1.getEndLatitude(), STATE1.getEndLongitude(), STATE1.getNowLatitude(), STATE1.getNowLongitude(), child.getId());
-
         //when
         stateService.deleteState(child.getId());
 
