@@ -80,7 +80,7 @@ class StateControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("상태코드 조회 API 테스트 [POST /api/state/{childId}]")
+    @DisplayName("상태코드 조회 API 테스트 [GET /api/state/{childId}]")
     class findState{
         private static final String BASE_URL ="/api/state/{childId}";
         private static final Long CHILD_ID = 1L;
@@ -90,8 +90,7 @@ class StateControllerTest extends ControllerTest {
         void throwExceptionByInvalidPermission() throws Exception{
             //when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .get(BASE_URL,CHILD_ID)
-                    .contentType(MediaType.APPLICATION_JSON);
+                    .get(BASE_URL,CHILD_ID);
 
             //then
             final AuthErrorCode expectedError = AuthErrorCode.INVALID_PERMISSION;
@@ -165,7 +164,7 @@ class StateControllerTest extends ControllerTest {
         @DisplayName("현재 위치를 기반으로 상태를 수정한다")
         void modifyState() throws Exception {
             //given
-            doReturn(createStateResponseDto())
+            doNothing()
                     .when(stateService)
                     .modifyState(anyLong(),any(),any());
             //when
@@ -195,7 +194,7 @@ class StateControllerTest extends ControllerTest {
         void throwExceptionByInvalidPermission() throws Exception{
             //when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .patch(BASE_URL);
+                    .delete(BASE_URL);
 
             //then
             final AuthErrorCode expectedError = AuthErrorCode.INVALID_PERMISSION;

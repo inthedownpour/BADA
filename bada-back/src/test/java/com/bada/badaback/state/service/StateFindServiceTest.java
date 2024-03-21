@@ -11,12 +11,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.bada.badaback.feature.MemberFixture.JIYEON;
-import static com.bada.badaback.feature.MemberFixture.YONGJUN;
+import static com.bada.badaback.feature.MemberFixture.*;
 import static com.bada.badaback.feature.StateFixture.STATE1;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class StateFindServiceTest extends ServiceTest {
     @Autowired
@@ -25,14 +23,16 @@ class StateFindServiceTest extends ServiceTest {
     private MemberFindService memberFindService;
 
     private static Member parent;
+    private static Member notstart;
     private static Member child;
     private static State state;
 
 
     @BeforeEach
     void setUp(){
-        child = memberRepository.save(YONGJUN.toMember());
+        notstart = memberRepository.save(SUNKYOUNG.toMember());
         parent = memberRepository.save(JIYEON.toMember());
+        child = memberRepository.save(YONGJUN.toMember());
         state = stateRepository.save(STATE1.toState(child));
     }
 
@@ -41,10 +41,15 @@ class StateFindServiceTest extends ServiceTest {
     void findByMember() {
         //when
         State findState = stateFindService.findByMember(child);
-        Member p = memberFindService.findByEmailAndSocial(parent.getEmail(), parent.getSocial());
-        Member c = memberFindService.findByEmailAndSocial(child.getEmail(), child.getSocial());
+        Member not_start = memberFindService.findByEmailAndSocial(notstart.getEmail(), notstart.getSocial());
+        Member not_child = memberFindService.findByEmailAndSocial(parent.getEmail(),parent.getSocial());
+
         //then
-        assertThatThrownBy(()->stateFindService.findByMember(p))
+        assertThatThrownBy(()->stateFindService.findByMember(not_start))
+                .isInstanceOf(BaseException.class)
+                .hasMessage(StateErrorCode.STATE_NOT_FOUND.getMessage());
+
+        assertThatThrownBy(()->stateFindService.findByMember(not_child))
                 .isInstanceOf(BaseException.class)
                 .hasMessage(StateErrorCode.STATE_NOT_FOUND.getMessage());
 
