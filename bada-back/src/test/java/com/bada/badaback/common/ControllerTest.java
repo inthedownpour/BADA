@@ -25,9 +25,13 @@ import com.bada.badaback.myplace.controller.MyPlaceListApiController;
 import com.bada.badaback.myplace.service.MyPlaceFindService;
 import com.bada.badaback.myplace.service.MyPlaceListService;
 import com.bada.badaback.myplace.service.MyPlaceService;
+import com.bada.badaback.state.controller.StateController;
+import com.bada.badaback.state.service.StateFindService;
+import com.bada.badaback.state.service.StateService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -49,7 +53,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
         MemberApiController.class,
         MyPlaceApiController.class,
         MyPlaceListApiController.class,
-        SafeFacilityController.class
+        SafeFacilityController.class,
+        StateController.class
 })
 @WithMockUser("test")
 public abstract class ControllerTest {
@@ -118,6 +123,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected SafeFacilityService safeFacilityService;
+
+    @MockBean
+    protected StateService stateService;
+
+    @MockBean
+    protected StateFindService stateFindService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);
