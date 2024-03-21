@@ -1,6 +1,7 @@
 import 'package:bada/models/screen_size.dart';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/main/main_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,6 +12,7 @@ import 'package:bada/screens/login/login_screen.dart';
 import 'package:bada/screens/loading_screen.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:provider/provider.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +20,10 @@ void main() async {
   await dotenv.load(fileName: '.env');
   AuthRepository.initialize(appKey: dotenv.env['KAKAO_MAP_API'] ?? '');
   // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
-  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   KakaoSdk.init(
     nativeAppKey: '9d4c295f031b5c1f50269e353e895e12',
   );

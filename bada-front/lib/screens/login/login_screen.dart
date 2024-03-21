@@ -39,32 +39,31 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: UIhelper.scaleWidth(context) * 200,
                 height: UIhelper.scaleHeight(context) * 200,
               ),
-
               SizedBox(
                 height: UIhelper.scaleHeight(context) * 120,
               ),
-
-              // 아이디가 데이터베이스에 없는 경우
               GestureDetector(
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.kakao;
                   await profileProvider.initProfile(loginPlatform);
-
-                  if (profileProvider.isLogined) {
-                    // if(id 비교해서 데이터베이스에 없으면)
+                  bool hasProfile = await profileProvider.profileDbCheck();
+                  // 아이디가 데이터베이스에 있는 경우
+                  if (hasProfile) {
+                    profileProvider.saveProfileToStorage();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  } else {
+                    // 아이디가 데이터베이스에 없는 경우
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const InitialScreen(),
                       ),
                     );
-                    // else if (id 비교해서 데이터베이스에 있으면)
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const HomeScreen(),
-                    //   ),
-                    // );
                   }
                 },
                 child: Image.asset(
@@ -80,22 +79,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.naver;
                   await profileProvider.initProfile(loginPlatform);
-
-                  if (profileProvider.isLogined) {
-                    // if(id 비교해서 데이터베이스에 없으면)
+                  bool hasProfile = await profileProvider.profileDbCheck();
+                  if (hasProfile) {
+                    profileProvider.saveProfileToStorage();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  } else {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const InitialScreen(),
                       ),
                     );
-                    // else if (id 비교해서 데이터베이스에 있으면)
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const HomeScreen(),
-                    //   ),
-                    // );
                   }
                 },
                 child: Image.asset(
@@ -103,20 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: UIhelper.scaleWidth(context) * 200,
                   height: UIhelper.scaleHeight(context) * 50,
                 ),
-              ),
-
-              // 아이디가 데이터베이스에 있는 경우
-              // if (hasId)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ),
-                  );
-                },
-                child: const Text('메인 가기'),
               ),
             ],
           ),

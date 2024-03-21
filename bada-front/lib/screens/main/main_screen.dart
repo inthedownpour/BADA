@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/main/my_family.dart';
 import 'package:bada/screens/main/my_place.dart';
 import 'package:bada/screens/main/settings.dart';
@@ -9,8 +8,8 @@ import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,19 +19,25 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final platform = const MethodChannel("testing.flutter.android");
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Future<void> _showActivity() async {
-    try {
-      await platform.invokeMethod('showActivity');
-    } on PlatformException catch (e) {
-      log("Error : $e");
-    }
+  String profileUrl = "";
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileFromStorage();
+  }
+
+  void _loadProfileFromStorage() async {
+    await _storage.read(key: 'profileImage').then((value) {
+      setState(() {
+        profileUrl = value ?? '';
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final profileProvider = Provider.of<ProfileProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -53,10 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: profileProvider.isLogined
-                          ? NetworkImage(profileProvider.profileImage!)
-                              as ImageProvider<Object>
-                          : const AssetImage('assets/img/default_profile.png'),
+                      backgroundImage: profileUrl == ''
+                          ? Image.asset('assets/img/default_profile.png').image
+                          : NetworkImage(
+                              profileUrl,
+                            ),
                     ),
                   ],
                 ),
@@ -107,9 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Button714_300(
                   label: '경로 추천 받기',
                   buttonImage: Image.asset('assets/img/map-phone.png'),
-                  onPressed: () {
-                    _showActivity();
-                  },
+                  onPressed: () {},
                 ),
                 SizedBox(
                   height: UIhelper.scaleHeight(context) * 15,
