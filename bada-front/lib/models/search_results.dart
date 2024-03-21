@@ -1,5 +1,6 @@
 class SearchResultItem {
   final String addressName;
+  final String categoryGroupCode;
   final String categoryGroupName;
   final String placeName;
   final String roadAddressName;
@@ -9,6 +10,7 @@ class SearchResultItem {
 
   SearchResultItem({
     required this.addressName,
+    required this.categoryGroupCode,
     required this.categoryGroupName,
     required this.placeName,
     required this.roadAddressName,
@@ -20,6 +22,7 @@ class SearchResultItem {
   factory SearchResultItem.fromJson(Map<String, dynamic> json) {
     return SearchResultItem(
       addressName: json['address_name'],
+      categoryGroupCode: json['category_group_code'],
       categoryGroupName: json['category_group_name'],
       placeName: json['place_name'],
       roadAddressName: json['road_address_name'],

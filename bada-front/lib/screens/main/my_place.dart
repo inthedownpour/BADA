@@ -3,6 +3,7 @@ import 'package:bada/screens/main/my_place/map_search.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class PlaceIndicator extends StatelessWidget {
   final int numberOfPlaces;
@@ -39,6 +40,8 @@ class MyPlace extends StatefulWidget {
 
 class _MyPlaceState extends State<MyPlace> {
   late Future<List<Place>> myPlaces;
+  late String accessToken = '';
+  FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   void _addNewPlace() {
     Navigator.push(
@@ -49,10 +52,15 @@ class _MyPlaceState extends State<MyPlace> {
     );
   }
 
+  void _loadAccessToken() async {
+    accessToken = (await secureStorage.read(key: 'accessToken'))!;
+  }
+
   @override
   void initState() {
     super.initState();
-    myPlaces = MyPlaceData.loadPlaces();
+    _loadAccessToken();
+    myPlaces = MyPlaceData.loadPlaces(accessToken);
   }
 
   @override

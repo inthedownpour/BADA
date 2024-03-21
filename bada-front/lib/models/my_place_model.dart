@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 class Place {
   final int placeId;
@@ -43,10 +45,21 @@ class Place {
 }
 
 class MyPlaceData {
-  static Future<List<Place>> loadPlaces() async {
-    final dat =
-        await rootBundle.loadString('assets/dummydata/my_place_dummy.json');
-    final res = json.decode(dat) as List;
-    return res.map((place) => Place.fromJson(place)).toList();
+  static Future<List<Place>> loadPlaces(String accessToken) async {
+    debugPrint('accessToken: $accessToken');
+    final response = await http.get(
+      Uri.parse('https://j10b207.p.ssafy.io/api/myplace'),
+      // 요청 헤더에 accessToken을 포함
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> res = json.decode(response.body);
+      return res.map((place) => Place.fromJson(place)).toList();
+    } else {
+      throw Exception('Failed to load places');
+    }
   }
 }

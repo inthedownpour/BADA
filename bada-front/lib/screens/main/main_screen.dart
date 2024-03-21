@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bada/screens/main/my_family.dart';
 import 'package:bada/screens/main/my_place.dart';
 import 'package:bada/screens/main/settings.dart';
@@ -8,7 +6,6 @@ import 'package:bada/screens/main/testing/testing.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:lottie/lottie.dart';
 

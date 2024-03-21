@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:bada/models/search_history.dart';
 import 'package:bada/models/search_results.dart';
+import 'package:bada/screens/main/my_place/search_map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MapSearch extends StatefulWidget {
   const MapSearch({super.key});
@@ -14,7 +17,13 @@ class MapSearch extends StatefulWidget {
 class _MapSearchState extends State<MapSearch> {
   final TextEditingController _controller = TextEditingController();
   Future<List<SearchResultItem>>? _searchResult;
-  final bool _isSearching = false;
+  List<SearchHistory> _searchHistory = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSearchHistory();
+  }
 
   Future<List<SearchResultItem>> fetchSearchResults(String keyword) async {
     var url = Uri.parse(
@@ -37,6 +46,35 @@ class _MapSearchState extends State<MapSearch> {
     }
   }
 
+  Future<void> _loadSearchHistory() async {
+    final prefs = await SharedPreferences.getInstance();
+    final List<String>? jsonStringList = prefs.getStringList('searchHistory');
+    if (jsonStringList != null) {
+      // JSON 문자열을 SearchHistory 객체로 변환
+      final List<SearchHistory> loadedSearchHistory =
+          jsonStringList.map((jsonString) {
+        final decoded = jsonDecode(jsonString);
+        return SearchHistory.fromJson(decoded);
+      }).toList();
+
+      setState(() {
+        _searchHistory = loadedSearchHistory;
+      });
+    }
+  }
+
+  Future<void> _saveSearchKeyword(String keyword) async {
+    final prefs = await SharedPreferences.getInstance();
+    final searchHistory =
+        SearchHistory(keyword: keyword, timestamp: DateTime.now());
+    _searchHistory.insert(0, searchHistory); // 새로운 검색어를 맨 앞에 추가
+
+    // 검색 기록을 JSON 문자열 리스트로 변환
+    List<String> jsonStringList =
+        _searchHistory.map((history) => jsonEncode(history.toJson())).toList();
+    prefs.setStringList('searchHistory', jsonStringList);
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -52,56 +90,96 @@ class _MapSearchState extends State<MapSearch> {
         backgroundColor: Colors.white,
       ),
       body: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                border: Border.all(width: 0.1),
-              ),
+              padding: const EdgeInsets.all(8),
               child: TextField(
                 controller: _controller,
                 decoration: InputDecoration(
-                  labelText: '키워드를 입력해주세요',
+                  contentPadding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Colors.black,
+                      width: 0.1,
+                    ),
+                  ),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () {
+                      // 아이콘 버튼을 눌렀을 때 수행할 동작
                       setState(() {
                         _searchResult = fetchSearchResults(_controller.text);
                       });
                     },
                   ),
                 ),
+                onSubmitted: (value) => setState(() {
+                  _searchResult = fetchSearchResults(value);
+                }),
               ),
             ),
+            // 검색 결과를 보여주는 부분
             Expanded(
               child: FutureBuilder<List<SearchResultItem>>(
                 future: _searchResult,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
+                    // 데이터 로딩 중일 때
                     return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
                   } else if (snapshot.hasData) {
+                    // 데이터가 성공적으로 로드되었을 때
                     return ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         SearchResultItem item = snapshot.data![index];
                         return ListTile(
+                          onTap: () {
+                            _saveSearchKeyword(item.placeName);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchMapScreen(
+                                  item: item,
+                                  keyword: _controller.text,
+                                ),
+                              ),
+                            );
+                          },
                           title: Text(item.placeName),
                           subtitle: Text(item.addressName),
-                          tileColor: Colors.white,
+                        );
+                      },
+                    );
+                  } else {
+                    // 데이터가 없을 때
+                    return ListView.builder(
+                      itemCount: _searchHistory.length,
+                      itemBuilder: (context, index) {
+                        final keyword = _searchHistory[index].keyword;
+                        final date = _searchHistory[index].timestamp;
+                        final formattedDate =
+                            '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+                        return ListTile(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(keyword),
+                              Text(formattedDate),
+                            ],
+                          ),
+                          onTap: () {
+                            // 검색어를 클릭했을 때의 동작
+                            _controller.text = keyword;
+                          },
                         );
                       },
                     );
                   }
-                  return Container(
-                    alignment: Alignment.center,
-                    child: const Text('아직 검색된 키워드가 없습니다.'),
-                  );
                 },
               ),
             ),
