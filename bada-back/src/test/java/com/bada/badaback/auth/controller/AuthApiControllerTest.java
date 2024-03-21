@@ -133,7 +133,7 @@ class AuthApiControllerTest extends ControllerTest {
             // when
             final AuthAlreadyRequestDto request = createAuthAlreadyRequestDto();
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .get(BASE_URL)
+                    .post(BASE_URL)
                     .contentType(APPLICATION_JSON)
                     .content(convertObjectToJson(request));
 
@@ -158,7 +158,7 @@ class AuthApiControllerTest extends ControllerTest {
             // when
             final AuthAlreadyRequestDto request = createAuthAlreadyRequestDto();
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .get(BASE_URL)
+                    .post(BASE_URL)
                     .contentType(APPLICATION_JSON)
                     .content(convertObjectToJson(request));
 
