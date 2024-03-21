@@ -13,15 +13,22 @@ public class State {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 100)
     private String startLatitude;
+
+    @Column(nullable = false, length = 100)
     private String startLongitude;
 
+    @Column(nullable = false, length = 100)
     private String endLatitude;
 
+    @Column(nullable = false, length = 100)
     private String endLongitude;
 
+    @Column(nullable = false, length = 100)
     private String nowLatitude;
 
+    @Column(nullable = false, length = 100)
     private String nowLongitude;
 
     @OneToOne(fetch = FetchType.LAZY)

@@ -48,9 +48,9 @@ public class StateController{
      * @return
      */
     @PatchMapping
-    public ResponseEntity<StateResponseDto> modifyState(@ExtractPayload Long memberId, @RequestBody StateNowRequestDto stateNowRequestDto){
-        StateResponseDto stateResponseDto = stateService.modifyState(memberId,stateNowRequestDto.nowLat(),stateNowRequestDto.nowLong());
-        return ResponseEntity.ok(stateResponseDto);
+    public ResponseEntity<Void> modifyState(@ExtractPayload Long memberId, @RequestBody StateNowRequestDto stateNowRequestDto){
+        stateService.modifyState(memberId,stateNowRequestDto.nowLat(),stateNowRequestDto.nowLong());
+        return ResponseEntity.ok().build();
     }
 
     /**
