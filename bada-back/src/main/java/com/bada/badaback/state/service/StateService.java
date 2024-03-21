@@ -65,11 +65,10 @@ public class StateService {
      * @return
      */
     @Transactional
-    public StateResponseDto modifyState(Long childId, String nowLat, String nowLong) {
+    public void modifyState(Long childId, String nowLat, String nowLong) {
         Member child = memberFindService.findById(childId);
         State state = stateFindService.findByMember(child);
         state.updateState(nowLat, nowLong);
-        return StateResponseDto.from(state);
     }
 
     /**
