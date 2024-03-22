@@ -26,14 +26,7 @@ public class MemberListService {
         List<MemberResponseDto> familyList = new ArrayList<>();
 
         for (Member member : memberList) {
-            MemberResponseDto memberResponseDto = MemberResponseDto.builder()
-                    .memberId(member.getId())
-                    .name(member.getName())
-                    .isParent(member.getIsParent())
-                    .phone(member.getPhone())
-                    .profileUrl(member.getProfileUrl())
-                    .movingState(0) //state 구현 이후 수정 예정
-                    .build();
+            MemberResponseDto memberResponseDto = MemberResponseDto.from(member);
             familyList.add(memberResponseDto);
         }
         return new MemberListResponseDto(familyList);

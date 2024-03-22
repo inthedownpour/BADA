@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Type implements EnumStandard {
-    CCTV("CCTV"),
-    POLICE("POLICE"),
-    GUARD("GUARD");
+    CCTV("cctv"),
+    POLICE("police"),
+    GUARD("guard");
 
 private final String type;
 

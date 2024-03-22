@@ -1,5 +1,6 @@
 package com.bada.badaback.myplace.domain;
 
+import com.bada.badaback.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Table(name="myplace")
-public class MyPlace {
+public class MyPlace extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "myplace_id")

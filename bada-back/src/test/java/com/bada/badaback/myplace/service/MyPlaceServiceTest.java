@@ -5,6 +5,7 @@ import com.bada.badaback.family.domain.Family;
 import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.myplace.domain.MyPlace;
+import com.bada.badaback.myplace.dto.MyPlaceDetailResponseDto;
 import com.bada.badaback.myplace.exception.MyPlaceErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +35,7 @@ public class MyPlaceServiceTest extends ServiceTest {
     void setup() {
         member = memberRepository.save(SUNKYOUNG.toMember());
         family = familyRepository.save(FAMILY_0.toFamily(member.getFamilyCode()));
-        myPlace = myPlaceRepository.save(MYPLACE_0.toMyPlace(family.getFamilyCode()));
+        myPlace = myPlaceRepository.save(MYPLACE_0.toMyPlace(member.getFamilyCode()));
     }
 
     @Test
@@ -82,6 +83,27 @@ public class MyPlaceServiceTest extends ServiceTest {
         assertThatThrownBy(() -> myPlaceFindService.findById(myPlace.getId()))
                 .isInstanceOf(BaseException.class)
                 .hasMessage(MyPlaceErrorCode.MYPLACE_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    @DisplayName("마이플레이스 상세 조회에 성공한다")
+    void read() {
+        // when
+        MyPlaceDetailResponseDto responseDto = myPlaceService.read(member.getId(), myPlace.getId());
+
+        // then
+        assertAll(
+                () -> assertThat(responseDto.myPlaceId()).isEqualTo(myPlace.getId()),
+                () -> assertThat(responseDto.placeName()).isEqualTo(myPlace.getPlaceName()),
+                () -> assertThat(responseDto.placeLatitude()).isEqualTo(myPlace.getPlaceLatitude()),
+                () -> assertThat(responseDto.placeLongitude()).isEqualTo(myPlace.getPlaceLongitude()),
+                () -> assertThat(responseDto.placeCategoryCode()).isEqualTo(myPlace.getPlaceCategoryCode()),
+                () -> assertThat(responseDto.placePhoneNumber()).isEqualTo(myPlace.getPlacePhoneNumber()),
+                () -> assertThat(responseDto.icon()).isEqualTo(myPlace.getIcon()),
+                () -> assertThat(responseDto.familyCode()).isEqualTo(myPlace.getFamilyCode()),
+                () -> assertThat(responseDto.addressName()).isEqualTo(myPlace.getAddressName()),
+                () -> assertThat(responseDto.addressRoadName()).isEqualTo(myPlace.getAddressRoadName())
+        );
     }
 
 }

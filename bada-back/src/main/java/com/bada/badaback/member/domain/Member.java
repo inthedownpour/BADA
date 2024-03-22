@@ -40,9 +40,15 @@ public class Member extends BaseTimeEntity {
     @Column(length = 20, nullable = false)
     private String familyCode;
 
+    @Column(nullable = false)
+    private int movingState;
+
+    @Column(length = 500, nullable = false)
+    private String fcmToken;
+
     @Builder
     private Member(String name, String phone, String email, SocialType social, int isParent,
-                   String profileUrl, String familyCode){
+                   String profileUrl, String familyCode, String fcmToken){
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -51,11 +57,13 @@ public class Member extends BaseTimeEntity {
         this.role = Role.USER;
         this.profileUrl = profileUrl;
         this.familyCode = familyCode;
+        this.movingState = 0;
+        this.fcmToken = fcmToken;
     }
 
     public static Member createMember(String name, String phone, String email, SocialType social, int isParent,
-                                      String profileUrl, String familyCode) {
-        return new Member(name, phone, email, social, isParent, profileUrl, familyCode);
+                                      String profileUrl, String familyCode, String fcmToken) {
+        return new Member(name, phone, email, social, isParent, profileUrl, familyCode, fcmToken);
     }
 
     public void updateChildEmail(String ChildEmail) {
