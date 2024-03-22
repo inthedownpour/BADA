@@ -6,6 +6,7 @@ import com.bada.badaback.family.domain.FamilyRepository;
 import com.bada.badaback.member.domain.MemberRepository;
 import com.bada.badaback.myplace.domain.MyPlaceRepository;
 import com.bada.badaback.safefacility.domain.SafeFacilityRepository;
+import com.bada.badaback.state.domain.StateRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class ServiceTest {
 
     @Autowired
     protected SafeFacilityRepository safeFacilityRepository;
+
+    @Autowired
+    protected StateRepository stateRepository;
 
     @AfterEach
     void clearDatabase() {
