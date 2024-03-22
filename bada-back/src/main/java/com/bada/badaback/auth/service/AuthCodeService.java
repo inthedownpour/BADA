@@ -46,6 +46,14 @@ public class AuthCodeService {
         return AuthCodeResponseDto.from(findAuthCode);
     }
 
+    @Transactional
+    public void delete(Long memberId) {
+        Member findMember = memberFindService.findById(memberId);
+        AuthCode findAuthCode = authCodeFindService.findByMemberId(findMember.getId());
+
+        authCodeRepository.delete(findAuthCode);
+    }
+
     private String createRandomCode() {
         int certCharLength = 5;
         final char[] characterTable = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
