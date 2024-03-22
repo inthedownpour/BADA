@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,17 +46,6 @@ public class MyPlaceService {
         Member findMember = memberFindService.findById(memberId);
         MyPlace findMyPlace = myPlaceFindService.findById(myPlaceId);
         myPlaceRepository.delete(findMyPlace);
-
-        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
-        List<Long> placeList = findFamily.getPlaceList();
-        if(placeList != null) {
-            for(Long placeId : placeList) {
-                if(!placeId.equals(myPlaceId)) {
-                    placeList.add(placeId);
-                }
-            }
-        }
-        findFamily.updatePlaceList(placeList);
     }
 
     @Transactional

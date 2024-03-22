@@ -23,7 +23,7 @@ public class MyPlaceApiController {
     public ResponseEntity<Void> create(@ExtractPayload Long memberId, @RequestBody MyPlaceRequestDto requestDto) {
         Long myPlaceId = myPlaceService.create(memberId, requestDto.placeName(), requestDto.placeLatitude(), requestDto.placeLongitude(), requestDto.placeCategoryCode(),
                 requestDto.placePhoneNumber(), requestDto.icon(), requestDto.addressName(), requestDto.addressRoadName());
-        familyService.update(memberId, myPlaceId);
+        familyService.updateAdd(memberId, myPlaceId);
         return ResponseEntity.ok().build();
     }
 
@@ -36,6 +36,7 @@ public class MyPlaceApiController {
     @DeleteMapping("/{myPlaceId}")
     public ResponseEntity<Void> delete (@ExtractPayload Long memberId, @PathVariable("myPlaceId") Long myPlaceId) {
         myPlaceService.delete(memberId, myPlaceId);
+        familyService.updateRemove(memberId, myPlaceId);
         return ResponseEntity.ok().build();
     }
 

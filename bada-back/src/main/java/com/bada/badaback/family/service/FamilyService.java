@@ -36,17 +36,35 @@ public class FamilyService {
     }
 
     @Transactional
-    public void update(Long memberId, Long myPlaceId) {
+    public void updateAdd(Long memberId, Long myPlaceId) {
         Member findMember= memberFindService.findById(memberId);
         Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
+
         List<Long> placeList = findFamily.getPlaceList();
-        if(placeList != null) {
-            placeList.add(myPlaceId);
-        }
-        else {
+        if(placeList == null) {
             placeList = new ArrayList<>();
         }
+        placeList.add(myPlaceId);
+
         findFamily.updatePlaceList(placeList);
+    }
+
+    @Transactional
+    public void updateRemove(Long memberId, Long myPlaceId) {
+        Member findMember= memberFindService.findById(memberId);
+        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
+
+        List<Long> placeList = findFamily.getPlaceList();
+        if(placeList == null) {
+            placeList = new ArrayList<>();
+        }
+        List<Long> newPlaceList = new ArrayList<>();
+        for(Long placeId : placeList) {
+            if(!placeId.equals(myPlaceId)) {
+                newPlaceList.add(placeId);
+            }
+        }
+        findFamily.updatePlaceList(newPlaceList);
     }
 
     @Transactional
