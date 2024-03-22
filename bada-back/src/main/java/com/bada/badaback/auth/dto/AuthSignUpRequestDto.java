@@ -10,6 +10,8 @@ public record AuthSignUpRequestDto(
         String social,
         String profileUrl,
         @NotBlank(message = "가족 코드는 필수입니다.")
-        String familyName
+        String familyName,
+        @NotBlank(message = "fcmToken은 필수입니다.")
+        String fcmToken
 ) {
 }
