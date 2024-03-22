@@ -4,6 +4,7 @@ import com.bada.badaback.auth.dto.AuthAlreadyRequestDto;
 import com.bada.badaback.auth.dto.AuthJoinRequestDto;
 import com.bada.badaback.auth.dto.AuthSignUpRequestDto;
 import com.bada.badaback.auth.dto.LoginResponseDto;
+import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,11 +13,13 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
-import static com.bada.badaback.feature.TokenFixture.ACCESS_TOKEN;
-import static com.bada.badaback.feature.TokenFixture.REFRESH_TOKEN;
+import static com.bada.badaback.feature.TokenFixture.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("Auth [Controller Layer] -> AuthApiController 테스트")
@@ -161,6 +164,54 @@ class AuthApiControllerTest extends ControllerTest {
                     .post(BASE_URL)
                     .contentType(APPLICATION_JSON)
                     .content(convertObjectToJson(request));
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isOk()
+                    );
+        }
+    }
+
+    @Nested
+    @DisplayName("로그아웃 API 테스트 [GET /api/auth/logout]")
+    class logout {
+        private static final String BASE_URL = "/api/auth/logout";
+
+        @Test
+        @DisplayName("Authorization_Header에 RefreshToken이 없으면 예외가 발생한다")
+        void throwExceptionByInvalidPermission() throws Exception {
+            // when
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .get(BASE_URL);
+
+            // then
+            final AuthErrorCode expectedError = AuthErrorCode.INVALID_PERMISSION;
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isForbidden(),
+                            jsonPath("$.status").exists(),
+                            jsonPath("$.status").value(expectedError.getStatus().value()),
+                            jsonPath("$.errorCode").exists(),
+                            jsonPath("$.errorCode").value(expectedError.getErrorCode()),
+                            jsonPath("$.message").exists(),
+                            jsonPath("$.message").value(expectedError.getMessage())
+                    );
+
+        }
+
+        @Test
+        @DisplayName("로그아웃에 성공한다")
+        void success() throws Exception {
+            // given
+            doNothing()
+                    .when(authService)
+                    .logout(anyLong());
+
+            // when
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .get(BASE_URL)
+                    .header(AUTHORIZATION, BEARER_TOKEN + REFRESH_TOKEN);
 
             // then
             mockMvc.perform(requestBuilder)
