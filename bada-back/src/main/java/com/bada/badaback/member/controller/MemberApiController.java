@@ -29,4 +29,10 @@ public class MemberApiController {
         memberService.update(memberId, requestDto.name(), multipartFile);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> delete (@ExtractPayload Long memberId) {
+        memberService.delete(memberId);
+        return ResponseEntity.ok().build();
+    }
 }
