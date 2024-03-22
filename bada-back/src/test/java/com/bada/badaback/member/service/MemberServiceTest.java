@@ -1,16 +1,28 @@
 package com.bada.badaback.member.service;
 
+import com.bada.badaback.auth.domain.AuthCode;
+import com.bada.badaback.auth.exception.AuthErrorCode;
+import com.bada.badaback.auth.service.AuthCodeFindService;
+import com.bada.badaback.auth.service.TokenService;
 import com.bada.badaback.common.ServiceTest;
+import com.bada.badaback.family.domain.Family;
+import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.dto.MemberDetailResponseDto;
+import com.bada.badaback.member.exception.MemberErrorCode;
+import com.bada.badaback.state.exception.StateErrorCode;
+import com.bada.badaback.state.service.StateFindService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.bada.badaback.feature.AuthCodeFixture.AUTHCODE_0;
+import static com.bada.badaback.feature.FamilyFixture.FAMILY_0;
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("Member [Service Layer] -> MemberService 테스트")
@@ -21,11 +33,22 @@ public class MemberServiceTest extends ServiceTest {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private StateFindService stateFindService;
+
     private Member member;
+    private AuthCode authCode;
+
+    private Family family;
 
     @BeforeEach
     void setup() {
         member = memberRepository.save(SUNKYOUNG.toMember());
+        authCode = authCodeRepository.save(AUTHCODE_0.toAuthCode(member));
+        family = familyRepository.save(FAMILY_0.toFamily(member.getFamilyCode()));
     }
 
     @Nested
@@ -70,6 +93,27 @@ public class MemberServiceTest extends ServiceTest {
                     () -> assertThat(findmember.getName()).isEqualTo("새로운이름"),
                     () -> assertThat(findmember.getProfileUrl()).isEqualTo(null)
             );
+        }
+    }
+
+    @Nested
+    @DisplayName("회원 탈퇴")
+    class delete {
+        @Test
+        @DisplayName("회원 탈퇴에 성공한다")
+        void success() {
+            // given
+            boolean actual1 = tokenService.isRefreshTokenExists(member.getId(), "refresh_token");
+            memberService.delete(member.getId());
+
+            // when - then
+            assertThatThrownBy(() -> memberFindService.findById(member.getId()))
+                    .isInstanceOf(BaseException.class)
+                    .hasMessage(MemberErrorCode.MEMBER_NOT_FOUND.getMessage());
+            assertThatThrownBy(() -> stateFindService.findByMember(member))
+                    .isInstanceOf(BaseException.class)
+                    .hasMessage(StateErrorCode.STATE_NOT_FOUND.getMessage());
+            assertThat(actual1).isFalse();
         }
     }
 
