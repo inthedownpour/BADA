@@ -43,7 +43,7 @@ public class MyPlaceServiceTest extends ServiceTest {
     void create() {
         // when
         Long myPlaceId = myPlaceService.create(member.getId(),"집", "35.111111", "127.111111", "SC4",
-                "042-1111-1111", "icon0", "지번 주소", "도로명 주소");
+                "042-1111-1111", "icon0", "지번 주소", "도로명 주소","11111111");
 
         // then
         MyPlace findMyPlace = myPlaceFindService.findById(myPlaceId);

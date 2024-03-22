@@ -22,7 +22,7 @@ public class MyPlaceApiController {
     @PostMapping
     public ResponseEntity<Void> create(@ExtractPayload Long memberId, @RequestBody MyPlaceRequestDto requestDto) {
         Long myPlaceId = myPlaceService.create(memberId, requestDto.placeName(), requestDto.placeLatitude(), requestDto.placeLongitude(), requestDto.placeCategoryCode(),
-                requestDto.placePhoneNumber(), requestDto.icon(), requestDto.addressName(), requestDto.addressRoadName());
+                requestDto.placePhoneNumber(), requestDto.icon(), requestDto.addressName(), requestDto.addressRoadName(), requestDto.placeCode());
         familyService.updateAdd(memberId, myPlaceId);
         return ResponseEntity.ok().build();
     }
