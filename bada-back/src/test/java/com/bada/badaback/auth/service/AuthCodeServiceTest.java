@@ -1,7 +1,9 @@
 package com.bada.badaback.auth.service;
 
 import com.bada.badaback.auth.domain.AuthCode;
+import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ServiceTest;
+import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.bada.badaback.feature.AuthCodeFixture.AUTHCODE_0;
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("AuthCode [Service Layer] -> AuthCodeService 테스트")
@@ -23,9 +26,12 @@ public class AuthCodeServiceTest extends ServiceTest {
 
     private Member member;
 
+    private AuthCode authCode;
+
     @BeforeEach
     void setup() {
         member = memberRepository.save(SUNKYOUNG.toMember());
+        authCode = authCodeRepository.save(AUTHCODE_0.toAuthCode(member));
     }
 
     @Test
@@ -59,5 +65,17 @@ public class AuthCodeServiceTest extends ServiceTest {
                 () -> assertThat(findMember.getProfileUrl()).isEqualTo(member.getProfileUrl()),
                 () -> assertThat(findMember.getFamilyCode()).isEqualTo(member.getFamilyCode())
         );
+    }
+
+    @Test
+    @DisplayName("인증코드 삭제에 성공한다")
+    void success() {
+        // given
+        authCodeService.delete(member.getId());
+
+        // when - then
+        assertThatThrownBy(() -> authCodeFindService.findByMemberId(member.getId()))
+                .isInstanceOf(BaseException.class)
+                .hasMessage(AuthErrorCode.AUTHCODE_NOT_FOUND.getMessage());
     }
 }
