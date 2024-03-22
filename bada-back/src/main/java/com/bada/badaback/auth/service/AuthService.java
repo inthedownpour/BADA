@@ -53,7 +53,6 @@ public class AuthService {
         Long memberId = AlreadyMember(email, social);
 
         if(memberId == null) {
-
             Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, findFamilyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
@@ -119,7 +118,7 @@ public class AuthService {
         LocalDateTime authCodeTime = authCode.getModifiedAt().plusMinutes(10);
 
         if(nowTime.isAfter(authCodeTime)) { // 발급 후 10분이상 지남
-            throw BaseException.type(AuthErrorCode.AUTH_EXPIRED_AUTHCODE);
+            throw BaseException.type(AuthErrorCode.MEMBER_IS_NOT_AUTHCODE_MEMBER);
         }
     }
 }
