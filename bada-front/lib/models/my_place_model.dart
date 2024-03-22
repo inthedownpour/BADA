@@ -49,15 +49,18 @@ class MyPlaceData {
     debugPrint('accessToken: $accessToken');
     final response = await http.get(
       Uri.parse('https://j10b207.p.ssafy.io/api/myplace'),
-      // 요청 헤더에 accessToken을 포함
       headers: {
         'Authorization': 'Bearer $accessToken',
       },
     );
 
     if (response.statusCode == 200) {
-      final List<dynamic> res = json.decode(response.body);
-      return res.map((place) => Place.fromJson(place)).toList();
+      // 응답에서 전체 JSON 객체를 디코드
+      final Map<String, dynamic> decodedData = json.decode(response.body);
+      // MyPlaceList 키에 접근하여 List<dynamic> 타입으로 변환
+      final List<dynamic> myPlaceList = decodedData['MyPlaceList'];
+      // List<dynamic>을 List<Place>로 변환
+      return myPlaceList.map((place) => Place.fromJson(place)).toList();
     } else {
       throw Exception('Failed to load places');
     }

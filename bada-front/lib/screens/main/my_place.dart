@@ -60,7 +60,10 @@ class _MyPlaceState extends State<MyPlace> {
   void initState() {
     super.initState();
     _loadAccessToken();
-    myPlaces = MyPlaceData.loadPlaces(accessToken);
+    // myPlaces = MyPlaceData.loadPlaces(accessToken);
+    myPlaces = MyPlaceData.loadPlaces(
+      'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Nywicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTEwMjk3NDIsImV4cCI6MTcxMTExNjE0Mn0.MbPFncZgd7vL6-V9x3DNQvt2ozoC8z0RSoalDV-BhyQ',
+    );
   }
 
   @override
