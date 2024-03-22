@@ -47,7 +47,7 @@ public class AuthService {
     public Long join(String name, String phone, String email, String social, String profileUrl,
                      String code, String fcmToken){
         // 인증 코드 유효성 체크
-        validateAuthCode(code, LocalDateTime.now());
+        // validateAuthCode(code, LocalDateTime.now());
         String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
 
         Long memberId = AlreadyMember(email, social);
@@ -64,7 +64,7 @@ public class AuthService {
     @Transactional
     public Long joinChild(String name, String phone, String profileUrl, String code, String fcmToken){
         // 인증 코드 유효성 체크
-        validateAuthCode(code, LocalDateTime.now());
+        // validateAuthCode(code, LocalDateTime.now());
         String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
         Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode, fcmToken);
 
