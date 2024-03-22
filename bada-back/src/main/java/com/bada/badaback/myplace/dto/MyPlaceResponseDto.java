@@ -9,7 +9,8 @@ public record MyPlaceResponseDto(
         String placeName,
         String icon,
         String addressName,
-        String addressRoadName
+        String addressRoadName,
+        String placeCode
 ) {
     public static MyPlaceResponseDto from(MyPlace findMyplace) {
         return MyPlaceResponseDto.builder()
@@ -18,6 +19,7 @@ public record MyPlaceResponseDto(
                 .icon(findMyplace.getIcon())
                 .addressName(findMyplace.getAddressName())
                 .addressRoadName(findMyplace.getAddressRoadName())
+                .placeCode(findMyplace.getPlaceCode())
                 .build();
     }
 }
