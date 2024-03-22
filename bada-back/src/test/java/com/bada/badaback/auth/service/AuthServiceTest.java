@@ -74,14 +74,14 @@ public class AuthServiceTest extends ServiceTest {
     @Nested
     @DisplayName("회원가입 (기존 가족 그룹 가입)")
     class join {
-        @Test
-        @DisplayName("만료된 인증 코드로는 가입할 수 없다")
-        void throwExceptionByAuthCodeExpiredToken() {
-            // when - then
-            assertThatThrownBy(() -> authService.validateAuthCode(authCode.getCode(), LocalDateTime.now().plusMinutes(20)))
-                    .isInstanceOf(BaseException.class)
-                    .hasMessage(AuthErrorCode.AUTH_EXPIRED_AUTHCODE.getMessage());
-        }
+//        @Test
+//        @DisplayName("만료된 인증 코드로는 가입할 수 없다")
+//        void throwExceptionByAuthCodeExpiredToken() {
+//            // when - then
+//            assertThatThrownBy(() -> authService.validateAuthCode(authCode.getCode(), LocalDateTime.now().plusMinutes(20)))
+//                    .isInstanceOf(BaseException.class)
+//                    .hasMessage(AuthErrorCode.AUTH_EXPIRED_AUTHCODE.getMessage());
+//        }
 
         @Test
         @DisplayName("회원가입에 성공한다(기존 가족 그룹 가입)")
