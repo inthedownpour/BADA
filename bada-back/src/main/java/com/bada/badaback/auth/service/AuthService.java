@@ -1,8 +1,6 @@
 package com.bada.badaback.auth.service;
 
 import com.bada.badaback.auth.dto.LoginResponseDto;
-import com.bada.badaback.family.domain.Family;
-import com.bada.badaback.family.service.FamilyFindService;
 import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.global.security.JwtProvider;
 import com.bada.badaback.member.domain.Member;
@@ -27,13 +25,13 @@ public class AuthService {
 
     @Transactional
     public Long signup(String name, String phone, String email, String social, String profileUrl,
-                       String familyName){
+                       String familyName, String fcmToken){
         Long memberId = AlreadyMember(email, social);
 
         if(memberId == null) {
             String familyCode = familyService.create(familyName);
 
-            Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, familyCode);
+            Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, familyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
 
@@ -42,14 +40,15 @@ public class AuthService {
 
     @Transactional
     public Long join(String name, String phone, String email, String social, String profileUrl,
-                       String code){
+                     String code, String fcmToken){
         // 인증 코드 유효성 체크
         String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
 
         Long memberId = AlreadyMember(email, social);
+        System.out.println("memberId : "+memberId);
         if(memberId == null) {
 
-            Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, findFamilyCode);
+            Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, findFamilyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
 
@@ -57,10 +56,10 @@ public class AuthService {
     }
 
     @Transactional
-    public Long joinChild(String name, String phone, String profileUrl, String code){
+    public Long joinChild(String name, String phone, String profileUrl, String code, String fcmToken){
         // 인증 코드 유효성 체크
         String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
-        Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode);
+        Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode, fcmToken);
 
         return memberRepository.save(member).getId();
     }
@@ -84,10 +83,12 @@ public class AuthService {
                 .familyCode(member.getFamilyCode())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .fcmToken(member.getFcmToken())
                 .build();
     }
 
-    private Long AlreadyMember(String email, String social) {
+    @Transactional
+    public Long AlreadyMember(String email, String social) {
         if(memberRepository.existsByEmailAndSocial(email, SocialType.valueOf(social))){
             return memberFindService.findByEmailAndSocial(email, SocialType.valueOf(social)).getId();
         }

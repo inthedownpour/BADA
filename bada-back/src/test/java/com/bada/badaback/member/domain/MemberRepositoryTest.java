@@ -37,7 +37,9 @@ public class MemberRepositoryTest extends RepositoryTest {
                 () -> assertThat(findMember.getSocial()).isEqualTo(member.getSocial()),
                 () -> assertThat(findMember.getIsParent()).isEqualTo(1),
                 () -> assertThat(findMember.getProfileUrl()).isEqualTo(member.getProfileUrl()),
-                () -> assertThat(findMember.getFamilyCode()).isEqualTo(member.getFamilyCode())
+                () -> assertThat(findMember.getFamilyCode()).isEqualTo(member.getFamilyCode()),
+                () -> assertThat(findMember.getMovingState()).isEqualTo(member.getMovingState()),
+                () -> assertThat(findMember.getFcmToken()).isEqualTo(member.getFcmToken())
         );
 
     }
@@ -69,7 +71,9 @@ public class MemberRepositoryTest extends RepositoryTest {
                 () -> assertThat(findMember.getSocial()).isEqualTo(member.getSocial()),
                 () -> assertThat(findMember.getIsParent()).isEqualTo(1),
                 () -> assertThat(findMember.getProfileUrl()).isEqualTo(member.getProfileUrl()),
-                () -> assertThat(findMember.getFamilyCode()).isEqualTo(member.getFamilyCode())
+                () -> assertThat(findMember.getFamilyCode()).isEqualTo(member.getFamilyCode()),
+        () -> assertThat(findMember.getMovingState()).isEqualTo(member.getMovingState()),
+                () -> assertThat(findMember.getFcmToken()).isEqualTo(member.getFcmToken())
         );
     }
 }

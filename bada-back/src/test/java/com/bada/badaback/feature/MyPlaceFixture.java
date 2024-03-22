@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum MyPlaceFixture {
     MYPLACE_0("집", "35.111111", "127.111111", "SC4", "042-1111-1111", "icon0", "지번 주소", "도로명 주소"),
-    MYPLACE_1("학교", "35.222222", "127.222222", "SC4", "042-2222-2222", "icon1", "지번 주소", "도로명 주소")
+    MYPLACE_1("학교", "35.222222", "127.222222", "SC4", "042-2222-2222", "icon1", "지번 주소", "도로명 주소"),
+    MYPLACE_2("집", "35.333333", "127.333333", "SC4", "042-3333-3333", "icon2", "지번 주소", "도로명 주소"),
+    MYPLACE_3("학교", "35.444444", "127.444444", "SC4", "042-4444-4444", "icon3", "지번 주소", "도로명 주소")
     ;
 
     private final String placeName;
