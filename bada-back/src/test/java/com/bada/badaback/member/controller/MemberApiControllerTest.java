@@ -147,6 +147,54 @@ public class MemberApiControllerTest extends ControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("회원 탈퇴 API 테스트 [DELETE /api/members]")
+    class delete {
+        private static final String BASE_URL = "/api/members";
+
+        @Test
+        @DisplayName("Authorization_Header에 RefreshToken이 없으면 예외가 발생한다")
+        void throwExceptionByInvalidPermission() throws Exception {
+            // when
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .delete(BASE_URL);
+
+            // then
+            final AuthErrorCode expectedError = AuthErrorCode.INVALID_PERMISSION;
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isForbidden(),
+                            jsonPath("$.status").exists(),
+                            jsonPath("$.status").value(expectedError.getStatus().value()),
+                            jsonPath("$.errorCode").exists(),
+                            jsonPath("$.errorCode").value(expectedError.getErrorCode()),
+                            jsonPath("$.message").exists(),
+                            jsonPath("$.message").value(expectedError.getMessage())
+                    );
+
+        }
+
+        @Test
+        @DisplayName("회원 탈퇴에 성공한다")
+        void success() throws Exception {
+            // given
+            doNothing()
+                    .when(memberService)
+                    .delete(anyLong());
+
+            // when
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .delete(BASE_URL)
+                    .header(AUTHORIZATION, BEARER_TOKEN + REFRESH_TOKEN);
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isOk()
+                    );
+        }
+    }
+
     private MemberDetailResponseDto readMemberDetailResponseDto() {
         return new MemberDetailResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getPhone(), SUNKYOUNG.getEmail(),
                 SUNKYOUNG.getSocial().getSocialType(), SUNKYOUNG.getProfileUrl(), LocalDateTime.now(), SUNKYOUNG.getFamilyCode(),
