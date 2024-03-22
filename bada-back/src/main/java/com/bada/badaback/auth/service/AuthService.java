@@ -53,7 +53,6 @@ public class AuthService {
         Long memberId = AlreadyMember(email, social);
 
         if(memberId == null) {
-
             Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, findFamilyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
@@ -64,7 +63,7 @@ public class AuthService {
     @Transactional
     public Long joinChild(String name, String phone, String profileUrl, String code, String fcmToken){
         // 인증 코드 유효성 체크
-        validateAuthCode(code, LocalDateTime.now());
+        // validateAuthCode(code, LocalDateTime.now());
         String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
         Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode, fcmToken);
 
@@ -119,7 +118,7 @@ public class AuthService {
         LocalDateTime authCodeTime = authCode.getModifiedAt().plusMinutes(10);
 
         if(nowTime.isAfter(authCodeTime)) { // 발급 후 10분이상 지남
-            throw BaseException.type(AuthErrorCode.AUTH_EXPIRED_AUTHCODE);
+            throw BaseException.type(AuthErrorCode.MEMBER_IS_NOT_AUTHCODE_MEMBER);
         }
     }
 }
