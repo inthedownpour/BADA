@@ -8,15 +8,16 @@ import com.bada.badaback.myplace.domain.MyPlace;
 import com.bada.badaback.myplace.domain.MyPlaceRepository;
 import com.bada.badaback.myplace.dto.MyPlaceDetailResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class MyPlaceService {
     private final MemberFindService memberFindService;
     private final FamilyFindService familyFindService;
@@ -25,11 +26,11 @@ public class MyPlaceService {
 
     @Transactional
     public Long create(Long memberId, String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode,
-                       String placePhoneNumber, String icon, String addressName, String addressRoadName) {
+                       String placePhoneNumber, String icon, String addressName, String addressRoadName, String placeCode) {
         Member findMember = memberFindService.findById(memberId);
 
         MyPlace myPlace = MyPlace.createMyPlace(placeName, placeLatitude, placeLongitude, placeCategoryCode,
-                placePhoneNumber, icon, findMember.getFamilyCode(), addressName, addressRoadName);
+                placePhoneNumber, icon, findMember.getFamilyCode(), addressName, addressRoadName, placeCode);
 
         return myPlaceRepository.save(myPlace).getId();
     }
@@ -46,6 +47,16 @@ public class MyPlaceService {
         Member findMember = memberFindService.findById(memberId);
         MyPlace findMyPlace = myPlaceFindService.findById(myPlaceId);
         myPlaceRepository.delete(findMyPlace);
+        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
+        List<Long> placeList = findFamily.getPlaceList();
+        if(placeList != null) {
+            for(Long placeId : placeList) {
+                if(!placeId.equals(myPlaceId)) {
+                    placeList.add(placeId);
+                }
+            }
+        }
+        findFamily.updatePlaceList(placeList);
     }
 
     @Transactional
