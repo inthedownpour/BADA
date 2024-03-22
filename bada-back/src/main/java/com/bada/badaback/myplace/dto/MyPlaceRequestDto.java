@@ -16,6 +16,9 @@ public record MyPlaceRequestDto(
         @NotBlank(message = "지번 주소는 필수입니다.")
         String addressName,
         @NotBlank(message = "도로명 주소는 필수입니다.")
-        String addressRoadName
+        String addressRoadName,
+
+        @NotBlank(message = "장소 고유 번호는 필수입니다.")
+        String placeCode
 ) {
 }
