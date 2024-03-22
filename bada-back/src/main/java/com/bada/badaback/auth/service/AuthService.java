@@ -102,6 +102,12 @@ public class AuthService {
         return null;
     }
 
+    @Transactional
+    public void logout(Long memberId) {
+        Member findMember = memberFindService.findById(memberId);
+        tokenService.deleteRefreshTokenByMemberId(findMember.getId());
+    }
+
     private String childEmail(Long memberId) {
         String number = String.valueOf((int)(Math.random() * 99) + 10);
         return "bada"+number+String.valueOf(memberId)+"@bada.com";

@@ -1,7 +1,9 @@
 package com.bada.badaback.auth.controller;
 
 import com.bada.badaback.auth.dto.*;
+import com.bada.badaback.auth.service.AuthCodeService;
 import com.bada.badaback.auth.service.AuthService;
+import com.bada.badaback.global.annotation.ExtractPayload;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthApiController {
     private final AuthService authService;
+    private final AuthCodeService authCodeService;
 
     @PostMapping("/signup")
     public ResponseEntity<LoginResponseDto> signup(@RequestBody @Valid AuthSignUpRequestDto requestDto) {
         Long memberId = authService.signup(requestDto.name(), requestDto.phone(), requestDto.email(),
                 requestDto.social(), requestDto.profileUrl(), requestDto.familyName(), requestDto.fcmToken());
         LoginResponseDto responseDto = authService.login(memberId);
+        authCodeService.issueCode(memberId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -28,6 +32,7 @@ public class AuthApiController {
         Long memberId = authService.join(requestDto.name(), requestDto.phone(), requestDto.email(),
                 requestDto.social(), requestDto.profileUrl(), requestDto.code(), requestDto.fcmToken());
         LoginResponseDto responseDto = authService.login(memberId);
+        authCodeService.issueCode(memberId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -36,6 +41,7 @@ public class AuthApiController {
         Long memberId = authService.joinChild(requestDto.name(), requestDto.phone(), requestDto.profileUrl(), requestDto.code(),
                 requestDto.fcmToken());
         LoginResponseDto responseDto = authService.login(memberId);
+        authCodeService.issueCode(memberId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -46,8 +52,14 @@ public class AuthApiController {
             return ResponseEntity.noContent().build();
         }
         LoginResponseDto responseDto = authService.login(memberId);
+        authCodeService.issueCode(memberId);
         return ResponseEntity.ok(responseDto);
     }
 
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(@ExtractPayload Long memberId) {
+        authService.logout(memberId);
+        return ResponseEntity.ok().build();
+    }
 }
 
