@@ -2,6 +2,7 @@ package com.bada.badaback.myplace.controller;
 
 import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ControllerTest;
+import com.bada.badaback.myplace.dto.MyPlaceDetailResponseDto;
 import com.bada.badaback.myplace.dto.MyPlaceRequestDto;
 import com.bada.badaback.myplace.dto.MyPlaceUpdateRequestDto;
 import org.junit.jupiter.api.DisplayName;
@@ -181,6 +182,55 @@ public class MyPlaceApiControllerTest extends ControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("마이 플레이스 상세 조회 API 테스트 [PATCH /api/myplace/{myPlaceId}]")
+    class readMyPlace {
+        private static final String BASE_URL = "/api/myplace/{myPlaceId}";
+        private static final Long MYPLACE_ID = 1L;
+
+        @Test
+        @DisplayName("Authorization_Header에 RefreshToken이 없으면 예외가 발생한다")
+        void throwExceptionByInvalidPermission() throws Exception {
+            // when
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .get(BASE_URL, MYPLACE_ID);
+
+            // then
+            final AuthErrorCode expectedError = AuthErrorCode.INVALID_PERMISSION;
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isForbidden(),
+                            jsonPath("$.status").exists(),
+                            jsonPath("$.status").value(expectedError.getStatus().value()),
+                            jsonPath("$.errorCode").exists(),
+                            jsonPath("$.errorCode").value(expectedError.getErrorCode()),
+                            jsonPath("$.message").exists(),
+                            jsonPath("$.message").value(expectedError.getMessage())
+                    );
+
+        }
+
+        @Test
+        @DisplayName("마이 플레이스 상세 조회에 성공한다")
+        void success() throws Exception {
+            // given
+            doReturn(createMyPlaceDetailResponseDto())
+                    .when(myPlaceService)
+                    .read(anyLong(), anyLong());
+
+            // when
+            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                    .get(BASE_URL, MYPLACE_ID)
+                    .header(AUTHORIZATION, BEARER_TOKEN + ACCESS_TOKEN);
+
+            // then
+            mockMvc.perform(requestBuilder)
+                    .andExpectAll(
+                            status().isOk()
+                    );
+        }
+    }
+
     private MyPlaceRequestDto createMyPlaceRequestDto() {
         return new MyPlaceRequestDto("집", "35.111111", "127.111111", "SC4",
                 "042-1111-1111", "icon0", "지번 주소", "도로명 주소");
@@ -188,5 +238,9 @@ public class MyPlaceApiControllerTest extends ControllerTest {
 
     private MyPlaceUpdateRequestDto createMyPlaceUpdateRequestDto() {
         return new MyPlaceUpdateRequestDto("새로운 이름", "icon1");
+    }
+
+    private MyPlaceDetailResponseDto createMyPlaceDetailResponseDto() {
+        return new MyPlaceDetailResponseDto(1L, "집", "35.111111", "127.111111", "SC4", "042-1111-1111", "icon0", "가족코드", "지번 주소", "도로명 주소");
     }
 }

@@ -2,6 +2,7 @@ package com.bada.badaback.alarm.service;
 
 import com.bada.badaback.alarm.domain.AlarmLog;
 import com.bada.badaback.alarm.domain.AlarmRepository;
+import com.bada.badaback.alarm.dto.AlarmLogRequestDto;
 import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.kafka.dto.AlarmDto;
 import com.bada.badaback.member.domain.Member;
@@ -29,14 +30,15 @@ public class AlarmLogService {
     return alarmRepository.findAllAlarmLogsbyMemberId(memberId);
   }
 
-  public String writeAlarmLog(AlarmDto alarmDto) {
-    Optional<Member> optMember = memberRepository.findById(Long.valueOf(alarmDto.getMemberId()));
+  @Transactional
+  public void writeAlarmLog(AlarmLogRequestDto alarmLogRequestDto) {
+    Optional<Member> optMember = memberRepository.findById(alarmLogRequestDto.getMemberId());
     if (optMember.isEmpty()) { // 찾는 회원 없다면 에러발생
        throw new BaseException(MemberErrorCode.MEMBER_NOT_FOUND);
     }
-    AlarmLog alarmLog = AlarmLog.createAlarmLog(alarmDto.getType(), optMember.get());
+    AlarmLog alarmLog = AlarmLog.createAlarmLog(alarmLogRequestDto.getType(), optMember.get());
+
     alarmRepository.save(alarmLog);
-    return "AlarmLog write success";
   }
 
 

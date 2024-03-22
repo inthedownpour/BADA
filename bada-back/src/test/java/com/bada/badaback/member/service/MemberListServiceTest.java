@@ -44,7 +44,8 @@ public class MemberListServiceTest extends ServiceTest {
                 () -> assertThat(familyList.familyList().get(0).name()).isEqualTo(memberList[2].getName()),
                 () -> assertThat(familyList.familyList().get(0).isParent()).isEqualTo(0),
                 () -> assertThat(familyList.familyList().get(0).profileUrl()).isEqualTo(null),
-                () -> assertThat(familyList.familyList().get(0).movingState()).isEqualTo(0)
+                () -> assertThat(familyList.familyList().get(0).movingState()).isEqualTo(0),
+                () -> assertThat(familyList.familyList().get(0).fcmToken()).isEqualTo(memberList[2].getFcmToken())
         );
 
     }
