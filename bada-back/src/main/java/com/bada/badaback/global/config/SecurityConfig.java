@@ -67,13 +67,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
                                 .requestMatchers(
-                                        AntPathRequestMatcher.antMatcher("/api/**")
+                                        AntPathRequestMatcher.antMatcher("/api/**"),
+                                        AntPathRequestMatcher.antMatcher("/api/auth/logout")
                                 ).hasRole("USER")
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(corsFilter(), SecurityContextPersistenceFilter.class)
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, memberFindService), UsernamePasswordAuthenticationFilter.class);
-
 
         return http.build();
     }

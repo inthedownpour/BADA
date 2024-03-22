@@ -38,6 +38,9 @@ public class AuthServiceTest extends ServiceTest {
     @Autowired
     private MemberFindService memberFindService;
 
+    @Autowired
+    private TokenService tokenService;
+
     private Member member;
     private AuthCode authCode;
 
@@ -146,5 +149,16 @@ public class AuthServiceTest extends ServiceTest {
                     assertThat(loginResponseDto.refreshToken()).isEqualTo(findToken.getRefreshToken());
                 }
         );
+    }
+
+    @Test
+    @DisplayName("로그아웃에 성공한다")
+    void logout() {
+        // given
+        boolean actual1 = tokenService.isRefreshTokenExists(member.getId(), "refresh_token");
+        authService.logout(member.getId());
+
+        // when - then
+        assertThat(actual1).isFalse();
     }
 }
