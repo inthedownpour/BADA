@@ -4,10 +4,14 @@ import com.bada.badaback.safefacility.domain.Point;
 import com.bada.badaback.safefacility.domain.SafeFacility;
 import com.bada.badaback.safefacility.domain.SafeFacilityRepository;
 import com.bada.badaback.safefacility.dto.SafeFacilityResponseDto;
+import com.uber.h3core.H3Core;
+import com.uber.h3core.util.LatLng;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,53 +24,28 @@ public class SafeFacilityService {
     //CCTV 출발 시작 좌표로 가져오기
     //두 지점의 거리를 구하고 그것의 반만큼의 거리를 구한다.
     //todo 경로찾기 알고리즘 구현
-    public SafeFacilityResponseDto getCCTVs(String startX, String startY, String endX, String endY) {
+    public SafeFacilityResponseDto getCCTVs(String startX, String startY, String endX, String endY) throws IOException {
         Point start = Point.builder()
-                .longitude(Double.parseDouble(startX))
                 .latitude(Double.parseDouble(startY))
+                .longitude(Double.parseDouble(startX))
                 .build();
 
-//                new Point(Double.parseDouble(startY), Double.parseDouble(startX));
         Point end = Point.builder()
                 .latitude(Double.parseDouble(endY))
                 .longitude(Double.parseDouble(endX))
                 .build();
 
-        //도착지와 출발지의 h3값 찾기
-//        H3Core h3 = H3Core.newInstance();
-//        int res = 14;
-//        String startHexAddr = h3.latLngToCellAddress(s0tart.getLatitude(), start.getLongitude(), res);
-//        String endHexAddr = h3.latLngToCellAddress(end.getLatitude(), end.getLongitude(), res);
-//
-//        System.out.println("출발지 헥사곤 주소: " + startHexAddr);
-//        System.out.println("도착지 헥사곤 주소: " + endHexAddr);
-//
-//        System.out.println("출발지와 도착지 거리: " + h3.gridDistance(startHexAddr, endHexAddr));
-        //범위안의 그리드 다 가져오기
-//        h3.polygonToCellAddresses();
-
-        //가운데 좌표 가져와서 그곳을 기준으로 300m거리안에 있는 cctv 데이터를 가져오고 안에서 순서대로 최대 3개만 골라서 넘긴다
-
-
         Point mid = calculateMidpoint(start, end);
-//        System.out.println("start: " + start);
-//        System.out.println("end: " + end);
-//        System.out.println("mid: " + mid);
-        Double sLatRad = Math.toRadians(90 - start.getLatitude());
-        Double seLongRad = Math.toRadians(start.getLongitude()-end.getLongitude());
-        Double eLatRad = Math.toRadians(90 - end.getLatitude());
 
         //시작 ~ 도착 거리 계산
-        Double distance = 6371 * Math.acos(Math.cos(sLatRad)*Math.cos(eLatRad)+Math.sin(sLatRad)*Math.sin(eLatRad)*Math.cos(seLongRad));
-//        System.out.println("start ~ end distance: " + distance/2);
-//                ACOS(COS()*COS()+SIN()*SIN()*COS())
+        Double distance = distance(start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude());
+
 
         List<SafeFacility> paths = safeFacilityRepository.getCCTVs(mid.getLatitude().toString(), mid.getLongitude().toString(),distance/2);
 
-//        System.out.println("중간 cctv 개수: " + paths.size());
         Iterator<SafeFacility> pathIterator = paths.iterator();
 
-        //String을 포인트 여러개로 만들기
+        // String을 포인트 여러개로 만들기
         StringBuilder stringBuilder = new StringBuilder();
         int count = 0;
         while (pathIterator.hasNext()) {
@@ -80,14 +59,16 @@ public class SafeFacilityService {
                 stringBuilder.append("_");
             }
         }
-//        System.out.println(stringBuilder);
+
+        List<String> hexagonsAddress = hexagonsAddress(start, mid);
+        List<Point> hexagonsCoordinates = hexagonsCoordinates(hexagonsAddress);
 
         SafeFacilityResponseDto safeFacilityResponseDto = SafeFacilityResponseDto.from(start, end, stringBuilder.toString());
 
         return safeFacilityResponseDto;
     }
 
-    public static Point calculateMidpoint(Point start, Point end) {
+    private static Point calculateMidpoint(Point start, Point end) {
         // 위도와 경도의 평균값 계산
         double midLat = (start.getLatitude() + end.getLatitude()) / 2;
         double midLong = (start.getLongitude() + end.getLongitude()) / 2;
@@ -99,4 +80,58 @@ public class SafeFacilityService {
                 .build();
     }
 
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        int R = 6371; // 지구 반지름 (단위: km)
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon/2) * Math.sin(dLon/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    }
+
+    private double[] calc_offsets(double distance, double lat) {
+        double[] offsets = new double[2];
+        offsets[0] = 180*distance/6371/1000/Math.PI*1000; // lat
+        offsets[1] = Math.abs(360*Math.asin(Math.sin(distance/6371/2/1000)/Math.cos(lat*Math.PI/180))/Math.PI)*1000; // lon
+        return offsets;
+    }
+
+    private double[] coordinate_after_rotation(double lat, double lon, double degree, double[] offsets) {
+        double[] coordinate = new double[2];
+        coordinate[0] = lat + Math.sin(Math.toRadians(degree))*offsets[0];
+        coordinate[1] = lon + Math.cos(Math.toRadians(degree))*offsets[1];
+        return coordinate;
+    }
+
+    // [8b30e3634d61fff, 8b30e3634c20fff, 8b30e3634c12fff, ... ]
+    private List<String> hexagonsAddress(Point start, Point mid) throws IOException {
+        double radius = distance(start.getLatitude(), start.getLongitude(), mid.getLatitude(), mid.getLongitude());
+        double[] offsets = calc_offsets(radius, mid.getLatitude());
+        // 헥사곤 경계 좌표 리스트
+        List<LatLng> polygon = new ArrayList<>();
+        for(int d=0; d<=360; d+=45){
+            double[] coordinate = coordinate_after_rotation(mid.getLatitude(), mid.getLongitude(), d, offsets);
+            polygon.add(new LatLng(coordinate[0], coordinate[1])); // lat, lon
+        }
+
+        H3Core h3 = H3Core.newInstance();
+        int res = 11;
+        List<String> hexagons = h3.polygonToCellAddresses(polygon, null, res);
+
+        return hexagons;
+    }
+
+    // [Point(longitude=127.38555434963529, latitude=36.41950933776037)...]
+    private List<Point> hexagonsCoordinates(List<String> hexagons) throws IOException {
+        H3Core h3 = H3Core.newInstance();
+        List<List<List<LatLng>>> coordinates = h3.cellAddressesToMultiPolygon(hexagons, true);
+
+        List<Point> list = new ArrayList<>();
+        for(int i=0; i<coordinates.get(0).get(0).size(); i++){
+            list.add(new Point(coordinates.get(0).get(0).get(0).lat, coordinates.get(0).get(0).get(0).lng));
+        }
+        return list;
+    }
 }
