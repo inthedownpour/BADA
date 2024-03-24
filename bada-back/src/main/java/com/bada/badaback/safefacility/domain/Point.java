@@ -8,7 +8,11 @@ import lombok.ToString;
 @Builder
 @ToString
 public class Point {
-    private Double longitude;
     private Double latitude;
+    private Double longitude;
 
+    public Point(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 }
