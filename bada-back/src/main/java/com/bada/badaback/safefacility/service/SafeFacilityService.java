@@ -38,7 +38,7 @@ public class SafeFacilityService {
         Point mid = calculateMidpoint(start, end);
 
         //시작 ~ 도착 거리 계산
-        Double distance = distance(start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude());
+        double distance = distance(start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude());
 
 
         List<SafeFacility> paths = safeFacilityRepository.getCCTVs(mid.getLatitude().toString(), mid.getLongitude().toString(),distance/2);
@@ -51,7 +51,7 @@ public class SafeFacilityService {
         while (pathIterator.hasNext()) {
             count++;
             SafeFacility next = pathIterator.next();
-            stringBuilder.append(next.getFacilityLongitude() + ", " + next.getFacilityLatitude());
+            stringBuilder.append(next.getFacilityLongitude()).append(", ").append(next.getFacilityLatitude());
             if (count == 3) {
                 break;
             }
@@ -63,9 +63,7 @@ public class SafeFacilityService {
         List<String> hexagonsAddress = hexagonsAddress(start, mid);
         List<Point> hexagonsCoordinates = hexagonsCoordinates(hexagonsAddress);
 
-        SafeFacilityResponseDto safeFacilityResponseDto = SafeFacilityResponseDto.from(start, end, stringBuilder.toString());
-
-        return safeFacilityResponseDto;
+        return SafeFacilityResponseDto.from(start, end, stringBuilder.toString());
     }
 
     private static Point calculateMidpoint(Point start, Point end) {
@@ -118,9 +116,8 @@ public class SafeFacilityService {
 
         H3Core h3 = H3Core.newInstance();
         int res = 11;
-        List<String> hexagons = h3.polygonToCellAddresses(polygon, null, res);
 
-        return hexagons;
+        return h3.polygonToCellAddresses(polygon, null, res);
     }
 
     // [Point(longitude=127.38555434963529, latitude=36.41950933776037)...]
