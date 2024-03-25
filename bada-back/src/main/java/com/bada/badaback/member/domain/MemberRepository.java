@@ -16,4 +16,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select distinct m from Member m where m.familyCode = :familyCode order by m.createdAt desc")
     List<Member> familyList(@Param("familyCode") String familyCode);
+
+    Optional<Member> findByNameAndFamilyCodeAndIsParent(String name, String familyCode, int isParent);
+
+    boolean existsByNameAndFamilyCodeAndIsParent(String name, String familyCode, int isParent);
 }

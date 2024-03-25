@@ -24,4 +24,10 @@ public class MemberFindService {
         return memberRepository.findById(id)
                 .orElseThrow(() -> BaseException.type(MemberErrorCode.MEMBER_NOT_FOUND));
     }
+
+    public Member findByNameAndFamilyCodeAndIsParent(String name, String familyCode, int isParent) {
+        return memberRepository.findByNameAndFamilyCodeAndIsParent(name, familyCode, isParent)
+                .orElseThrow(() -> BaseException.type(MemberErrorCode.MEMBER_NOT_FOUND));
+    }
+
 }
