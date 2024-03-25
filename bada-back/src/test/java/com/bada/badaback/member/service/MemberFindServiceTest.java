@@ -46,7 +46,21 @@ public class MemberFindServiceTest extends ServiceTest {
         Member findMember = memberFindService.findByEmailAndSocial(member.getEmail(), member.getSocial());
 
         // then
-        assertThatThrownBy(() -> memberFindService.findById(member.getId() + 100L))
+        assertThatThrownBy(() -> memberFindService.findByEmailAndSocial("abc@gmail.com", member.getSocial()))
+                .isInstanceOf(BaseException.class)
+                .hasMessage(MemberErrorCode.MEMBER_NOT_FOUND.getMessage());
+
+        assertThat(findMember).isEqualTo(member);
+    }
+
+    @Test
+    @DisplayName("name과 familyCode로 회원을 조회한다")
+    void findByNameAndFamilyCode() {
+        // when
+        Member findMember = memberFindService.findByNameAndFamilyCodeAndIsParent(member.getName(), member.getFamilyCode(), member.getIsParent());
+
+        // then
+        assertThatThrownBy(() -> memberFindService.findByNameAndFamilyCodeAndIsParent(member.getName()+"가짜이름", member.getFamilyCode(), member.getIsParent()))
                 .isInstanceOf(BaseException.class)
                 .hasMessage(MemberErrorCode.MEMBER_NOT_FOUND.getMessage());
 
