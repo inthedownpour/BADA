@@ -5,7 +5,6 @@ import com.bada.badaback.auth.domain.AuthCodeRepository;
 import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
-import com.bada.badaback.member.exception.MemberErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +22,6 @@ public class AuthCodeFindService {
 
     public Member findMemberByCode(String code) {
         return authCodeRepository.findMemberByCode(code)
-                .orElseThrow(() -> BaseException.type(MemberErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> BaseException.type(AuthErrorCode.MEMBER_IS_NOT_AUTHCODE_MEMBER));
     }
 }
