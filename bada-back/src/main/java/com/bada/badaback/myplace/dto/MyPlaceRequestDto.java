@@ -9,7 +9,10 @@ public record MyPlaceRequestDto(
         String placeLatitude,
         @NotBlank(message = "경도는 필수입니다.")
         String placeLongitude,
+        @NotBlank(message = "장소카테고리코드는 필수입니다.")
         String placeCategoryCode,
+        @NotBlank(message = "장소카테고리이름은 필수입니다.")
+        String placeCategoryName,
         String placePhoneNumber,
         @NotBlank(message = "아이콘번호는 필수입니다.")
         String icon,
@@ -17,7 +20,6 @@ public record MyPlaceRequestDto(
         String addressName,
         @NotBlank(message = "도로명 주소는 필수입니다.")
         String addressRoadName,
-
         @NotBlank(message = "장소 고유 번호는 필수입니다.")
         String placeCode
 ) {

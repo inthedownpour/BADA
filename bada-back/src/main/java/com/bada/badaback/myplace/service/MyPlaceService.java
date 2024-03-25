@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,11 +26,11 @@ public class MyPlaceService {
     private final MyPlaceRepository myPlaceRepository;
 
     @Transactional
-    public Long create(Long memberId, String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode,
+    public Long create(Long memberId, String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode, String placeCategoryName,
                        String placePhoneNumber, String icon, String addressName, String addressRoadName, String placeCode) {
         Member findMember = memberFindService.findById(memberId);
 
-        MyPlace myPlace = MyPlace.createMyPlace(placeName, placeLatitude, placeLongitude, placeCategoryCode,
+        MyPlace myPlace = MyPlace.createMyPlace(placeName, placeLatitude, placeLongitude, placeCategoryCode, placeCategoryName,
                 placePhoneNumber, icon, findMember.getFamilyCode(), addressName, addressRoadName, placeCode);
 
         return myPlaceRepository.save(myPlace).getId();
@@ -46,17 +47,8 @@ public class MyPlaceService {
     public void delete(Long memberId, Long myPlaceId) {
         Member findMember = memberFindService.findById(memberId);
         MyPlace findMyPlace = myPlaceFindService.findById(myPlaceId);
+
         myPlaceRepository.delete(findMyPlace);
-        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
-        List<Long> placeList = findFamily.getPlaceList();
-        if(placeList != null) {
-            for(Long placeId : placeList) {
-                if(!placeId.equals(myPlaceId)) {
-                    placeList.add(placeId);
-                }
-            }
-        }
-        findFamily.updatePlaceList(placeList);
     }
 
     @Transactional
