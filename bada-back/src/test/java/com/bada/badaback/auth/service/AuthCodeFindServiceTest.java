@@ -5,7 +5,6 @@ import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ServiceTest;
 import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
-import com.bada.badaback.member.exception.MemberErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +52,7 @@ public class AuthCodeFindServiceTest extends ServiceTest {
         // then
         assertThatThrownBy(() -> authCodeFindService.findMemberByCode(authCode.getCode()+"aaa"))
                 .isInstanceOf(BaseException.class)
-                .hasMessage(MemberErrorCode.MEMBER_NOT_FOUND.getMessage());
+                .hasMessage(AuthErrorCode.MEMBER_IS_NOT_AUTHCODE_MEMBER.getMessage());
 
         assertThat(findMember).isEqualTo(member);
     }
