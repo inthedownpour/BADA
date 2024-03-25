@@ -20,7 +20,6 @@ void main() async {
   await dotenv.load(fileName: '.env');
   AuthRepository.initialize(appKey: dotenv.env['KAKAO_MAP_API'] ?? '');
 
-  // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

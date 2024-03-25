@@ -75,6 +75,28 @@ class _MapSearchState extends State<MapSearch> {
     prefs.setStringList('searchHistory', jsonStringList);
   }
 
+  Future<void> _resetSearchHistory(String keyword) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // 특정 키워드와 일치하는 모든 기록을 제거합니다.
+    _searchHistory.removeWhere((item) => item.keyword == keyword);
+
+    // 새로운 검색 기록을 생성하고 맨 앞에 추가합니다.
+    final searchHistory =
+        SearchHistory(keyword: keyword, timestamp: DateTime.now());
+    _searchHistory.insert(0, searchHistory);
+
+    // 변경된 검색 기록을 JSON 문자열 리스트로 변환합니다.
+    List<String> jsonStringList =
+        _searchHistory.map((history) => jsonEncode(history.toJson())).toList();
+
+    // 변경된 검색 기록을 SharedPreferences에 저장합니다.
+    await prefs.setStringList('searchHistory', jsonStringList);
+
+    // 검색 기록을 다시 로드합니다.
+    _loadSearchHistory();
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -175,6 +197,11 @@ class _MapSearchState extends State<MapSearch> {
                           onTap: () {
                             // 검색어를 클릭했을 때의 동작
                             _controller.text = keyword;
+                            _resetSearchHistory(keyword);
+                            setState(() {
+                              _searchResult =
+                                  fetchSearchResults(_controller.text);
+                            });
                           },
                         );
                       },

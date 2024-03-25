@@ -28,9 +28,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-                <!-- 카카오톡 공유, 카카오톡 메시지 커스텀 URL 스킴 설정 -->   
-                <!-- "kakao${YOUR_NATIVE_APP_KEY}://${PRODUCT_NAME}" 형식의 앱 실행 스킴 설정 -->
-                <!-- 카카오톡 공유, 카카오톡 메시지 -->
                 <data android:host="kakaolink"
                     android:scheme="kakao9d4c295f031b5c1f50269e353e895e12" />
             </intent-filter>
@@ -71,7 +68,6 @@
             android:value="@string/client_name" />
     </application>
     <queries>
-        <package android:name="com.kakao.talk" />
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>

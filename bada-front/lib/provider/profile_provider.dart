@@ -98,7 +98,7 @@ class ProfileProvider extends ChangeNotifier {
         break;
     }
     // TODO : memberID 가져오기(FCM용 기기ID)
-    // _phone = await SmsAutoFill().hint;
+    _phone = await SmsAutoFill().hint;
     notifyListeners();
   }
 
