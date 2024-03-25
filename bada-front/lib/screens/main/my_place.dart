@@ -39,8 +39,8 @@ class MyPlace extends StatefulWidget {
 }
 
 class _MyPlaceState extends State<MyPlace> {
-  late Future<List<Place>> myPlaces;
-  late String accessToken = '';
+  Future<List<Place>>? myPlaces;
+  String accessToken = '';
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   void _addNewPlace() {
@@ -52,18 +52,22 @@ class _MyPlaceState extends State<MyPlace> {
     );
   }
 
-  void _loadAccessToken() async {
+  Future<void> _loadAccessToken() async {
     accessToken = (await secureStorage.read(key: 'accessToken'))!;
+    debugPrint('accessToken: $accessToken');
   }
 
   @override
   void initState() {
     super.initState();
-    _loadAccessToken();
-    // myPlaces = MyPlaceData.loadPlaces(accessToken);
-    myPlaces = MyPlaceData.loadPlaces(
-      'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Nywicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTEwMjk3NDIsImV4cCI6MTcxMTExNjE0Mn0.MbPFncZgd7vL6-V9x3DNQvt2ozoC8z0RSoalDV-BhyQ',
-    );
+    _loadAccessToken().then((_) {
+      setState(() {
+        myPlaces = MyPlaceData.loadPlaces(accessToken);
+      });
+    });
+    // myPlaces = MyPlaceData.loadPlaces(
+    //   'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Miwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTExOTQ4MTQsImV4cCI6MTcxNjM3ODgxNH0.WCl4onrbwX1Y44HU1PXPaWJgSFdiwrHYwezEB7VWObQ',
+    // );
   }
 
   @override

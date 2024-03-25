@@ -89,7 +89,7 @@ class _CreateFamilyState extends State<CreateFamily> {
                     debugPrint('FCM 토큰: $fcmToken');
                     signUp(
                       name: userData.nickname!,
-                      phone: 'userData.phone!',
+                      phone: userData.phone!,
                       email: userData.email!,
                       social: userData.social!,
                       familyName: _familyNameController.text,

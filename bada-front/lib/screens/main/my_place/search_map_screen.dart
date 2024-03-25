@@ -3,7 +3,10 @@ import 'package:bada/provider/map_provider.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:bada/models/search_results.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart'; // SearchResultItem 모델 import 필요
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SearchMapScreen extends StatefulWidget {
   final SearchResultItem item;
@@ -19,14 +22,17 @@ class SearchMapScreen extends StatefulWidget {
   State<SearchMapScreen> createState() => _SearchMapScreenState();
 }
 
+// TODO : 지도를 켰을 때 마지막으로 검색했던 위치로 이동하도록 수정
 class _SearchMapScreenState extends State<SearchMapScreen> {
   late KakaoMapController mapController;
   late MapProvider mapProvider;
   late LatLng searchedLocation;
+  late String accessToken;
+  FlutterSecureStorage secureStorage = const FlutterSecureStorage();
 
   Set<Marker> markers = {};
 
-  // 현재 위치 업데이트 및 현재 위치로 화면 이동
+  // 검색 위치 업데이트 및 검색 위치로 화면 이동
   Future<void> _updateSearchedLocation() async {
     LatLng searchedLocation =
         LatLng(double.parse(widget.item.y), double.parse(widget.item.x));
@@ -55,8 +61,44 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
     Navigator.pop(context);
   }
 
+  Future<void> sendPostRequest() async {
+    accessToken = await secureStorage.read(key: 'accessToken') ?? '';
+    debugPrint('accessToken: $accessToken');
+
+    var url = Uri.parse('https://j10b207.p.ssafy.io/api/myplace');
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $accessToken',
+    };
+    var requestBody = jsonEncode({
+      "placeName": widget.item.placeName,
+      "placeLatitude": widget.item.y,
+      "placeLongitude": widget.item.x,
+      "placeCategoryCode": widget.item.categoryGroupCode,
+      "placeCategoryName": widget.item.categoryGroupName,
+      "placePhoneNumber": widget.item.phone,
+      "addressName": widget.item.addressName,
+      "addressRoadName": widget.item.roadAddressName,
+      // "placeCode": "placeCode",
+    });
+
+    var response = await http.post(url, headers: headers, body: requestBody);
+
+    if (response.statusCode == 200) {
+      // 요청이 성공적으로 처리되었을 때의 로직
+      print('Request successful');
+    } else {
+      // 오류가 발생했을 때의 로직
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    double deviceHeight = UIhelper.deviceHeight(context);
+    double deviceWidth = UIhelper.deviceWidth(context);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -66,8 +108,8 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
               child: KakaoMap(
                 onMapCreated: (controller) {
                   mapController = controller;
-                  _updateSearchedLocation();
-                  moveToSearchedLocation();
+                  _updateSearchedLocation(); // 검색 위치 업데이트
+                  moveToSearchedLocation(); // 검색 위치로 이동
                 },
                 markers: markers.toList(),
               ),
@@ -111,44 +153,70 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
             right: 0,
             child: Container(
               color: Colors.white,
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: EdgeInsets.fromLTRB(
+                deviceWidth * 0.08,
+                deviceHeight * 0.03,
+                deviceWidth * 0.08,
+                deviceHeight * 0.03,
+              ),
+              child: Column(
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        widget.item.placeName,
-                        style: const TextStyle(fontSize: 24),
-                      ),
-                      SizedBox(height: UIhelper.scaleHeight(context) * 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.item.addressName,
-                            style: const TextStyle(fontSize: 18),
+                            widget.item.placeName,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          SizedBox(height: UIhelper.scaleHeight(context) * 2),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                widget.item.addressName,
+                                style: const TextStyle(fontSize: 13),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: UIhelper.scaleHeight(context) * 8,
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: UIhelper.scaleHeight(context) * 8,
+                      Image.asset(
+                        CategoryIconMapper.getIconUrl(
+                          widget.item.categoryGroupName,
+                        ),
+                        width: UIhelper.scaleWidth(context) * 60,
                       ),
                     ],
                   ),
-
-                  Image.asset(
-                    CategoryIconMapper.getIconUrl(
-                      widget.item.categoryGroupName,
-                    ),
-                    width: UIhelper.scaleWidth(context) * 60,
+                  SizedBox(height: UIhelper.scaleHeight(context) * 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                        width: 80, // 버튼의 너비를 80픽셀로 설정
+                        height: 32, // 버튼의 높이를 32픽셀로 설정
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(deviceWidth * 0.01),
+                            backgroundColor: const Color(0xff696DFF),
+                            foregroundColor: Colors.white,
+                          ),
+                          onPressed: sendPostRequest, // myPlace 추가 요청
+                          child: const Text(
+                            '추가하기',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  // Text(
-                  //   item.categoryGroupName,
-                  //   style: const TextStyle(fontSize: 18),
-                  // ),
                 ],
               ),
             ),

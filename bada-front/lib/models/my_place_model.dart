@@ -1,45 +1,58 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 class Place {
-  final int placeId;
+  final int myPlaceId;
   final String placeName;
   final String placeLatitude;
   final String placeLongitude;
-  final String icon;
-  final String familyCode;
+  final String placeCategoryCode;
+  final String placeCategoryName;
+  final String placePhoneNumber;
+  final String addressName;
+  final String addressRoadName;
 
   Place({
-    required this.placeId,
+    required this.myPlaceId,
     required this.placeName,
     required this.placeLatitude,
     required this.placeLongitude,
-    required this.icon,
-    required this.familyCode,
+    required this.placeCategoryCode,
+    required this.placeCategoryName,
+    required this.placePhoneNumber,
+    required this.addressName,
+    required this.addressRoadName,
+    // required this.placeCode,
   });
 
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(
-      placeId: json['place_id'],
-      placeName: json['place_name'],
-      placeLatitude: json['place_latitude'],
-      placeLongitude: json['place_longitude'],
-      icon: json['icon'],
-      familyCode: json['family_code'],
+      myPlaceId: json['myPlaceId'] as int,
+      placeName: json['placeName'] as String,
+      placeLatitude: json['placeLatitude'] as String,
+      placeLongitude: json['placeLongitude'] as String,
+      placeCategoryCode: json['placeCategoryCode'] as String,
+      placeCategoryName: json['placeCategoryName'] as String,
+      placePhoneNumber: json['placePhoneNumber'] as String,
+      addressName: json['addressName'] as String,
+      addressRoadName: json['addressRoadName'] as String,
+      // placeCode: json['placeCode'] as String,
     );
   }
-
   Map<String, dynamic> toJson() {
     return {
-      'place_id': placeId,
-      'place_name': placeName,
-      'place_latitude': placeLatitude,
-      'place_longitude': placeLongitude,
-      'icon': icon,
-      'family_code': familyCode,
+      'myPlaceId': myPlaceId,
+      'placeName': placeName,
+      'placeLatitude': placeLatitude,
+      'placeLongitude': placeLongitude,
+      'placeCategoryCode': placeCategoryCode,
+      'placeCategoryName': placeCategoryName,
+      'placePhoneNumber': placePhoneNumber,
+      'addressName': addressName,
+      'addressRoadName': addressRoadName,
+      // 'placeCode': placeCode,
     };
   }
 }
