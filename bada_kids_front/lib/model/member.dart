@@ -5,7 +5,7 @@ class Member {
   int? _isParent;
   String? _profileUrl;
   String? _familyCode;
-  String? _movingState;
+  int? _movingState;
   String? _fcmToken;
 
   Member(
@@ -15,7 +15,7 @@ class Member {
       int? isParent,
       String? profileUrl,
       String? familyCode,
-      String? movingState,
+      int? movingState,
       String? fcmToken}) {
     _memberId = memberId;
     _name = name;
@@ -28,9 +28,9 @@ class Member {
   }
 
   String get fcmToken => _fcmToken!;
-  String get movingState => _movingState!;
+  int get movingState => _movingState!;
   String get familyCode => _familyCode!;
-  String get profileUrl => _profileUrl!;
+  String? get profileUrl => _profileUrl;
   int get isParent => _isParent!;
   String get phone => _phone!;
   String get name => _name!;
