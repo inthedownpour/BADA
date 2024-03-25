@@ -30,7 +30,7 @@ class SafeFacilityControllerTest extends ControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
 
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/path")
+                MockMvcRequestBuilders.post("/api/path")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input))
                         .header(AUTHORIZATION, BEARER_TOKEN + REFRESH_TOKEN))
