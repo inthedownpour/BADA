@@ -95,8 +95,8 @@ public class MyPlaceServiceTest extends ServiceTest {
         assertAll(
                 () -> assertThat(responseDto.myPlaceId()).isEqualTo(myPlace.getId()),
                 () -> assertThat(responseDto.placeName()).isEqualTo(myPlace.getPlaceName()),
-                () -> assertThat(responseDto.placeLatitude()).isEqualTo(myPlace.getPlaceLatitude()),
-                () -> assertThat(responseDto.placeLongitude()).isEqualTo(myPlace.getPlaceLongitude()),
+                () -> assertThat(responseDto.placeLatitude()).isEqualTo(Double.parseDouble(myPlace.getPlaceLatitude())),
+                () -> assertThat(responseDto.placeLongitude()).isEqualTo(Double.parseDouble(myPlace.getPlaceLongitude())),
                 () -> assertThat(responseDto.placeCategoryCode()).isEqualTo(myPlace.getPlaceCategoryCode()),
                 () -> assertThat(responseDto.placeCategoryName()).isEqualTo(myPlace.getPlaceCategoryName()),
                 () -> assertThat(responseDto.placePhoneNumber()).isEqualTo(myPlace.getPlacePhoneNumber()),
