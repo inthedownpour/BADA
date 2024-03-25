@@ -7,6 +7,7 @@ import com.bada.badaback.myplace.dto.MyPlaceRequestDto;
 import com.bada.badaback.myplace.dto.MyPlaceUpdateRequestDto;
 import com.bada.badaback.myplace.service.MyPlaceService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,9 @@ public class MyPlaceApiController {
     private final FamilyService familyService;
 
     @PostMapping
-    public ResponseEntity<Void> create(@ExtractPayload Long memberId, @RequestBody MyPlaceRequestDto requestDto) {
+    public ResponseEntity<Void> create(@ExtractPayload Long memberId, @RequestBody @Valid MyPlaceRequestDto requestDto) {
         Long myPlaceId = myPlaceService.create(memberId, requestDto.placeName(), requestDto.placeLatitude(), requestDto.placeLongitude(), requestDto.placeCategoryCode(),
-                requestDto.placePhoneNumber(), requestDto.icon(), requestDto.addressName(), requestDto.addressRoadName(), requestDto.placeCode());
+                requestDto.placeCategoryName() ,requestDto.placePhoneNumber(), requestDto.icon(), requestDto.addressName(), requestDto.addressRoadName(), requestDto.placeCode());
         familyService.updateAdd(memberId, myPlaceId);
         return ResponseEntity.ok().build();
     }

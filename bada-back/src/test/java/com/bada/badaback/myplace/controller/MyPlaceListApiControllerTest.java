@@ -52,9 +52,12 @@ public class MyPlaceListApiControllerTest extends ControllerTest {
 
     private MyPlaceListResponseDto createMyPlaceListResponseDto() {
         List<MyPlaceResponseDto> myPlaceList = new ArrayList<>();
-        myPlaceList.add(new MyPlaceResponseDto(1L, MYPLACE_0.getPlaceName(), MYPLACE_0.getIcon(), MYPLACE_0.getAddressName(), MYPLACE_0.getAddressRoadName(), MYPLACE_0.getPlaceCode()));
-        myPlaceList.add(new MyPlaceResponseDto(2L, MYPLACE_1.getPlaceName(), MYPLACE_1.getIcon(), MYPLACE_1.getAddressName(), MYPLACE_1.getAddressRoadName(), MYPLACE_1.getPlaceCode()));
-        myPlaceList.add(new MyPlaceResponseDto(3L, MYPLACE_2.getPlaceName(), MYPLACE_2.getIcon(), MYPLACE_2.getAddressName(), MYPLACE_2.getAddressRoadName(), MYPLACE_2.getPlaceCode()));
+        myPlaceList.add(new MyPlaceResponseDto(1L, MYPLACE_0.getPlaceName(), MYPLACE_0.getPlaceLongitude(), MYPLACE_0.getPlaceLatitude(), MYPLACE_0.getPlaceCategoryCode(), MYPLACE_0.getPlaceCategoryName(), MYPLACE_0.getPlacePhoneNumber(),
+                MYPLACE_0.getIcon(), MYPLACE_0.getAddressName(), MYPLACE_0.getAddressRoadName(), MYPLACE_0.getPlaceCode()));
+        myPlaceList.add(new MyPlaceResponseDto(2L, MYPLACE_1.getPlaceName(), MYPLACE_1.getPlaceLongitude(), MYPLACE_1.getPlaceLatitude(), MYPLACE_1.getPlaceCategoryCode(), MYPLACE_1.getPlaceCategoryName(), MYPLACE_1.getPlacePhoneNumber(),
+                MYPLACE_1.getIcon(), MYPLACE_1.getAddressName(), MYPLACE_1.getAddressRoadName(), MYPLACE_1.getPlaceCode()));
+        myPlaceList.add(new MyPlaceResponseDto(3L, MYPLACE_2.getPlaceName(), MYPLACE_2.getPlaceLongitude(), MYPLACE_2.getPlaceLatitude(), MYPLACE_2.getPlaceCategoryCode(), MYPLACE_2.getPlaceCategoryName(), MYPLACE_2.getPlacePhoneNumber(),
+                MYPLACE_2.getIcon(), MYPLACE_2.getAddressName(), MYPLACE_2.getAddressRoadName(), MYPLACE_2.getPlaceCode()));
         return new MyPlaceListResponseDto(myPlaceList);
     }
 
