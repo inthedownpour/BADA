@@ -1,9 +1,14 @@
 import 'package:bada/models/category_icon_mapper.dart';
 import 'package:bada/provider/map_provider.dart';
+import 'package:bada/screens/main/my_place/add_place.dart';
+import 'package:bada/widgets/longText_handler.dart';
 import 'package:bada/widgets/screensize.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bada/models/search_results.dart';
-import 'package:kakao_map_plugin/kakao_map_plugin.dart'; // SearchResultItem 모델 import 필요
+import 'package:flutter/widgets.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:marquee/marquee.dart'; // SearchResultItem 모델 import 필요
 
 class SearchMapScreen extends StatefulWidget {
   final SearchResultItem item;
@@ -63,6 +68,7 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
           // KakaoMap 위치 표시 (실제 KakaoMap 위젯으로 대체 필요)
           Positioned.fill(
             child: Container(
+              color: Colors.white,
               child: KakaoMap(
                 onMapCreated: (controller) {
                   mapController = controller;
@@ -112,49 +118,94 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
             child: Container(
               color: Colors.white,
               padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        widget.item.placeName,
-                        style: const TextStyle(fontSize: 24),
-                      ),
-                      SizedBox(height: UIhelper.scaleHeight(context) * 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            widget.item.addressName,
-                            style: const TextStyle(fontSize: 18),
+                          SizedBox(
+                            width: UIhelper.scaleWidth(context) * 300,
+                            height: UIhelper.scaleHeight(context) * 50,
+                            child: OptionalScrollingText(
+                              text: widget.item.placeName,
+                              style: const TextStyle(fontSize: 24),
+                            ),
+                          ),
+                          SizedBox(height: UIhelper.scaleHeight(context) * 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: UIhelper.scaleWidth(context) * 300,
+                                height: UIhelper.scaleHeight(context) * 50,
+                                child: OptionalScrollingText(
+                                  text: widget.item.addressName,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: UIhelper.scaleHeight(context) * 8,
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: UIhelper.scaleHeight(context) * 8,
+                      Image.asset(
+                        CategoryIconMapper.getIconUrl(
+                          widget.item.categoryGroupName,
+                        ),
+                        width: UIhelper.scaleWidth(context) * 60,
                       ),
                     ],
                   ),
-
-                  Image.asset(
-                    CategoryIconMapper.getIconUrl(
-                      widget.item.categoryGroupName,
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(_createRoute());
+                      },
+                      child: const Text("추가하기"),
                     ),
-                    width: UIhelper.scaleWidth(context) * 60,
                   ),
-                  // Text(
-                  //   item.categoryGroupName,
-                  //   style: const TextStyle(fontSize: 18),
-                  // ),
                 ],
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => AddPlace(
+        placeName: widget.item.placeName,
+        addressName: widget.item.addressName,
+        roadAddressName: widget.item.roadAddressName,
+        categoryGroupName: widget.item.categoryGroupName,
+        categoryGroupCode: widget.item.categoryGroupCode,
+        phone: widget.item.phone,
+        x: widget.item.x,
+        y: widget.item.y,
+        id: widget.item.id,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
     );
   }
 }

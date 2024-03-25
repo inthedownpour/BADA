@@ -54,6 +54,7 @@ class _MyPlaceState extends State<MyPlace> {
 
   void _loadAccessToken() async {
     accessToken = (await secureStorage.read(key: 'accessToken'))!;
+    print("my_place 57번줄 $accessToken");
   }
 
   @override
@@ -61,9 +62,7 @@ class _MyPlaceState extends State<MyPlace> {
     super.initState();
     _loadAccessToken();
     // myPlaces = MyPlaceData.loadPlaces(accessToken);
-    myPlaces = MyPlaceData.loadPlaces(
-      'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Nywicm9sZSI6IlVTRVIiLCJpYXQiOjE3MTEwMjk3NDIsImV4cCI6MTcxMTExNjE0Mn0.MbPFncZgd7vL6-V9x3DNQvt2ozoC8z0RSoalDV-BhyQ',
-    );
+    myPlaces = MyPlaceData.loadPlaces();
   }
 
   @override
@@ -98,7 +97,7 @@ class _MyPlaceState extends State<MyPlace> {
                 future: myPlaces,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData) {
+                    if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                       var places = snapshot.data!;
                       return ListView.builder(
                         itemCount: places.length,
@@ -116,7 +115,11 @@ class _MyPlaceState extends State<MyPlace> {
                     } else if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     } else {
-                      return const Center(child: Text('No places to display.'));
+                      return const Center(
+                          child: Text(
+                        '저장된 장소가 없습니다.',
+                        style: TextStyle(fontSize: 20),
+                      ));
                     }
                   } else {
                     return const Center(child: CircularProgressIndicator());
