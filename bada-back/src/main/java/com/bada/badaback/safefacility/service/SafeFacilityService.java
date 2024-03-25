@@ -41,7 +41,7 @@ public class SafeFacilityService {
         double distance = distance(start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude());
 
 
-        List<SafeFacility> paths = safeFacilityRepository.getCCTVs(mid.getLatitude().toString(), mid.getLongitude().toString(),distance/2);
+        List<SafeFacility> paths = safeFacilityRepository.getCCTVs(String.valueOf(mid.getLatitude()), String.valueOf(mid.getLongitude()),distance/2);
 
         Iterator<SafeFacility> pathIterator = paths.iterator();
 
