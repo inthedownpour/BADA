@@ -3,9 +3,7 @@ package com.bada.badaback.auth.service;
 import com.bada.badaback.auth.domain.AuthCode;
 import com.bada.badaback.auth.domain.Token;
 import com.bada.badaback.auth.dto.LoginResponseDto;
-import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ServiceTest;
-import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.global.security.JwtProvider;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.domain.SocialType;
@@ -16,12 +14,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
-
 import static com.bada.badaback.feature.AuthCodeFixture.AUTHCODE_0;
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("Auth [Service Layer] -> AuthService 테스트")
