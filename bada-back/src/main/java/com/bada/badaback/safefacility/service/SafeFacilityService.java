@@ -79,6 +79,9 @@ public class SafeFacilityService {
         //police, guard 헥사곤 구하기 완료-----------------------------
 
         //1. cctv의 hexagon을 구한다 Tile로 저장해서 Tile.hexaddr 로 구분하는 자료구조 생성
+        //전체 헥사곤 받아오고 이곳에 있는 hexagon만 쓰도록 조건문 추가
+        List<String> BigHexagon = hexagonsAddress(start, end);
+
         Map<String, Tile> cctvHexagons = new HashMap<>();
         Iterator<SafeFacility> cctvIte = cctv.iterator();
         while (cctvIte.hasNext()) {
@@ -87,13 +90,16 @@ public class SafeFacilityService {
             double Lng = Double.parseDouble(next.getFacilityLongitude());
 
             String cctvHexagon = h3.latLngToCellAddress(Lat, Lng, res);
-            Tile tile = new Tile(cctvHexagon);
-            if (cctvHexagons.containsKey(cctvHexagon)) {
-                Tile preTile = cctvHexagons.get(cctvHexagon);
-                preTile.cctvCount++;
 
+            if(BigHexagon.contains(cctvHexagon)){
+                Tile tile = new Tile(cctvHexagon);
+                if (cctvHexagons.containsKey(cctvHexagon)) {
+                    Tile preTile = cctvHexagons.get(cctvHexagon);
+                    preTile.cctvCount++;
+                }
+                cctvHexagons.put(cctvHexagon, tile);
             }
-            cctvHexagons.put(cctvHexagon, tile);
+
         }
 
         //2. cctv의 hexagon으로 주위를 탐색해서 주변에 guard와 police의 헥사곤이 있다면 Tile.envir 점수를 올린다.
@@ -147,7 +153,7 @@ public class SafeFacilityService {
         List<String> pass = new ArrayList<>();
         pass = PassCCTV(layer, 1, startHexAddr, pass);
 
-        //t5. 결정된 hexagon에 있는 cctv의 좌표 passList를 만든다. (만약 여러개의 cctv가 있다면 랜덤으로 도착지에 보낸다.)
+        //5. 결정된 hexagon에 있는 cctv의 좌표 passList를 만든다. (만약 여러개의 cctv가 있다면 랜덤으로 도착지에 보낸다.)
         List<Point> passList = hexagonsCoordinates(pass);
 
         StringBuilder sb = new StringBuilder();
@@ -264,8 +270,8 @@ public class SafeFacilityService {
 
         List<Point> list = new ArrayList<>();
 
-        for(String hexagon : hexagons) {
-            LatLng latLng= h3.cellToLatLng(hexagon);
+        for (String hexagon : hexagons) {
+            LatLng latLng = h3.cellToLatLng(hexagon);
             list.add(new Point(latLng.lat, latLng.lng));
         }
         return list;
