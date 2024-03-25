@@ -7,8 +7,8 @@ import lombok.Builder;
 public record MyPlaceDetailResponseDto(
         Long myPlaceId,
         String placeName,
-        String placeLatitude,
-        String placeLongitude,
+        double placeLatitude,
+        double placeLongitude,
         String placeCategoryCode,
         String placeCategoryName,
         String placePhoneNumber,
@@ -22,8 +22,8 @@ public record MyPlaceDetailResponseDto(
         return MyPlaceDetailResponseDto.builder()
                 .myPlaceId(findMyPlace.getId())
                 .placeName(findMyPlace.getPlaceName())
-                .placeLatitude(findMyPlace.getPlaceLatitude())
-                .placeLongitude(findMyPlace.getPlaceLongitude())
+                .placeLatitude(Double.parseDouble(findMyPlace.getPlaceLatitude()))
+                .placeLongitude(Double.parseDouble(findMyPlace.getPlaceLongitude()))
                 .placeCategoryCode(findMyPlace.getPlaceCategoryCode())
                 .placeCategoryName(findMyPlace.getPlaceCategoryName())
                 .placePhoneNumber(findMyPlace.getPlacePhoneNumber())
