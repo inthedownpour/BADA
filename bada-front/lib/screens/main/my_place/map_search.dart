@@ -135,7 +135,7 @@ class _MapSearchState extends State<MapSearch> {
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () {
-                      // 아이콘 버튼을 눌렀을 때 수행할 동작
+                      // controller.text로 검색
                       setState(() {
                         _searchResult = fetchSearchResults(_controller.text);
                       });
@@ -178,7 +178,7 @@ class _MapSearchState extends State<MapSearch> {
                         SearchResultItem item = snapshot.data![index];
                         return ListTile(
                           onTap: () {
-                            _saveSearchKeyword(item.placeName);
+                            _resetSearchHistory(item.placeName);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -223,7 +223,6 @@ class _MapSearchState extends State<MapSearch> {
                           onTap: () {
                             // 검색어를 클릭했을 때의 동작
                             _controller.text = keyword;
-                            _resetSearchHistory(keyword);
                             setState(() {
                               _searchResult =
                                   fetchSearchResults(_controller.text);
