@@ -3,15 +3,20 @@ import 'package:bada/screens/main/my_family/child_setting.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class FamilyMember extends StatefulWidget {
   final String name;
+  final String? profileUrl;
   final int isParent;
+  final int? movingState;
   const FamilyMember({
     super.key,
     required this.name,
     required this.isParent,
+    this.profileUrl,
+    this.movingState,
   });
 
   @override
@@ -29,7 +34,7 @@ class _FamilyMemberState extends State<FamilyMember> {
 
   void loadMyName() async {
     const storage = FlutterSecureStorage();
-    String? name = await storage.read(key: 'name');
+    String? name = await storage.read(key: 'nickname');
     if (name != null) {
       setState(() {
         myName = name;
@@ -51,9 +56,19 @@ class _FamilyMemberState extends State<FamilyMember> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   backgroundColor: Colors.black,
                   radius: 35,
+                  backgroundImage: widget.profileUrl != null
+                      ? NetworkImage(widget.profileUrl!)
+                      : null,
+                  child: widget.profileUrl == null
+                      ? const Icon(
+                          Icons.person,
+                          size: 50,
+                          color: Colors.white,
+                        ) // Example: default icon
+                      : null,
                 ),
                 SizedBox(width: UIhelper.scaleWidth(context) * 10),
                 // Text(
@@ -69,6 +84,7 @@ class _FamilyMemberState extends State<FamilyMember> {
                   Text(
                     '이름 : ${widget.name}',
                     style: const TextStyle(fontSize: 16),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 SizedBox(width: UIhelper.scaleWidth(context) * 10),
                 if (widget.isParent == 0) ...[

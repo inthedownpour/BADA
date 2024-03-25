@@ -74,6 +74,7 @@ class _MyFamilyState extends State<MyFamily> {
                   Button281_77(
                     label: const Text('아이들'),
                     onPressed: () => _filterFamily(true),
+                    isSelected: showChildren,
                   ),
                   SizedBox(
                     width: UIhelper.scaleWidth(context) * 20,
@@ -81,6 +82,7 @@ class _MyFamilyState extends State<MyFamily> {
                   Button281_77(
                     label: const Text('부모'),
                     onPressed: () => _filterFamily(false),
+                    isSelected: !showChildren,
                   ),
                 ],
               ),
@@ -109,6 +111,7 @@ class _MyFamilyState extends State<MyFamily> {
                           return FamilyMember(
                             name: members[index]['name'],
                             isParent: members[index]['isParent'],
+                            profileUrl: members[index]['profileUrl'],
                           );
                         },
                       ),
