@@ -23,6 +23,6 @@ public class AuthCodeFindService {
 
     public Member findMemberByCode(String code) {
         return authCodeRepository.findMemberByCode(code)
-                .orElseThrow(() -> BaseException.type(MemberErrorCode.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> BaseException.type(AuthErrorCode.MEMBER_IS_NOT_AUTHCODE_MEMBER));
     }
 }
