@@ -51,7 +51,7 @@ public class MemberRepositoryTest extends RepositoryTest {
     @DisplayName("이메일과 소셜타입에 일치하는 회원의 존재 여부를 확인한다")
     void existsByEmailAndSocial() {
         boolean actual1 = memberRepository.existsByEmailAndSocial(member.getEmail(), member.getSocial());
-        boolean actual2 =  memberRepository.existsByEmailAndSocial("123@naver.com", member.getSocial());;
+        boolean actual2 =  memberRepository.existsByEmailAndSocial("123@naver.com", member.getSocial());
 
         // then
         Assertions.assertAll(
@@ -84,7 +84,7 @@ public class MemberRepositoryTest extends RepositoryTest {
     @DisplayName("이름과 패밀리코드에 일치하는 회원의 존재 여부를 확인한다")
     void existsByNameAndFamilyCode() {
         boolean actual1 = memberRepository.existsByNameAndFamilyCodeAndIsParent(childMember.getName(), childMember.getFamilyCode(), childMember.getIsParent());
-        boolean actual2 =  memberRepository.existsByNameAndFamilyCodeAndIsParent("없는회원이름", childMember.getFamilyCode(), childMember.getIsParent());;
+        boolean actual2 =  memberRepository.existsByNameAndFamilyCodeAndIsParent("없는회원이름", childMember.getFamilyCode(), childMember.getIsParent());
 
         // then
         Assertions.assertAll(
