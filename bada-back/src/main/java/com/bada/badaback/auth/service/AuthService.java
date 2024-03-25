@@ -65,9 +65,15 @@ public class AuthService {
         // 인증 코드 유효성 체크
         // validateAuthCode(code, LocalDateTime.now());
         String findFamilyCode = authCodeFindService.findMemberByCode(code).getFamilyCode();
-        Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode, fcmToken);
 
-        return memberRepository.save(member).getId();
+        Long memberId = AlreadyChildMember(name, findFamilyCode, 0);
+
+        if(memberId == null) {
+            Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode, fcmToken);
+            memberId = memberRepository.save(member).getId();
+        }
+
+        return memberId;
     }
 
 
@@ -97,6 +103,14 @@ public class AuthService {
     public Long AlreadyMember(String email, String social) {
         if(memberRepository.existsByEmailAndSocial(email, SocialType.valueOf(social))){
             return memberFindService.findByEmailAndSocial(email, SocialType.valueOf(social)).getId();
+        }
+        return null;
+    }
+
+    @Transactional
+    public Long AlreadyChildMember(String name, String familyCode, int isParent) {
+        if(memberRepository.existsByNameAndFamilyCodeAndIsParent(name, familyCode, isParent)){
+            return memberFindService.findByNameAndFamilyCodeAndIsParent(name, familyCode, isParent).getId();
         }
         return null;
     }
