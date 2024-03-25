@@ -49,17 +49,6 @@ public class MyPlaceService {
         MyPlace findMyPlace = myPlaceFindService.findById(myPlaceId);
 
         myPlaceRepository.delete(findMyPlace);
-        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
-        List<Long> placeList = findFamily.getPlaceList();
-        List<Long> newPlaceList = new ArrayList<>();
-        if(placeList != null) {
-            for(Long placeId : placeList) {
-                if(!placeId.equals(myPlaceId)) {
-                    newPlaceList.add(placeId);
-                }
-            }
-        }
-        findFamily.updatePlaceList(newPlaceList);
     }
 
     @Transactional
