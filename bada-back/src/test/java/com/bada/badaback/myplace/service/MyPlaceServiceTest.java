@@ -42,7 +42,7 @@ public class MyPlaceServiceTest extends ServiceTest {
     @DisplayName("마이플레이스 등록에 성공한다")
     void create() {
         // when
-        Long myPlaceId = myPlaceService.create(member.getId(),"집", "35.111111", "127.111111", "SC4",
+        Long myPlaceId = myPlaceService.create(member.getId(),"집", "35.111111", "127.111111", "SC4", "아파트",
                 "042-1111-1111", "icon0", "지번 주소", "도로명 주소","11111111");
 
         // then
@@ -98,6 +98,7 @@ public class MyPlaceServiceTest extends ServiceTest {
                 () -> assertThat(responseDto.placeLatitude()).isEqualTo(myPlace.getPlaceLatitude()),
                 () -> assertThat(responseDto.placeLongitude()).isEqualTo(myPlace.getPlaceLongitude()),
                 () -> assertThat(responseDto.placeCategoryCode()).isEqualTo(myPlace.getPlaceCategoryCode()),
+                () -> assertThat(responseDto.placeCategoryName()).isEqualTo(myPlace.getPlaceCategoryName()),
                 () -> assertThat(responseDto.placePhoneNumber()).isEqualTo(myPlace.getPlacePhoneNumber()),
                 () -> assertThat(responseDto.icon()).isEqualTo(myPlace.getIcon()),
                 () -> assertThat(responseDto.familyCode()).isEqualTo(myPlace.getFamilyCode()),

@@ -10,6 +10,7 @@ public record MyPlaceDetailResponseDto(
         String placeLatitude,
         String placeLongitude,
         String placeCategoryCode,
+        String placeCategoryName,
         String placePhoneNumber,
         String icon,
         String familyCode,
@@ -24,6 +25,7 @@ public record MyPlaceDetailResponseDto(
                 .placeLatitude(findMyPlace.getPlaceLatitude())
                 .placeLongitude(findMyPlace.getPlaceLongitude())
                 .placeCategoryCode(findMyPlace.getPlaceCategoryCode())
+                .placeCategoryName(findMyPlace.getPlaceCategoryName())
                 .placePhoneNumber(findMyPlace.getPlacePhoneNumber())
                 .icon(findMyPlace.getIcon())
                 .familyCode(findMyPlace.getFamilyCode())

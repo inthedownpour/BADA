@@ -24,8 +24,11 @@ public class MyPlace extends BaseTimeEntity {
     @Column(nullable = false)
     private String placeLongitude;
 
-    @Column(length = 10)
+    @Column(length = 10, nullable = false)
     private String placeCategoryCode;
+
+    @Column(length = 100, nullable = false)
+    private String placeCategoryName;
 
     private String placePhoneNumber;
 
@@ -44,12 +47,13 @@ public class MyPlace extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String placeCode;
 
-    private MyPlace(String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode,
+    private MyPlace(String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode, String placeCategoryName,
                     String placePhoneNumber, String icon, String familyCode, String addressName, String addressRoadName, String placeCode) {
         this.placeName = placeName;
         this.placeLatitude = placeLatitude;
         this.placeLongitude = placeLongitude;
         this.placeCategoryCode = placeCategoryCode;
+        this.placeCategoryName = placeCategoryName;
         this.placePhoneNumber = placePhoneNumber;
         this.icon = icon;
         this.familyCode = familyCode;
@@ -58,9 +62,9 @@ public class MyPlace extends BaseTimeEntity {
         this.placeCode = placeCode;
     }
 
-    public static MyPlace createMyPlace(String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode,
+    public static MyPlace createMyPlace(String placeName, String placeLatitude, String placeLongitude, String placeCategoryCode, String placeCategoryName,
                                         String placePhoneNumber, String icon, String familyCode, String addressName, String addressRoadName, String placeCode) {
-        return new MyPlace(placeName, placeLatitude, placeLongitude, placeCategoryCode, placePhoneNumber,
+        return new MyPlace(placeName, placeLatitude, placeLongitude, placeCategoryCode, placeCategoryName, placePhoneNumber,
                 icon, familyCode, addressName, addressRoadName, placeCode);
     }
 
