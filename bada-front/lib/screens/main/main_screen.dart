@@ -1,7 +1,6 @@
 import 'package:bada/screens/main/my_family.dart';
 import 'package:bada/screens/main/my_place.dart';
 import 'package:bada/screens/main/settings.dart';
-import 'package:bada/screens/main/testing/testPhoneCall.dart';
 import 'package:bada/screens/main/testing/testing.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
@@ -49,14 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const PhoneCall(),
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                   child: const Text('테스트'),
                 ),
                 SizedBox(

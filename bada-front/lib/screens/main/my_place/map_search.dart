@@ -9,7 +9,11 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MapSearch extends StatefulWidget {
-  const MapSearch({super.key});
+  final VoidCallback onDataUpdate;
+  const MapSearch({
+    super.key,
+    required this.onDataUpdate,
+  });
 
   @override
   State<MapSearch> createState() => _MapSearchState();
@@ -185,6 +189,7 @@ class _MapSearchState extends State<MapSearch> {
                                 builder: (context) => SearchMapScreen(
                                   item: item,
                                   keyword: _controller.text,
+                                  onDataUpdate: widget.onDataUpdate,
                                 ),
                               ),
                             );

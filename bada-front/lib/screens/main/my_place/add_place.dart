@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:bada/models/category_icon_mapper.dart';
+import 'package:bada/models/my_place_model.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 class AddPlace extends StatefulWidget {
   final String addressName,
@@ -17,18 +18,19 @@ class AddPlace extends StatefulWidget {
       x,
       y,
       id;
-
+  final VoidCallback onDataUpdate;
   const AddPlace({
     super.key,
     required this.id,
-    required this.categoryGroupName,
     required this.addressName,
-    required this.categoryGroupCode,
     required this.placeName,
     required this.roadAddressName,
-    required this.phone,
-    required this.x,
-    required this.y,
+    this.x = '',
+    this.y = '',
+    this.phone = '',
+    this.categoryGroupCode = '',
+    this.categoryGroupName = '',
+    required this.onDataUpdate,
   });
 
   @override
@@ -40,12 +42,21 @@ class _AddPlaceState extends State<AddPlace> {
 
   late TextEditingController _titleController;
   late String _selectedIcon;
+  Future<List<Place>>? myPlaces;
+  bool _checkPlace = false;
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController(text: widget.placeName);
     _selectedIcon = CategoryIconMapper.getIconUrl(widget.categoryGroupName);
+    myPlaces = MyPlaceData.loadPlaces();
+
+    myPlaces?.then((places) {
+      setState(() {
+        _checkPlace = places.any((place) => place.placeCode == widget.id);
+      });
+    });
   }
 
   @override
@@ -99,11 +110,30 @@ class _AddPlaceState extends State<AddPlace> {
                     ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: _showIconSelection,
-                  child: Image.asset(
-                    _selectedIcon,
-                    width: UIhelper.scaleWidth(context) * 60,
+                SizedBox(
+                  height: 100,
+                  width: 70,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: _showIconSelection,
+                        child: Image.asset(
+                          _selectedIcon,
+                          width: UIhelper.scaleWidth(context) * 60,
+                        ),
+                      ),
+                      if (!_checkPlace)
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Lottie.asset(
+                            'assets/lottie/changeIcon.json',
+                            width: 35,
+                            height: 35,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
@@ -111,23 +141,34 @@ class _AddPlaceState extends State<AddPlace> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _postPlace(
-                      placeName: _titleController.text,
-                      placeLatitude: widget.x,
-                      placeLongitude: widget.y,
-                      placeCategoryCode: widget.categoryGroupCode,
-                      placeCategoryName: widget.categoryGroupName,
-                      placePhoneNumber: widget.phone,
-                      icon: _selectedIcon,
-                      addressName: widget.addressName,
-                      addressRoadName: widget.roadAddressName,
-                      placeCode: widget.id,
-                    );
-                  },
-                  child: const Text('추가하기'),
-                ),
+                if (!_checkPlace)
+                  ElevatedButton(
+                    onPressed: () {
+                      _postPlace(
+                        placeName: _titleController.text,
+                        placeLatitude: widget.x,
+                        placeLongitude: widget.y,
+                        placeCategoryCode: widget.categoryGroupCode,
+                        placeCategoryName: widget.categoryGroupName,
+                        placePhoneNumber: widget.phone,
+                        icon: _selectedIcon,
+                        addressName: widget.addressName,
+                        addressRoadName: widget.roadAddressName,
+                        placeCode: widget.id,
+                      );
+                    },
+                    child: const Text('추가하기'),
+                  )
+                else
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Text('저장됨', style: TextStyle(fontSize: 16)),
+                  ),
               ],
             ),
             Container(
@@ -182,6 +223,10 @@ class _AddPlaceState extends State<AddPlace> {
       );
       if (response.statusCode == 200) {
         print('add_place 184번줄, 성공');
+        setState(() {
+          _checkPlace = true;
+        });
+        widget.onDataUpdate();
       } else {
         print("add_place 186번줄, 실패 ${response.statusCode}");
       }
