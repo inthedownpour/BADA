@@ -241,6 +241,6 @@ public class MyPlaceApiControllerTest extends ControllerTest {
     }
 
     private MyPlaceDetailResponseDto createMyPlaceDetailResponseDto() {
-        return new MyPlaceDetailResponseDto(1L, "집", "35.111111", "127.111111", "SC4", "아파트","042-1111-1111", "icon0", "가족코드", "지번 주소", "도로명 주소","11111111");
+        return new MyPlaceDetailResponseDto(1L, "집", 35.111111, 127.111111, "SC4", "아파트","042-1111-1111", "icon0", "가족코드", "지번 주소", "도로명 주소","11111111");
     }
 }
