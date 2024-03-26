@@ -85,6 +85,11 @@ class ProfileProvider extends ChangeNotifier {
     return false;
   }
 
+  void setPhone(String phone) {
+    _phone = phone;
+    notifyListeners();
+  }
+
   Future<void> initProfile(LoginPlatform loginPlatform) async {
     switch (loginPlatform) {
       case LoginPlatform.kakao:
@@ -99,7 +104,8 @@ class ProfileProvider extends ChangeNotifier {
         break;
     }
     // TODO : memberID 가져오기(FCM용 기기ID)
-    _phone = await SmsAutoFill().hint;
+    debugPrint('휴대폰 번호@@@: $phone');
+    saveProfileToStorage();
     notifyListeners();
   }
 
@@ -127,7 +133,6 @@ class ProfileProvider extends ChangeNotifier {
       _email = user.kakaoAccount?.email;
       _isLogined = true;
       _social = 'KAKAO';
-      saveProfileToStorage();
     } catch (e) {
       debugPrint('initProfile error: $e');
     }
@@ -143,7 +148,6 @@ class ProfileProvider extends ChangeNotifier {
       _email = result.email;
       _isLogined = true;
       _social = 'NAVER';
-      saveProfileToStorage();
     } catch (e) {
       debugPrint('initProfile error: $e');
     }
