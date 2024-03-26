@@ -24,9 +24,9 @@ class AddPlace extends StatefulWidget {
     required this.id,
     required this.addressName,
     required this.placeName,
-    required this.roadAddressName,
-    this.x = '',
-    this.y = '',
+    this.roadAddressName = '',
+    required this.x,
+    required this.y,
     this.phone = '',
     this.categoryGroupCode = '',
     this.categoryGroupName = '',
@@ -222,13 +222,13 @@ class _AddPlaceState extends State<AddPlace> {
         }),
       );
       if (response.statusCode == 200) {
-        print('add_place 184번줄, 성공');
+        print('add_place 225번줄, 성공');
         setState(() {
           _checkPlace = true;
         });
         widget.onDataUpdate();
       } else {
-        print("add_place 186번줄, 실패 ${response.statusCode}");
+        print("add_place 231번줄, 실패 ${response.statusCode}");
       }
     } catch (e) {
       print('PostVerificationCode $e');
