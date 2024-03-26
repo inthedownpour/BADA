@@ -48,6 +48,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.uber/h3
 	implementation group: 'com.uber', name: 'h3', version: '4.1.1'
 
+	// kafka
+	implementation 'org.apache.kafka:kafka-streams'
+	implementation 'org.springframework.kafka:spring-kafka'
+
 	// Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
