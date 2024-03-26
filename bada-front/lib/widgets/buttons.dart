@@ -355,18 +355,24 @@ class _AlarmSettingButtonState extends State<AlarmSettingButton> {
 }
 
 class MyPlaceButton extends StatefulWidget {
-  final String label;
-  final String? navigateTo;
+  final String placeName, icon, addressName;
+  final int myPlaceId;
+  final double placeLatitude, placeLongitude;
+
   final Color backgroundColor, foregroundColor;
-  final void Function()? onPressed;
+  final VoidCallback onPlaceUpdate;
 
   const MyPlaceButton({
     super.key,
-    required this.label,
+    required this.placeName,
     this.backgroundColor = const Color(0xff696DFF),
     this.foregroundColor = Colors.white,
-    this.navigateTo,
-    this.onPressed,
+    required this.icon,
+    required this.addressName,
+    required this.myPlaceId,
+    required this.placeLatitude,
+    required this.placeLongitude,
+    required this.onPlaceUpdate,
   });
   @override
   State<MyPlaceButton> createState() => _MyPlaceButtonState();
@@ -397,7 +403,7 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
           child: Row(
             children: [
               Image.asset(
-                'assets/img/whistle.png',
+                widget.icon,
                 height: UIhelper.scaleWidth(context) * 50,
               ),
               SizedBox(
@@ -408,7 +414,7 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('이름: ${widget.label}'),
+                    Text('이름: ${widget.placeName}'),
                     const Text('주소: 대전광역시 유성구 덕명로 26'),
                   ],
                 ),
@@ -417,8 +423,15 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>
-                          PlaceDetail(placeName: widget.label),
+                      builder: (context) => PlaceDetail(
+                        placeName: widget.placeName,
+                        icon: widget.icon,
+                        myPlaceId: widget.myPlaceId,
+                        addressName: widget.addressName,
+                        placeLatitude: widget.placeLatitude,
+                        placeLongitude: widget.placeLongitude,
+                        onPlaceUpdate: widget.onPlaceUpdate,
+                      ),
                     ),
                   );
                 },

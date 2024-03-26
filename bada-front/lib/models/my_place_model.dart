@@ -79,13 +79,14 @@ class MyPlaceData {
     );
 
     if (response.statusCode == 200) {
+      print('my_place_model 82번줄 성공');
       final Map<String, dynamic> decodedData =
           json.decode(utf8.decode(response.bodyBytes));
       final List<dynamic> myPlaceList = decodedData['MyPlaceList'];
       return myPlaceList.map((place) => Place.fromJson(place)).toList();
     } else {
-      print('my_place_model 69번줄 ${response.statusCode} ');
-      print('my_place_model 71번줄, $accessToken');
+      print('my_place_model 88번줄 ${response.statusCode} ');
+      print('my_place_model 89번줄, $accessToken');
       throw Exception('Failed to load places');
     }
   }

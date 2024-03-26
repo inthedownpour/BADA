@@ -17,11 +17,12 @@ import 'package:marquee/marquee.dart'; // SearchResultItem 모델 import 필요
 class SearchMapScreen extends StatefulWidget {
   final SearchResultItem item;
   final String keyword;
-
+  final VoidCallback onDataUpdate;
   const SearchMapScreen({
     super.key,
     required this.item,
     required this.keyword,
+    required this.onDataUpdate,
   });
 
   @override
@@ -240,6 +241,7 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
         x: widget.item.x,
         y: widget.item.y,
         id: widget.item.id,
+        onDataUpdate: widget.onDataUpdate,
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);

@@ -8,7 +8,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class PlaceIndicator extends StatelessWidget {
   final int numberOfPlaces;
   final VoidCallback onAddPlace;
-
   const PlaceIndicator({
     super.key,
     required this.numberOfPlaces,
@@ -47,7 +46,13 @@ class _MyPlaceState extends State<MyPlace> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const MapSearch(),
+        builder: (context) => MapSearch(
+          onDataUpdate: () {
+            setState(() {
+              myPlaces = MyPlaceData.loadPlaces();
+            });
+          },
+        ),
       ),
     );
   }
@@ -55,6 +60,12 @@ class _MyPlaceState extends State<MyPlace> {
   Future<void> _loadAccessToken() async {
     accessToken = (await secureStorage.read(key: 'accessToken'))!;
     debugPrint('accessToken: $accessToken');
+  }
+
+  void _refreshPlaces() {
+    setState(() {
+      myPlaces = MyPlaceData.loadPlaces();
+    });
   }
 
   @override
@@ -104,7 +115,15 @@ class _MyPlaceState extends State<MyPlace> {
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
-                              MyPlaceButton(label: places[index].placeName),
+                              MyPlaceButton(
+                                placeName: places[index].placeName,
+                                icon: places[index].icon,
+                                myPlaceId: places[index].myPlaceId,
+                                addressName: places[index].addressName,
+                                placeLatitude: places[index].placeLatitude,
+                                placeLongitude: places[index].placeLongitude,
+                                onPlaceUpdate: _refreshPlaces,
+                              ),
                               SizedBox(
                                 height: UIhelper.scaleHeight(context) * 5,
                               ),
