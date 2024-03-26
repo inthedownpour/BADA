@@ -77,6 +77,15 @@ public class Member extends BaseTimeEntity {
     public void updateMember(String name, String profileUrl) {
         this.name = name;
         this.profileUrl = profileUrl;
-    };
+    }
+
+    public void updateMovingState() {
+        if(this.movingState == 0){
+            this.movingState = 1;
+        }
+        else {
+            this.movingState = 0;
+        }
+    }
 
 }

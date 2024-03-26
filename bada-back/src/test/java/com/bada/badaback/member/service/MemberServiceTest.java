@@ -1,8 +1,6 @@
 package com.bada.badaback.member.service;
 
 import com.bada.badaback.auth.domain.AuthCode;
-import com.bada.badaback.auth.exception.AuthErrorCode;
-import com.bada.badaback.auth.service.AuthCodeFindService;
 import com.bada.badaback.auth.service.TokenService;
 import com.bada.badaback.common.ServiceTest;
 import com.bada.badaback.family.domain.Family;
@@ -114,6 +112,26 @@ public class MemberServiceTest extends ServiceTest {
                     .isInstanceOf(BaseException.class)
                     .hasMessage(StateErrorCode.STATE_NOT_FOUND.getMessage());
             assertThat(actual1).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("이동 여부 수정")
+    class updateMovingSate {
+        @Test
+        @DisplayName("이동 여부 수정에 성공한다")
+        void success() {
+            // given
+            // 초기 - 0
+            memberService.updateMovingState(member.getId());
+
+            // when
+            Member findmember = memberFindService.findById(member.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(findmember.getMovingState()).isEqualTo(1)
+            );
         }
     }
 
