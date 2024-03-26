@@ -117,4 +117,24 @@ public class MemberServiceTest extends ServiceTest {
         }
     }
 
+    @Nested
+    @DisplayName("이동 여부 수정")
+    class updateMovingSate {
+        @Test
+        @DisplayName("이동 여부 수정에 성공한다")
+        void success() {
+            // given
+            // 초기 - 0
+            memberService.updateMovingState(member.getId());
+
+            // when
+            Member findmember = memberFindService.findById(member.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(findmember.getMovingState()).isEqualTo(1)
+            );
+        }
+    }
+
 }
