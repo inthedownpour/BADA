@@ -6,6 +6,7 @@ import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +16,38 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  String? _phone;
+
+  // 사용자에게 휴대폰 번호 입력을 요청하는 함수
+  Future<void> requestPhoneNumber(
+    BuildContext context,
+    ProfileProvider profileProvider,
+  ) async {
+    TextEditingController phoneNumberController = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("휴대폰 번호 입력"),
+          content: TextField(
+            controller: phoneNumberController,
+            decoration: const InputDecoration(hintText: "휴대폰 번호"),
+            keyboardType: TextInputType.phone,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("확인"),
+              onPressed: () {
+                profileProvider.setPhone(phoneNumberController.text);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final profileProvider = Provider.of<ProfileProvider>(context);
@@ -49,6 +82,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   print(await KakaoSdk.origin);
 
                   LoginPlatform loginPlatform = LoginPlatform.kakao;
+                  _phone = await SmsAutoFill().hint;
+                  if (_phone == null) {
+                    await requestPhoneNumber(context, profileProvider);
+                  }
                   await profileProvider.initProfile(loginPlatform);
                   bool hasProfile = await profileProvider.profileDbCheck();
                   // 아이디가 데이터베이스에 있는 경우
@@ -83,6 +120,10 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.naver;
+                  _phone = await SmsAutoFill().hint;
+                  if (_phone == null) {
+                    await requestPhoneNumber(context, profileProvider);
+                  }
                   await profileProvider.initProfile(loginPlatform);
                   bool hasProfile = await profileProvider.profileDbCheck();
                   if (hasProfile) {
