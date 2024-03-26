@@ -7,6 +7,9 @@ import com.bada.badaback.auth.service.AuthCodeFindService;
 import com.bada.badaback.auth.service.AuthCodeService;
 import com.bada.badaback.auth.service.AuthService;
 import com.bada.badaback.auth.service.TokenReissueService;
+import com.bada.badaback.currentLocation.controller.CurrentLocationApiController;
+import com.bada.badaback.currentLocation.service.CurrentLocationFindService;
+import com.bada.badaback.currentLocation.service.CurrentLocationService;
 import com.bada.badaback.family.service.FamilyFindService;
 import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.global.config.SecurityConfig;
@@ -54,7 +57,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
         MyPlaceApiController.class,
         MyPlaceListApiController.class,
         SafeFacilityController.class,
-        StateController.class
+        StateController.class,
+        CurrentLocationApiController.class
 })
 @WithMockUser("test")
 public abstract class ControllerTest {
@@ -129,6 +133,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected StateFindService stateFindService;
+
+    @MockBean
+    protected CurrentLocationService currentLocationService;
+
+    @MockBean
+    protected CurrentLocationFindService currentLocationFindService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);
