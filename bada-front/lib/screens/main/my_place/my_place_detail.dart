@@ -1,15 +1,15 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:bada/screens/main/my_place.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:bada/models/category_icon_mapper.dart';
 import 'package:bada/widgets/screensize.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:flutter/foundation.dart';
+// import 'dart:typed_data';
+// import 'package:bada/screens/main/my_place.dart';
 
 class PlaceDetail extends StatefulWidget {
   final String placeName, icon, addressName;
@@ -33,7 +33,6 @@ class PlaceDetail extends StatefulWidget {
 }
 
 class _PlaceDetailState extends State<PlaceDetail> {
-  Uint8List? _image;
   File? selectedImage;
   late TextEditingController _controller;
   late String _selectedIcon;
@@ -160,7 +159,13 @@ class _PlaceDetailState extends State<PlaceDetail> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    editMyPlace(
+                      widget.myPlaceId,
+                      _selectedIcon,
+                      _controller.text,
+                    ).then((value) => Navigator.of(context).pop());
+                  },
                   child: const Text('수정'),
                 ),
                 TextButton(
@@ -232,42 +237,42 @@ class _PlaceDetailState extends State<PlaceDetail> {
     );
   }
 
-  void showIconPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (builder) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height / 2.5,
-          child: Column(
-            children: [
-              const Text('아이콘을 선택해주세요'),
-              ElevatedButton(
-                onPressed: () {
-                  _pickImageFromGallery();
-                },
-                child: const Icon(Icons.abc),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  // void showIconPicker(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (builder) {
+  //       return Container(
+  //         decoration: BoxDecoration(
+  //           color: Colors.white,
+  //           borderRadius: BorderRadius.circular(20),
+  //         ),
+  //         width: MediaQuery.of(context).size.width,
+  //         height: MediaQuery.of(context).size.height / 2.5,
+  //         child: Column(
+  //           children: [
+  //             const Text('아이콘을 선택해주세요'),
+  //             ElevatedButton(
+  //               onPressed: () {
+  //                 _pickImageFromGallery();
+  //               },
+  //               child: const Icon(Icons.abc),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-  Future _pickImageFromGallery() async {
-    final returnImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (returnImage == null) return;
-    setState(() {
-      selectedImage = File(returnImage.path);
-      _image = File(returnImage.path).readAsBytesSync();
-    });
-  }
+  // Future _pickImageFromGallery() async {
+  //   final returnImage =
+  //       await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   if (returnImage == null) return;
+  //   setState(() {
+  //     selectedImage = File(returnImage.path);
+  //     _image = File(returnImage.path).readAsBytesSync();
+  //   });
+  // }
 
   void _showIconSelection() {
     showModalBottomSheet(
@@ -325,6 +330,36 @@ class _PlaceDetailState extends State<PlaceDetail> {
 
     if (response.statusCode == 200) {
       print('Delete successful');
+    } else {
+      print('Failed to delete myPlace. Status code: ${response.statusCode}');
+    }
+  }
+
+  Future<void> editMyPlace(int myPlaceId, String icon, String placeName) async {
+    String? token = await const FlutterSecureStorage().read(key: 'accessToken');
+
+    if (token == null) {
+      print('Token is not available');
+      return;
+    }
+
+    final response = await http.patch(
+      Uri.parse(
+        'https://j10b207.p.ssafy.io/api/myplace/${myPlaceId.toString()}',
+      ),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'placeName': placeName,
+        'icon': icon,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Delete successful');
+      widget.onPlaceUpdate();
     } else {
       print('Failed to delete myPlace. Status code: ${response.statusCode}');
     }
