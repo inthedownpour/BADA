@@ -37,8 +37,8 @@ class SafeFacilityControllerTest extends ControllerTest {
 //                .andDo(print())
                 //then
                 .andExpect(MockMvcResultMatchers.status().isOk());
-//                .andExpect(jsonPath("$.startX").exists())
-//                .andExpect(jsonPath("$.startX[0]").value("127.390075"))
+//                .andExpect(jsonPath("$.startLng").exists())
+//                .andExpect(jsonPath("$.startLng[0]").value("127.390075"))
 ////                .andExpect(jsonPath("$.pathList").exists())
 //                .andExpect(jsonPath("$.pathList").value("127.390075"));
 

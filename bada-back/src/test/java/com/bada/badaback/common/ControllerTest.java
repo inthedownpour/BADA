@@ -16,6 +16,9 @@ import com.bada.badaback.global.security.JwtProvider;
 import com.bada.badaback.member.controller.MemberApiController;
 import com.bada.badaback.member.controller.MemberListApiController;
 import com.bada.badaback.member.service.MemberFindService;
+import com.bada.badaback.route.controller.RouteController;
+import com.bada.badaback.route.service.RouteFindService;
+import com.bada.badaback.route.service.RouteService;
 import com.bada.badaback.safefacility.controller.SafeFacilityController;
 import com.bada.badaback.safefacility.service.SafeFacilityService;
 import com.bada.badaback.member.service.MemberListService;
@@ -54,7 +57,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
         MyPlaceApiController.class,
         MyPlaceListApiController.class,
         SafeFacilityController.class,
-        StateController.class
+        StateController.class,
+        RouteController.class
 })
 @WithMockUser("test")
 public abstract class ControllerTest {
@@ -129,6 +133,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected StateFindService stateFindService;
+
+    @MockBean
+    protected RouteFindService routeFindService;
+
+    @MockBean
+    protected RouteService routeService;
 
     protected String convertObjectToJson(Object data) throws JsonProcessingException {
         return objectMapper.writeValueAsString(data);
