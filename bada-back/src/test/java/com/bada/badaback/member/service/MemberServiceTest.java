@@ -1,8 +1,6 @@
 package com.bada.badaback.member.service;
 
 import com.bada.badaback.auth.domain.AuthCode;
-import com.bada.badaback.auth.exception.AuthErrorCode;
-import com.bada.badaback.auth.service.AuthCodeFindService;
 import com.bada.badaback.auth.service.TokenService;
 import com.bada.badaback.common.ServiceTest;
 import com.bada.badaback.family.domain.Family;
