@@ -14,6 +14,14 @@ spring:
       jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
       username: sa
 
+  kafka:
+    bootstrapAddress: ${EC2_HOST}:9092
+    consumer:
+      auto-offset-reset: earliest
+    topics:
+      now-topic: test-topic # alarm-topic
+      alarm-topic: alarm-topic
+
   #application-secret.yml
   profiles:
     include: secret
