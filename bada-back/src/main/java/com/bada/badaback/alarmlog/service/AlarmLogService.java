@@ -8,6 +8,7 @@ import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.domain.MemberRepository;
 import com.bada.badaback.member.exception.MemberErrorCode;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,19 @@ public class AlarmLogService {
       throw new BaseException(MemberErrorCode.MEMBER_NOT_FOUND);
     }
 
-    return alarmRepository.findAllAlarmLogsByMemberIdAndChildId(memberId, childId);
+    List<AlarmLogResponseDto> alarmLogResponseDtoList = new ArrayList<>();
+    List<AlarmLog> alarmLogs = alarmRepository.findAllAlarmLogsByMemberIdAndChildId(memberId, childId);
+
+    for (AlarmLog alarmLog : alarmLogs) {
+      AlarmLogResponseDto alarmLogResponseDto = AlarmLogResponseDto.builder()
+          .type(alarmLog.getType())
+          .memberId(alarmLog.getId())
+          .childId(alarmLog.getChildId())
+          .build();
+      alarmLogResponseDtoList.add(alarmLogResponseDto);
+    }
+
+    return alarmLogResponseDtoList;
   }
 
   @Transactional
@@ -41,7 +54,7 @@ public class AlarmLogService {
     if (optMember.isEmpty()) { // 찾는 회원 없다면 에러발생
        throw new BaseException(MemberErrorCode.MEMBER_NOT_FOUND);
     }
-    AlarmLog alarmLog = AlarmLog.createAlarmLog(alarmLogRequestDto.getType(), optMember.get());
+    AlarmLog alarmLog = AlarmLog.createAlarmLog(alarmLogRequestDto.getType(), optMember.get(), alarmLogRequestDto.getChildId());
 
     alarmRepository.save(alarmLog);
   }
