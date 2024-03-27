@@ -30,7 +30,7 @@ public class AlarmLog extends BaseTimeEntity {
   @Column(nullable = false)
   private String type;
 
-  @Column(name = "child_id")
+  @Column(name = "child_id", nullable = false)
   private Long childId;
 
 
@@ -38,13 +38,14 @@ public class AlarmLog extends BaseTimeEntity {
   @JoinColumn(name = "member_id", referencedColumnName = "member_id", nullable = false)
   private Member member;
 
-  private AlarmLog(String type, Member member) {
+  private AlarmLog(String type, Member member, Long childId) {
     this.type = type;
     this.member = member;
+    this.childId = childId;
   }
 
-  public static AlarmLog createAlarmLog(String type, Member member) {
-    return new AlarmLog(type, member);
+  public static AlarmLog createAlarmLog(String type, Member member, Long childId) {
+    return new AlarmLog(type, member, childId);
   }
 
 }
