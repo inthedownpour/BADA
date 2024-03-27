@@ -14,7 +14,7 @@ class Place {
   final String addressName;
   final String addressRoadName;
   final String placeCode;
-  final String Icon;
+  final String icon;
 
   Place({
     required this.myPlaceId,
@@ -27,22 +27,22 @@ class Place {
     required this.addressName,
     required this.addressRoadName,
     required this.placeCode,
-    required this.Icon,
+    required this.icon,
   });
 
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(
-      myPlaceId: json['my_place_id'],
-      placeName: json['place_name'],
-      placeLatitude: json['place_latitude'],
-      placeLongitude: json['place_longitude'],
-      placeCategoryCode: json['place_category_code'],
-      placeCategoryName: json['place_category_name'],
-      placePhoneNumber: json['place_phone_number'],
-      addressName: json['address_name'],
-      addressRoadName: json['address_road_name'],
-      placeCode: json['place_code'],
-      Icon: json['Icon'],
+      myPlaceId: (json['myPlaceId'] as num).toDouble(),
+      placeName: json['placeName'],
+      placeLatitude: json['placeLatitude'].toDouble(),
+      placeLongitude: json['placeLongitude'].toDouble(),
+      placeCategoryCode: json['placeCategoryCode'],
+      placeCategoryName: json['placeCategoryName'],
+      placePhoneNumber: json['placePhoneNumber'],
+      addressName: json['addressName'],
+      addressRoadName: json['addressRoadName'],
+      placeCode: json['placeCode'],
+      icon: json['icon'],
     );
   }
 
@@ -58,7 +58,7 @@ class Place {
       'address_name': addressName,
       'address_road_name': addressRoadName,
       'place_code': placeCode,
-      'Icon': Icon,
+      'icon': icon,
     };
   }
 }
