@@ -56,8 +56,8 @@ public class RouteService {
             String[] str = childRoute.getPointList().split("_");
             for (String s : str) {
                 String[] pointString = s.split(", ");
-                Double Lat = Double.parseDouble(pointString[0]);
-                Double Lng = Double.parseDouble(pointString[1]);
+                double Lat = Double.parseDouble(pointString[0]);
+                double Lng = Double.parseDouble(pointString[1]);
                 pointList.add(new Point(Lat, Lng));
             }
             return RouteResponseDto.from(childRoute, pointList);
