@@ -60,7 +60,7 @@ public class KafkaConfig {
     JsonDeserializer<AlarmDto> deserializer = new JsonDeserializer<>(AlarmDto.class);
     /// JSON 객체 역직렬화를 위해서는 JSON 객체를 생성하고 소비하는 producer, consumer와 만들어질 DTO가 같은 패키지 아래에 존재해야한다
     /// 객체를 역직렬화 할 수 있는 신뢰할 수 있는 패키기 설정 필수.
-    deserializer.addTrustedPackages("com.ssafy.bada.badaback.kafka");
+    deserializer.addTrustedPackages("com.bada.badaback.kafka");
     return new DefaultKafkaConsumerFactory<>(consumerConfig,
         new StringDeserializer(),
         deserializer);
