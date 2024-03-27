@@ -14,4 +14,5 @@ import lombok.ToString;
 public class AlarmLogResponseDto {
   private String type;
   private Long memberId;
+  private Long childId;
 }
