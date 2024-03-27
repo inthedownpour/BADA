@@ -6,6 +6,7 @@ import com.bada.badaback.currentLocation.domain.CurrentLocationRepository;
 import com.bada.badaback.family.domain.FamilyRepository;
 import com.bada.badaback.member.domain.MemberRepository;
 import com.bada.badaback.myplace.domain.MyPlaceRepository;
+import com.bada.badaback.route.domain.RouteRepository;
 import com.bada.badaback.safefacility.domain.SafeFacilityRepository;
 import com.bada.badaback.state.domain.StateRepository;
 import jakarta.transaction.Transactional;
@@ -42,6 +43,9 @@ public class ServiceTest {
 
     @Autowired
     protected CurrentLocationRepository currentLocationRepository;
+
+    @Autowired
+    protected RouteRepository routeRepository;
 
     @AfterEach
     void clearDatabase() {

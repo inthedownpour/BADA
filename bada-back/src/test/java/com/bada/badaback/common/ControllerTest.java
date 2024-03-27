@@ -19,6 +19,9 @@ import com.bada.badaback.global.security.JwtProvider;
 import com.bada.badaback.member.controller.MemberApiController;
 import com.bada.badaback.member.controller.MemberListApiController;
 import com.bada.badaback.member.service.MemberFindService;
+import com.bada.badaback.route.controller.RouteController;
+import com.bada.badaback.route.service.RouteFindService;
+import com.bada.badaback.route.service.RouteService;
 import com.bada.badaback.safefacility.controller.SafeFacilityController;
 import com.bada.badaback.safefacility.service.SafeFacilityService;
 import com.bada.badaback.member.service.MemberListService;
@@ -34,6 +37,7 @@ import com.bada.badaback.state.service.StateService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -57,6 +61,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
         MyPlaceListApiController.class,
         SafeFacilityController.class,
         StateController.class,
+        RouteController.class,
         CurrentLocationApiController.class
 })
 @WithMockUser("test")
@@ -132,6 +137,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected StateFindService stateFindService;
+
+    @MockBean
+    protected RouteService routeService;
+
+    @MockBean
+    protected RouteFindService routeFindService;
 
     @MockBean
     protected CurrentLocationService currentLocationService;
