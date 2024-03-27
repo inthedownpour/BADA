@@ -3,6 +3,8 @@ package com.bada.badaback.member.service;
 import com.bada.badaback.auth.service.AuthCodeService;
 import com.bada.badaback.auth.service.AuthService;
 import com.bada.badaback.auth.service.TokenService;
+import com.bada.badaback.family.domain.Family;
+import com.bada.badaback.family.service.FamilyFindService;
 import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.file.service.FileService;
 import com.bada.badaback.member.domain.Member;
@@ -28,11 +30,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final FamilyService familyService;
     private final StateRepository stateRepository;
+    private final FamilyFindService familyFindService;
 
     @Transactional
     public MemberDetailResponseDto read(Long memberId) {
         Member findMember = memberFindService.findById(memberId);
-        return MemberDetailResponseDto.from(findMember);
+        Family findFamily = familyFindService.findByFamilyCode(findMember.getFamilyCode());
+        return MemberDetailResponseDto.from(findMember, findFamily.getFamilyName());
     }
 
     @Transactional

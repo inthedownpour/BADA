@@ -15,11 +15,12 @@ public record MemberDetailResponseDto(
         String profileUrl,
         LocalDateTime createdAt,
         String familyCode,
+        String familyName,
         int movingState,
         String fcmToken
 
 ) {
-    public static MemberDetailResponseDto from(Member findMember) {
+    public static MemberDetailResponseDto from(Member findMember, String familyName) {
         return MemberDetailResponseDto.builder()
                 .memberId(findMember.getId())
                 .name(findMember.getName())
@@ -28,6 +29,7 @@ public record MemberDetailResponseDto(
                 .social(findMember.getSocial().getSocialType())
                 .profileUrl(findMember.getProfileUrl())
                 .familyCode(findMember.getFamilyCode())
+                .familyName(familyName)
                 .createdAt(findMember.getCreatedAt())
                 .movingState(findMember.getMovingState())
                 .fcmToken(findMember.getFcmToken())
