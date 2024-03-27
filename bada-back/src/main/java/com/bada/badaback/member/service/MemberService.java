@@ -72,4 +72,11 @@ public class MemberService {
 
         memberRepository.delete(findMember);
     }
+
+    @Transactional
+    public void updateMovingState(Long memberId) {
+        Member findMember = memberFindService.findById(memberId);
+        findMember.updateMovingState();
+    }
+
 }

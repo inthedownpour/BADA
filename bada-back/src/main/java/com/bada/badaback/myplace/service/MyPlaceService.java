@@ -1,6 +1,5 @@
 package com.bada.badaback.myplace.service;
 
-import com.bada.badaback.family.domain.Family;
 import com.bada.badaback.family.service.FamilyFindService;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.service.MemberFindService;

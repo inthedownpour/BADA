@@ -2,6 +2,7 @@ package com.bada.badaback.common;
 
 import com.bada.badaback.auth.domain.AuthCodeRepository;
 import com.bada.badaback.auth.domain.TokenRepository;
+import com.bada.badaback.currentLocation.domain.CurrentLocationRepository;
 import com.bada.badaback.family.domain.FamilyRepository;
 import com.bada.badaback.member.domain.MemberRepository;
 import com.bada.badaback.myplace.domain.MyPlaceRepository;
@@ -39,6 +40,9 @@ public class ServiceTest {
 
     @Autowired
     protected StateRepository stateRepository;
+
+    @Autowired
+    protected CurrentLocationRepository currentLocationRepository;
 
     @Autowired
     protected RouteRepository routeRepository;

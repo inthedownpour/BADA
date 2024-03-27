@@ -17,6 +17,14 @@ spring:
     password: ${EC2_PASSWORD}
 
 
+  kafka:
+    bootstrapAddress: ${EC2_HOST}:9092
+    consumer:
+      auto-offset-reset: earliest
+    topics:
+      now-topic: test-topic # alarm-topic
+      alarm-topic: alarm-topic
+
   #application-secret.yml
   profiles:
     include: secret

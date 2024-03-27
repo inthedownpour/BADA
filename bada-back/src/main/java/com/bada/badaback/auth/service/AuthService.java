@@ -107,8 +107,7 @@ public class AuthService {
         return null;
     }
 
-    @Transactional
-    public Long AlreadyChildMember(String name, String familyCode, int isParent) {
+    private Long AlreadyChildMember(String name, String familyCode, int isParent) {
         if(memberRepository.existsByNameAndFamilyCodeAndIsParent(name, familyCode, isParent)){
             return memberFindService.findByNameAndFamilyCodeAndIsParent(name, familyCode, isParent).getId();
         }
