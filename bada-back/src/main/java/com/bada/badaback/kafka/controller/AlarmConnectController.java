@@ -1,13 +1,10 @@
 package com.bada.badaback.kafka.controller;
 
 
-import com.bada.badaback.alarm.service.AlarmLogService;
-import com.bada.badaback.kafka.service.EmitterService;
+import com.bada.badaback.alarmlog.service.AlarmLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @Slf4j
