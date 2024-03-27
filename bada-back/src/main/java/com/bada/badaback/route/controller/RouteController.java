@@ -6,12 +6,11 @@ import com.bada.badaback.route.dto.RouteResponseDto;
 import com.bada.badaback.route.service.RouteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-@Controller
+@RestController
 @RequestMapping("/api/route")
 @RequiredArgsConstructor
 public class RouteController {

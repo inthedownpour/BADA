@@ -15,23 +15,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class RouteService {
     private final RouteRepository routeRepository;
     private final MemberFindService memberFindService;
     private final RouteFindService routeFindService;
+    private final TmapApiService tmapApiService;
 
     @Transactional
     public void createRoute(Long childId, RouteRequestDto routeRequestDto) throws IOException {
         Member child = memberFindService.findById(childId);
-        List<Point> pointList = new ArrayList<>();
-        String pointString = "null";
-//        safeFacilityService.getCCTVs(routeRequestDto.startLng(), routeRequestDto.startLat(), routeRequestDto.endLng(), routeRequestDto.endLat());
-        Route route = Route.createRoute(routeRequestDto.startLat(), routeRequestDto.startLng(), routeRequestDto.endLat(), routeRequestDto.endLng(), pointString, child);
+        List<Point> pointList = tmapApiService.getPoint(routeRequestDto.startLat(), routeRequestDto.startLng(), routeRequestDto.endLat(), routeRequestDto.endLng());
+        StringBuilder sb = new StringBuilder();
+        Iterator<Point> pointIte = pointList.iterator();
+        while (pointIte.hasNext()) {
+            Point p = pointIte.next();
+            sb.append(p.getLatitude() + ", " + p.getLongitude());
+            if (pointIte.hasNext()) {
+                sb.append("_");
+            }
+        }
+        Route route = Route.createRoute(routeRequestDto.startLat(), routeRequestDto.startLng(), routeRequestDto.endLat(), routeRequestDto.endLng(), sb.toString(), child);
         routeRepository.save(route);
     }
 
@@ -44,7 +52,14 @@ public class RouteService {
             //같은 가족일 때
             Route childRoute = routeFindService.findByMember(child);
             //pointList를 String에서 PointList로 변환 작업
-            List<Point> pointList = null;
+            List<Point> pointList = new ArrayList<>();
+            String[] str = childRoute.getPointList().split("_");
+            for (String s : str) {
+                String[] pointString = s.split(", ");
+                Double Lat = Double.parseDouble(pointString[0]);
+                Double Lng = Double.parseDouble(pointString[1]);
+                pointList.add(new Point(Lat, Lng));
+            }
             return RouteResponseDto.from(childRoute, pointList);
         } else {
             //같은 가족이 아닐 때

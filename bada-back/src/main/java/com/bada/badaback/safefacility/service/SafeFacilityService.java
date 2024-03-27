@@ -27,9 +27,9 @@ public class SafeFacilityService {
      * @param endX
      * @param endY
      * @return
-             * @throws IOException
+     * @throws IOException
      */
-    public SafeFacilityResponseDto getCCTVs(String startX, String startY, String endX, String endY) throws IOException {
+    public String getCCTVs(String startX, String startY, String endX, String endY) throws IOException {
         Point start = new Point(Double.parseDouble(startY), Double.parseDouble(startX));
         Point end = new Point(Double.parseDouble(endY), Double.parseDouble(endX));
 
@@ -77,9 +77,9 @@ public class SafeFacilityService {
             envHexAddrs.add(policeHexAddr);//전체 환경 변수에 추가
         }
         //police, guard 헥사곤 구하기 완료-----------------------------
-
         //1. cctv의 hexagon을 구한다 Tile로 저장해서 Tile.hexaddr 로 구분하는 자료구조 생성
         //전체 헥사곤 받아오고 이곳에 있는 hexagon만 쓰도록 조건문 추가
+
         List<String> BigHexagon = hexagonsAddress(start, end);
 
         Map<String, Tile> cctvHexagons = new HashMap<>();
@@ -91,7 +91,7 @@ public class SafeFacilityService {
 
             String cctvHexagon = h3.latLngToCellAddress(Lat, Lng, res);
 
-            if(BigHexagon.contains(cctvHexagon)){
+            if (BigHexagon.contains(cctvHexagon)) {
                 Tile tile = new Tile(cctvHexagon);
                 if (cctvHexagons.containsKey(cctvHexagon)) {
                     Tile preTile = cctvHexagons.get(cctvHexagon);
@@ -169,12 +169,13 @@ public class SafeFacilityService {
             }
         }
 
-        return SafeFacilityResponseDto.from(start, end, passList);
+        return sb.toString();
     }
 
 
     //현재의 최선 알고리즘
     //현재 노드에서 다음 레이어에 있는 노드로 가는 것 중 거리가 먼 것을 선택한다
+
     /**
      * layer를 까서 만든다. 현재 고려할 레이어 now와 now-1에서 선택했던 index
      *
@@ -225,24 +226,24 @@ public class SafeFacilityService {
         int R = 6371; // 지구 반지름 (단위: km)
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLon/2) * Math.sin(dLon/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     }
 
     private double[] calc_offsets(double distance, double lat) {
         double[] offsets = new double[2];
-        offsets[0] = 180*distance/6371/1000/Math.PI*1000; // lat
-        offsets[1] = Math.abs(360*Math.asin(Math.sin(distance/6371/2/1000)/Math.cos(lat*Math.PI/180))/Math.PI)*1000; // lon
+        offsets[0] = 180 * distance / 6371 / 1000 / Math.PI * 1000; // lat
+        offsets[1] = Math.abs(360 * Math.asin(Math.sin(distance / 6371 / 2 / 1000) / Math.cos(lat * Math.PI / 180)) / Math.PI) * 1000; // lon
         return offsets;
     }
 
     private double[] coordinate_after_rotation(double lat, double lon, double degree, double[] offsets) {
         double[] coordinate = new double[2];
-        coordinate[0] = lat + Math.sin(Math.toRadians(degree))*offsets[0];
-        coordinate[1] = lon + Math.cos(Math.toRadians(degree))*offsets[1];
+        coordinate[0] = lat + Math.sin(Math.toRadians(degree)) * offsets[0];
+        coordinate[1] = lon + Math.cos(Math.toRadians(degree)) * offsets[1];
         return coordinate;
     }
 
@@ -252,7 +253,7 @@ public class SafeFacilityService {
         double[] offsets = calc_offsets(radius, mid.getLatitude());
         // 헥사곤 경계 좌표 리스트
         List<LatLng> polygon = new ArrayList<>();
-        for(int d=0; d<=360; d+=45){
+        for (int d = 0; d <= 360; d += 45) {
             double[] coordinate = coordinate_after_rotation(mid.getLatitude(), mid.getLongitude(), d, offsets);
             polygon.add(new LatLng(coordinate[0], coordinate[1])); // lat, lon
         }
