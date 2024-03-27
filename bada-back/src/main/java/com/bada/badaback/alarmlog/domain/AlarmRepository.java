@@ -14,6 +14,6 @@ public interface AlarmRepository extends JpaRepository<AlarmLog, Long> {
 //  List<AlarmLog> findAllAlarmLogsByMemberId(@Param("memberId") Long memberId, @Param("childId") Long childId);
 
   @Query(nativeQuery = true, value = "SELECT * FROM alarm_log a WHERE a.member_id = :memberId AND a.child_id = :childId")
-  List<AlarmLogResponseDto> findAllAlarmLogsByMemberIdAndChildId(@Param("memberId") Long memberId, @Param("childId") Long childId);
+  List<AlarmLog> findAllAlarmLogsByMemberIdAndChildId(@Param("memberId") Long memberId, @Param("childId") Long childId);
 
 }
