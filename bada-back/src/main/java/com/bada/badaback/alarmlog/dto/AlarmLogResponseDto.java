@@ -1,4 +1,4 @@
-package com.bada.badaback.alarm.dto;
+package com.bada.badaback.alarmlog.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AlarmLogRequestDto {
+public class AlarmLogResponseDto {
   private String type;
   private Long memberId;
 }
