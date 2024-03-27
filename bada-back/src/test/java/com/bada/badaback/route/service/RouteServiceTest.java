@@ -3,20 +3,18 @@ package com.bada.badaback.route.service;
 import com.bada.badaback.common.ServiceTest;
 import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
-import com.bada.badaback.member.service.MemberFindService;
 import com.bada.badaback.route.domain.Route;
 import com.bada.badaback.route.dto.RouteResponseDto;
 import com.bada.badaback.route.exception.RouteErrorCode;
-import com.bada.badaback.state.exception.StateErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.bada.badaback.feature.MemberFixture.*;
 import static com.bada.badaback.feature.RouteFixture.ROUTE1;
-import static com.bada.badaback.feature.StateFixture.STATE1;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RouteServiceTest extends ServiceTest {
     @Autowired

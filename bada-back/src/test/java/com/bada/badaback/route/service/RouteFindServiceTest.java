@@ -6,8 +6,6 @@ import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.service.MemberFindService;
 import com.bada.badaback.route.domain.Route;
 import com.bada.badaback.route.exception.RouteErrorCode;
-import com.bada.badaback.state.domain.State;
-import com.bada.badaback.state.exception.StateErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.bada.badaback.feature.MemberFixture.*;
 import static com.bada.badaback.feature.RouteFixture.ROUTE1;
-import static com.bada.badaback.feature.StateFixture.STATE1;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class RouteFindServiceTest extends ServiceTest {
     @Autowired
