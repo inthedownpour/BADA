@@ -4,9 +4,6 @@ import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ControllerTest;
 import com.bada.badaback.route.dto.RouteRequestDto;
 import com.bada.badaback.route.dto.RouteResponseDto;
-import com.bada.badaback.state.dto.StateNowRequestDto;
-import com.bada.badaback.state.dto.StateRequestDto;
-import com.bada.badaback.state.dto.StateResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +16,6 @@ import java.util.ArrayList;
 
 import static com.bada.badaback.feature.TokenFixture.ACCESS_TOKEN;
 import static com.bada.badaback.feature.TokenFixture.BEARER_TOKEN;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
