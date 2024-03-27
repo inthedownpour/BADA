@@ -4,8 +4,6 @@ import 'package:bada/screens/login/initial_screen.dart';
 import 'package:bada/screens/main/main_screen.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
@@ -17,27 +15,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  bool _isPhone = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkPhone().then((hasPhone) {
-      if (mounted) {
-        setState(() {
-          _isPhone = hasPhone;
-        });
-      }
-    }).catchError((error) {
-      print('개씨발왜안대');
-    });
-  }
-
-  Future<bool> _checkPhone() async {
-    String? phone = await _storage.read(key: 'phone');
-    return phone != null;
-  }
+  String? _phone;
 
   // 사용자에게 휴대폰 번호 입력을 요청하는 함수
   Future<void> requestPhoneNumber(
@@ -99,10 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: () async {
-                  String? phone = await _storage.read(key: 'phone');
-
                   LoginPlatform loginPlatform = LoginPlatform.kakao;
-                  if (_isPhone || phone == null) {
+                  _phone = await SmsAutoFill().hint;
+                  if (_phone == null) {
                     await requestPhoneNumber(context, profileProvider);
                   }
                   await profileProvider.initProfile(loginPlatform);
@@ -139,9 +116,8 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.naver;
-                  String? phone = await _storage.read(key: 'phone');
-
-                  if (_isPhone || phone == null) {
+                  _phone = await SmsAutoFill().hint;
+                  if (_phone == null) {
                     await requestPhoneNumber(context, profileProvider);
                   }
                   await profileProvider.initProfile(loginPlatform);
