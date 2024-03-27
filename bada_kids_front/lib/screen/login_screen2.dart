@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen2> {
       );
     } else {
       // 요청 처리 실패
-      debugPrint("실패: ${response.statusCode}");
+      debugPrint("실패: ${response.body}");
     }
   }
 
