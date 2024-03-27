@@ -169,7 +169,7 @@ public class SafeFacilityService {
             }
         }
 
-        return SafeFacilityResponseDto.from(start, end, sb.toString());
+        return SafeFacilityResponseDto.from(start, end, passList);
     }
 
 
