@@ -11,6 +11,7 @@ import com.bada.badaback.route.exception.RouteErrorCode;
 import com.bada.badaback.safefacility.domain.Point;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,11 +19,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RouteService {
     private final RouteRepository routeRepository;
     private final MemberFindService memberFindService;
     private final RouteFindService routeFindService;
 
+    @Transactional
     public void createRoute(Long childId, RouteRequestDto routeRequestDto) throws IOException {
         Member child = memberFindService.findById(childId);
         List<Point> pointList = new ArrayList<>();
@@ -49,6 +52,7 @@ public class RouteService {
         }
     }
 
+    @Transactional
     public void deleteRoute(Long memberId) {
         Member member = memberFindService.findById(memberId);
         Route route = routeFindService.findByMember(member);
