@@ -12,10 +12,10 @@ import org.springframework.context.annotation.Bean;
 
 @TestConfiguration
 public class S3MockConfig {
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${S3_BUCKET_NAME}")
     public String bucket;
 
-    @Value("${cloud.aws.region.static}")
+    @Value("${S3_REGION_STATIC}")
     private String region;
 
     @Bean

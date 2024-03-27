@@ -22,7 +22,7 @@ public class FileService {
 
     private final AmazonS3 amazonS3;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("${S3_BUCKET_NAME}")
     private String bucket;
 
     public String uploadMemberFiles(MultipartFile file) {
