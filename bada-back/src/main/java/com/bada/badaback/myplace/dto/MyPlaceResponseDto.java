@@ -1,7 +1,6 @@
 package com.bada.badaback.myplace.dto;
 
 import com.bada.badaback.myplace.domain.MyPlace;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder

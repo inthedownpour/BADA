@@ -110,7 +110,7 @@ class RouteControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("경로 정보 등록에 성공한다.")
+        @DisplayName("경로 정보 조회에 성공한다.")
         void getRoute() throws Exception {
             //given
             doReturn(createRouteResponseDto())
