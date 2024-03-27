@@ -4,7 +4,6 @@ import com.bada.badaback.safefacility.domain.Point;
 import com.bada.badaback.safefacility.domain.SafeFacility;
 import com.bada.badaback.safefacility.domain.SafeFacilityRepository;
 import com.bada.badaback.safefacility.domain.Tile;
-import com.bada.badaback.safefacility.dto.SafeFacilityResponseDto;
 import com.uber.h3core.H3Core;
 import com.uber.h3core.util.LatLng;
 import lombok.RequiredArgsConstructor;

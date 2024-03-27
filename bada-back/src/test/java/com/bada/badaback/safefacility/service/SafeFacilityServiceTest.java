@@ -5,7 +5,6 @@ import com.bada.badaback.feature.SafeFacilityFixture;
 import com.bada.badaback.safefacility.domain.SafeFacility;
 import com.bada.badaback.safefacility.domain.SafeFacilityRepository;
 import com.bada.badaback.safefacility.domain.Type;
-import com.bada.badaback.safefacility.dto.SafeFacilityResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
