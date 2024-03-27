@@ -67,6 +67,8 @@ public class MemberServiceTest extends ServiceTest {
                     () -> assertThat(memberDetailResponseDto.social()).isEqualTo(member.getSocial().getSocialType()),
                     () -> assertThat(memberDetailResponseDto.profileUrl()).isEqualTo(member.getProfileUrl()),
                     () -> assertThat(memberDetailResponseDto.createdAt()).isEqualTo(member.getCreatedAt()),
+                    () -> assertThat(memberDetailResponseDto.familyCode()).isEqualTo(member.getFamilyCode()),
+                    () -> assertThat(memberDetailResponseDto.familyName()).isEqualTo(family.getFamilyName()),
                     () -> assertThat(memberDetailResponseDto.movingState()).isEqualTo(member.getMovingState()),
                     () -> assertThat(memberDetailResponseDto.fcmToken()).isEqualTo(member.getFcmToken())
             );
