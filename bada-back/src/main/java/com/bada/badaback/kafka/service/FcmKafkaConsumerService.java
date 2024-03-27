@@ -1,7 +1,7 @@
 package com.bada.badaback.kafka.service;
 
-import com.bada.badaback.alarm.dto.AlarmLogRequestDto;
-import com.bada.badaback.alarm.service.AlarmLogService;
+import com.bada.badaback.alarmlog.dto.AlarmLogRequestDto;
+import com.bada.badaback.alarmlog.service.AlarmLogService;
 import com.bada.badaback.family.exception.FamilyErrorCode;
 import com.bada.badaback.fcm.service.FcmService;
 import com.bada.badaback.global.exception.BaseException;
@@ -53,13 +53,14 @@ public class FcmKafkaConsumerService {
       log.info("##################  member.toString() : {}", member.toString());
       fcmService.sendMessageTo(alarmDto, member);
 
-      AlarmLogRequestDto alarmLogRequestDto = AlarmLogRequestDto.builder()
-          .memberId(member.getId())
-          .type(alarmDto.getType())
-          .build();
-      log.info("################## alarmLogRequestDto : {} ", alarmLogRequestDto.toString() );
       // 알림 로그 기록
-      alarmLogService.writeAlarmLog(alarmLogRequestDto);
+      /** 알림 전송 확인까지 보류 */
+//      AlarmLogRequestDto alarmLogRequestDto = AlarmLogRequestDto.builder()
+//          .memberId(member.getId())
+//          .type(alarmDto.getType())
+//          .build();
+//      log.info("################## alarmLogRequestDto : {} ", alarmLogRequestDto.toString() );
+//      alarmLogService.writeAlarmLog(alarmLogRequestDto);
 
     }
 

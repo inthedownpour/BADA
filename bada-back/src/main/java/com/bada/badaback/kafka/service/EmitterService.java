@@ -2,15 +2,12 @@ package com.bada.badaback.kafka.service;
 
 import static com.bada.badaback.kafka.controller.AlarmConnectController.DEFAULT_TIMEOUT;
 
-import com.bada.badaback.alarm.service.AlarmLogService;
-import com.bada.badaback.kafka.dto.AlarmDto;
+import com.bada.badaback.alarmlog.service.AlarmLogService;
 import com.bada.badaback.kafka.repository.EmitterRepository;
 import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
