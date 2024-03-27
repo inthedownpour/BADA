@@ -3,24 +3,22 @@ import 'dart:convert';
 import 'package:bada/models/search_history.dart';
 import 'package:bada/models/search_results.dart';
 import 'package:bada/screens/main/my_place/search_map_screen.dart';
+import 'package:bada/screens/main/path_recommend/search_map_for_path_screen.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MapSearch extends StatefulWidget {
-  final VoidCallback onDataUpdate;
-  const MapSearch({
-    super.key,
-    required this.onDataUpdate,
-  });
+class SearchPlaceForPath extends StatefulWidget {
+  const SearchPlaceForPath({super.key});
 
   @override
-  State<MapSearch> createState() => _MapSearchState();
+  State<SearchPlaceForPath> createState() => _SearchPlaceForPathState();
 }
 
-class _MapSearchState extends State<MapSearch> {
+class _SearchPlaceForPathState extends State<SearchPlaceForPath> {
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
   Future<List<SearchResultItem>>? _searchResult;
   List<SearchHistory> _searchHistory = [];
 
@@ -28,6 +26,11 @@ class _MapSearchState extends State<MapSearch> {
   void initState() {
     super.initState();
     _loadSearchHistory();
+
+    // 화면이 로드되고 나서 바로 텍스트 필드에 포커스를 맞춥니다.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
 
   Future<List<SearchResultItem>> fetchSearchResults(String keyword) async {
@@ -105,6 +108,7 @@ class _MapSearchState extends State<MapSearch> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose(); // FocusNode를 정리합니다.
     super.dispose();
   }
 
@@ -124,6 +128,7 @@ class _MapSearchState extends State<MapSearch> {
             Container(
               padding: const EdgeInsets.all(8),
               child: TextField(
+                focusNode: _focusNode,
                 controller: _controller,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
@@ -181,18 +186,20 @@ class _MapSearchState extends State<MapSearch> {
                       itemBuilder: (context, index) {
                         SearchResultItem item = snapshot.data![index];
                         return ListTile(
-                          onTap: () {
+                          onTap: () async {
                             _resetSearchHistory(item.placeName);
-                            Navigator.push(
+                            final result = await Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => SearchMapScreen(
+                                builder: (context) => SearchMapForPathScreen(
                                   item: item,
                                   keyword: _controller.text,
-                                  onDataUpdate: widget.onDataUpdate,
                                 ),
                               ),
                             );
+                            if (result != null) {
+                              Navigator.pop(context, result);
+                            }
                           },
                           title: Text(item.placeName),
                           subtitle: Text(item.addressName),
