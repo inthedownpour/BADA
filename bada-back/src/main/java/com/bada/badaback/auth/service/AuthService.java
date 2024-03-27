@@ -3,6 +3,8 @@ package com.bada.badaback.auth.service;
 import com.bada.badaback.auth.domain.AuthCode;
 import com.bada.badaback.auth.dto.LoginResponseDto;
 import com.bada.badaback.auth.exception.AuthErrorCode;
+import com.bada.badaback.family.domain.Family;
+import com.bada.badaback.family.service.FamilyFindService;
 import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.global.security.JwtProvider;
@@ -27,6 +29,7 @@ public class AuthService {
     private final TokenService tokenService;
     private final AuthCodeFindService authCodeFindService;
     private final FamilyService familyService;
+    private final FamilyFindService familyFindService;
 
     @Transactional
     public Long signup(String name, String phone, String email, String social, String profileUrl,
@@ -80,6 +83,7 @@ public class AuthService {
     @Transactional
     public LoginResponseDto login(Long memberId) {
         Member member = memberFindService.findById(memberId);
+        Family family = familyFindService.findByFamilyCode(member.getFamilyCode());
 
         if(member.getIsParent() == 0){
             member.updateChildEmail(childEmail(memberId));
@@ -93,6 +97,7 @@ public class AuthService {
                 .memberId(member.getId())
                 .name(member.getName())
                 .familyCode(member.getFamilyCode())
+                .familyName(family.getFamilyName())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .fcmToken(member.getFcmToken())

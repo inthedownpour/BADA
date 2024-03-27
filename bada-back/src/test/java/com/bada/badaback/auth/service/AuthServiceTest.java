@@ -4,6 +4,7 @@ import com.bada.badaback.auth.domain.AuthCode;
 import com.bada.badaback.auth.domain.Token;
 import com.bada.badaback.auth.dto.LoginResponseDto;
 import com.bada.badaback.common.ServiceTest;
+import com.bada.badaback.family.domain.Family;
 import com.bada.badaback.global.security.JwtProvider;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.domain.SocialType;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.bada.badaback.feature.AuthCodeFixture.AUTHCODE_0;
+import static com.bada.badaback.feature.FamilyFixture.FAMILY_0;
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -39,10 +41,13 @@ public class AuthServiceTest extends ServiceTest {
     private Member member;
     private AuthCode authCode;
 
+    private Family family;
+
     @BeforeEach
     void setup() {
         member = memberRepository.save(SUNKYOUNG.toMember());
         authCode = authCodeRepository.save(AUTHCODE_0.toAuthCode(member));
+        family = familyRepository.save(FAMILY_0.toFamily(member.getFamilyCode()));
     }
 
     @Test
@@ -138,6 +143,7 @@ public class AuthServiceTest extends ServiceTest {
                 () -> assertThat(loginResponseDto.memberId()).isEqualTo(saveMemberId),
                 () -> assertThat(loginResponseDto.name()).isEqualTo("윤선경"),
                 () -> assertThat(loginResponseDto.familyCode()).isEqualTo(findMember.getFamilyCode()),
+                () -> assertThat(loginResponseDto.familyName()).isEqualTo(family.getFamilyName()),
                 () -> assertThat(loginResponseDto.fcmToken()).isEqualTo(findMember.getFcmToken()),
                 () -> {
                     Token findToken = tokenRepository.findByMemberId(saveMemberId).orElseThrow();

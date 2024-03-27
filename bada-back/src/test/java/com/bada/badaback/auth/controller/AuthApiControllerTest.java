@@ -232,7 +232,7 @@ class AuthApiControllerTest extends ControllerTest {
     }
 
     private LoginResponseDto createLoginResponseDto() {
-        return new LoginResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getFamilyCode(), ACCESS_TOKEN, REFRESH_TOKEN, SUNKYOUNG.getFcmToken());
+        return new LoginResponseDto(1L, SUNKYOUNG.getName(), SUNKYOUNG.getFamilyCode(), "우리 가족", ACCESS_TOKEN, REFRESH_TOKEN, SUNKYOUNG.getFcmToken());
     }
 
     private AuthAlreadyRequestDto createAuthAlreadyRequestDto() {
