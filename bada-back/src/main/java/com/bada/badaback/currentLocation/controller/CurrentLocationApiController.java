@@ -22,20 +22,13 @@ public class CurrentLocationApiController {
     @PostMapping
     public ResponseEntity<Void> create(@ExtractPayload Long memberId, @RequestBody @Valid CurrentLocationRequestDto requestDto) {
         currentLocationService.create(memberId, requestDto.currentLatitude(), requestDto.currentLongitude());
-        memberService.updateMovingState(memberId);
+        memberService.updateMovingState(memberId, 1);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping
     public ResponseEntity<Void> update(@ExtractPayload Long memberId, @RequestBody @Valid CurrentLocationRequestDto requestDto) {
         currentLocationService.update(memberId, requestDto.currentLatitude(), requestDto.currentLongitude());
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@ExtractPayload Long memberId) {
-        currentLocationService.delete(memberId);
-        memberService.updateMovingState(memberId);
         return ResponseEntity.ok().build();
     }
 
