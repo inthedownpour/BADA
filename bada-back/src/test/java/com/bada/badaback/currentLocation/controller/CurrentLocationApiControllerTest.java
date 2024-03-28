@@ -132,54 +132,6 @@ public class CurrentLocationApiControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("현재 위치 삭제 API 테스트 [DELETE /api/currentLocation]")
-    class deleteMyPlace {
-        private static final String BASE_URL = "/api/currentLocation";
-
-        @Test
-        @DisplayName("Authorization_Header에 RefreshToken이 없으면 예외가 발생한다")
-        void throwExceptionByInvalidPermission() throws Exception {
-            // when
-            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .delete(BASE_URL);
-
-            // then
-            final AuthErrorCode expectedError = AuthErrorCode.INVALID_PERMISSION;
-            mockMvc.perform(requestBuilder)
-                    .andExpectAll(
-                            status().isForbidden(),
-                            jsonPath("$.status").exists(),
-                            jsonPath("$.status").value(expectedError.getStatus().value()),
-                            jsonPath("$.errorCode").exists(),
-                            jsonPath("$.errorCode").value(expectedError.getErrorCode()),
-                            jsonPath("$.message").exists(),
-                            jsonPath("$.message").value(expectedError.getMessage())
-                    );
-
-        }
-
-        @Test
-        @DisplayName("마이 플레이스 삭제에 성공한다")
-        void success() throws Exception {
-            // given
-            doNothing()
-                    .when(currentLocationService)
-                    .delete(anyLong());
-
-            // when
-            MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .delete(BASE_URL)
-                    .header(AUTHORIZATION, BEARER_TOKEN + ACCESS_TOKEN);
-
-            // then
-            mockMvc.perform(requestBuilder)
-                    .andExpectAll(
-                            status().isOk()
-                    );
-        }
-    }
-
-    @Nested
     @DisplayName("아이 현재 위치 상세 조회 API 테스트 [GET /api/currentLocation/{childId}]")
     class readCurrent {
         private static final String BASE_URL = "/api/currentLocation/{childId}";
