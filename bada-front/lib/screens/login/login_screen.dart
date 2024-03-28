@@ -1,6 +1,6 @@
 import 'package:bada/login/login_platform.dart';
 import 'package:bada/provider/profile_provider.dart';
-import 'package:bada/screens/login/initial_screen.dart';
+import 'package:bada/screens/login/screen/initial_screen.dart';
 import 'package:bada/screens/main/main_screen.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
@@ -15,38 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? _phone;
-
-  // 사용자에게 휴대폰 번호 입력을 요청하는 함수
-  Future<void> requestPhoneNumber(
-    BuildContext context,
-    ProfileProvider profileProvider,
-  ) async {
-    TextEditingController phoneNumberController = TextEditingController();
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("휴대폰 번호 입력"),
-          content: TextField(
-            controller: phoneNumberController,
-            decoration: const InputDecoration(hintText: "휴대폰 번호"),
-            keyboardType: TextInputType.phone,
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("확인"),
-              onPressed: () {
-                profileProvider.setPhone(phoneNumberController.text);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final profileProvider = Provider.of<ProfileProvider>(context);
@@ -78,15 +46,14 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.kakao;
-                  _phone = await SmsAutoFill().hint;
-                  if (_phone == null) {
-                    await requestPhoneNumber(context, profileProvider);
-                  }
-                  await profileProvider.initProfile(loginPlatform);
-                  bool hasProfile = await profileProvider.profileDbCheck();
+                  await profileProvider
+                      .initProfile(loginPlatform); // 소셜 로그인 진행 및 정보 가져오기
+                  bool hasProfile = await profileProvider
+                      .profileDbCheck(); // 데이터베이스에 아이디가 있는지 확인하고 있으면 response로 받은 accessToken Storage에 저장
                   // 아이디가 데이터베이스에 있는 경우
                   if (hasProfile) {
-                    await profileProvider.saveProfileToStorage();
+                    await profileProvider
+                        .saveProfileToStorage(); // 프로필 정보를 DB에서 가져온 뒤 Storage에 저장
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -116,14 +83,15 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.naver;
-                  _phone = await SmsAutoFill().hint;
-                  if (_phone == null) {
-                    await requestPhoneNumber(context, profileProvider);
-                  }
-                  await profileProvider.initProfile(loginPlatform);
-                  bool hasProfile = await profileProvider.profileDbCheck();
+
+                  await profileProvider
+                      .initProfile(loginPlatform); // 소셜 로그인 진행 및 정보 가져오기
+                  bool hasProfile = await profileProvider
+                      .profileDbCheck(); // 데이터베이스에 아이디가 있는지 확인하고 있으면 response로 받은 accessToken Storage에 저장
+                  // 아이디가 데이터베이스에 있는 경우
                   if (hasProfile) {
-                    profileProvider.saveProfileToStorage();
+                    await profileProvider
+                        .saveProfileToStorage(); // 프로필 정보를 DB에서 가져온 뒤 Storage에 저장
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -131,6 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                   } else {
+                    // 아이디가 데이터베이스에 없는 경우
                     Navigator.push(
                       context,
                       MaterialPageRoute(
