@@ -26,7 +26,7 @@ public class MemberApiController {
     public ResponseEntity<Void> update (@ExtractPayload Long memberId,
                                        @RequestPart(value = "request") MemberUpdateRequestDto requestDto,
                                        @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
-        memberService.update(memberId, requestDto.name(), multipartFile);
+        memberService.update(memberId, requestDto.childId(), requestDto.name(), multipartFile);
         return ResponseEntity.ok().build();
     }
 
