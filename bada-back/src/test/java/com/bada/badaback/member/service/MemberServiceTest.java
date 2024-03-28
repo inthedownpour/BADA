@@ -39,7 +39,6 @@ public class MemberServiceTest extends ServiceTest {
 
     private Member member;
     private AuthCode authCode;
-
     private Family family;
 
     @BeforeEach
@@ -123,16 +122,15 @@ public class MemberServiceTest extends ServiceTest {
         @Test
         @DisplayName("이동 여부 수정에 성공한다")
         void success() {
-            // given
-            // 초기 - 0
-            memberService.updateMovingState(member.getId());
-
             // when
-            Member findmember = memberFindService.findById(member.getId());
+            int result1 = memberFindService.findById(member.getId()).getMovingState();
+            memberService.updateMovingState(member.getId(), 1);
+            int result2 = memberFindService.findById(member.getId()).getMovingState();
 
             // then
             assertAll(
-                    () -> assertThat(findmember.getMovingState()).isEqualTo(1)
+                    () -> assertThat(result1).isEqualTo(0),
+                    () -> assertThat(result2).isEqualTo(1)
             );
         }
     }
