@@ -183,7 +183,7 @@ public class SafeFacilityService {
      * @param beforeHexAddr
      * @return
      */
-    private static List<String> PassCCTV(List<List<Tile>> layer, int now, String beforeHexAddr, List<String> route) throws IOException {
+    private List<String> PassCCTV(List<List<Tile>> layer, int now, String beforeHexAddr, List<String> route) throws IOException {
         // now는 현재 레이어의 숫자이다.
         // 만약 layer가 4가 된다면 5개의 레이어까지 왔으므로 도착지까지 보낸다.
         // 만약 첫번째 레이어면 출발과 비교한다.
@@ -212,7 +212,7 @@ public class SafeFacilityService {
         }
     }//PassCCTV
 
-    private static Point calculateMidpoint(Point start, Point end) {
+    public Point calculateMidpoint(Point start, Point end) {
         // 위도와 경도의 평균값 계산
         double midLat = (start.getLatitude() + end.getLatitude()) / 2;
         double midLong = (start.getLongitude() + end.getLongitude()) / 2;
@@ -221,7 +221,7 @@ public class SafeFacilityService {
         return new Point(midLat, midLong);
     }
 
-    private double distance(double lat1, double lon1, double lat2, double lon2) {
+    public double distance(double lat1, double lon1, double lat2, double lon2) {
         int R = 6371; // 지구 반지름 (단위: km)
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
