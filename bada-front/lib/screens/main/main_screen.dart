@@ -141,18 +141,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    Button330_220(
-                      label: '테스트 전용',
-                      buttonImage: Lottie.asset('assets/lottie/settings.json'),
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const Test(),
-                        //   ),
-                        // );
-                      },
-                    ),
                     SizedBox(
                       width: UIhelper.scaleWidth(context) * 10,
                     ),
