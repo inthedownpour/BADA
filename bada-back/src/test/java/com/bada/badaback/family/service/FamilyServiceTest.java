@@ -11,9 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.bada.badaback.feature.FamilyFixture.FAMILY_0;
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
 import static com.bada.badaback.feature.MyPlaceFixture.MYPLACE_0;
