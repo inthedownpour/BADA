@@ -3,13 +3,16 @@ package com.bada.badaback.member.service;
 import com.bada.badaback.auth.service.AuthCodeService;
 import com.bada.badaback.auth.service.AuthService;
 import com.bada.badaback.auth.service.TokenService;
+import com.bada.badaback.currentLocation.exception.CurrentLocationErrorCode;
 import com.bada.badaback.family.domain.Family;
 import com.bada.badaback.family.service.FamilyFindService;
 import com.bada.badaback.family.service.FamilyService;
 import com.bada.badaback.file.service.FileService;
+import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.domain.MemberRepository;
 import com.bada.badaback.member.dto.MemberDetailResponseDto;
+import com.bada.badaback.member.exception.MemberErrorCode;
 import com.bada.badaback.state.domain.StateRepository;
 import com.bada.badaback.state.service.StateService;
 import lombok.RequiredArgsConstructor;
@@ -40,17 +43,34 @@ public class MemberService {
     }
 
     @Transactional
-    public void update(Long memberId, String name, MultipartFile file) {
+    public void update(Long memberId, Long childId, String name, MultipartFile file) {
         Member findMember = memberFindService.findById(memberId);
 
-        String profileUrl = null;
-        if (file != null)
-            profileUrl = fileService.uploadMemberFiles(file);
+        // 아이 프로필 수정
+        if(childId != null) {
+            Member findChild = memberFindService.findById(childId);
+            checkParent(findMember.getFamilyCode(), findChild.getFamilyCode());
 
-        if(findMember.getProfileUrl() != null)
-            fileService.deleteFiles(findMember.getProfileUrl());
+            String profileUrl = null;
+            if (file != null)
+                profileUrl = fileService.uploadMemberFiles(file);
 
-        findMember.updateMember(name, profileUrl);
+            if(findChild.getProfileUrl() != null)
+                fileService.deleteFiles(findChild.getProfileUrl());
+
+            findChild.updateMember(name, profileUrl);
+        }
+        // 본인 프로필 수정
+        else {
+            String profileUrl = null;
+            if (file != null)
+                profileUrl = fileService.uploadMemberFiles(file);
+
+            if(findMember.getProfileUrl() != null)
+                fileService.deleteFiles(findMember.getProfileUrl());
+
+            findMember.updateMember(name, profileUrl);
+        }
     }
 
     @Transactional
@@ -81,5 +101,10 @@ public class MemberService {
     public void updateMovingState(Long memberId, int movingState) {
         Member findMember = memberFindService.findById(memberId);
         findMember.updateMovingState(movingState);
+    }
+
+    private void checkParent (String memberFamilyCode, String childFamilyCode) {
+        if(!memberFamilyCode.equals(childFamilyCode))
+            throw BaseException.type(MemberErrorCode.MEMBER_IS_NOT_CHILD_PARENT);
     }
 }
