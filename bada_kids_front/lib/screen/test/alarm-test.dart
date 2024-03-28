@@ -104,7 +104,7 @@ class _AlarmTestState extends State<AlarmTest> {
         'type': 'ALARM-TYPE',
         'familyCode': familyCode,
         'memberId': memberId,
-        'content': 'test 범위 이탈 감지 알림이 발생했습니다',
+        'content': '용준씨 엠엠 보세요',
         'latitude': currLocation.latitude,
         'longitude': currLocation.longitude,
       }),
