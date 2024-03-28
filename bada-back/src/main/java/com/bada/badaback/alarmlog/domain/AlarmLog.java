@@ -1,4 +1,4 @@
-package com.bada.badaback.alarm.domain;
+package com.bada.badaback.alarmlog.domain;
 
 
 import com.bada.badaback.global.BaseTimeEntity;
@@ -30,18 +30,22 @@ public class AlarmLog extends BaseTimeEntity {
   @Column(nullable = false)
   private String type;
 
+  @Column(name = "child_id", nullable = false)
+  private Long childId;
+
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_id", referencedColumnName = "member_id", nullable = false)
   private Member member;
 
-  private AlarmLog(String type, Member member) {
+  private AlarmLog(String type, Member member, Long childId) {
     this.type = type;
     this.member = member;
+    this.childId = childId;
   }
 
-  public static AlarmLog createAlarmLog(String type, Member member) {
-    return new AlarmLog(type, member);
+  public static AlarmLog createAlarmLog(String type, Member member, Long childId) {
+    return new AlarmLog(type, member, childId);
   }
 
 }
