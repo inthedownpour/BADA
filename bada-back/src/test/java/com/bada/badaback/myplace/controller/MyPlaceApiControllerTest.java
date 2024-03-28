@@ -79,7 +79,7 @@ public class MyPlaceApiControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("마이 플레이스 정보 수정 API 테스트 [PATCH /api/myplace/{myPlaceId}]")
+    @DisplayName("마이 플레이스 수정 API 테스트 [PATCH /api/myplace/{myPlaceId}]")
     class updateMyPlace {
         private static final String BASE_URL = "/api/myplace/{myPlaceId}";
         private static final Long MYPLACE_ID = 1L;
@@ -110,12 +110,12 @@ public class MyPlaceApiControllerTest extends ControllerTest {
         }
 
         @Test
-        @DisplayName("회원 정보 수정에 성공한다")
+        @DisplayName("마이 플레이스 수정에 성공한다")
         void success() throws Exception {
             // given
             doNothing()
-                    .when(memberService)
-                    .update(anyLong(), any(), any());
+                    .when(myPlaceService)
+                    .update(anyLong(), anyLong(), any(), any());
 
             // when
             final MyPlaceUpdateRequestDto requestDto = createMyPlaceUpdateRequestDto();
