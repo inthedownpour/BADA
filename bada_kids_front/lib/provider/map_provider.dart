@@ -55,7 +55,7 @@ class MapProvider with ChangeNotifier {
     );
     _currentLocation = LatLng(position.latitude, position.longitude);
     _isLocationServiceEnabled = true;
-
+    print('map_provider 58줄 ${_currentLocation.longitude}');
     notifyListeners(); // 위치 정보가 업데이트되면 리스너에게 알림
   }
 

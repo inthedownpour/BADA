@@ -1,12 +1,26 @@
-import 'package:bada_kids_front/screen/home_screen.dart';
+import 'package:bada_kids_front/firebase_options.dart';
+import 'package:bada_kids_front/screen/main/home_screen.dart';
 import 'package:bada_kids_front/screen/loading_screen.dart';
-import 'package:bada_kids_front/screen/login_screen.dart';
+import 'package:bada_kids_front/screen/login/login_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
+  AuthRepository.initialize(appKey: dotenv.env['KAKAO_MAP_API'] ?? '');
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  KakaoSdk.init(
+    nativeAppKey: '9d4c295f031b5c1f50269e353e895e12',
+  );
   runApp(const MyApp());
 }
 

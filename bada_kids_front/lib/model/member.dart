@@ -1,12 +1,6 @@
 class Member {
-  int? _memberId;
-  String? _name;
-  String? _phone;
-  int? _isParent;
-  String? _profileUrl;
-  String? _familyCode;
-  int? _movingState;
-  String? _fcmToken;
+  int? _memberId, _isParent, _movingState;
+  String? _name, _phone, _profileUrl, _familyCode, _familyName, _fcmToken;
 
   Member(
       {int? memberId,
@@ -15,6 +9,7 @@ class Member {
       int? isParent,
       String? profileUrl,
       String? familyCode,
+      String? familyName,
       int? movingState,
       String? fcmToken}) {
     _memberId = memberId;
@@ -23,6 +18,7 @@ class Member {
     _isParent = isParent;
     _profileUrl = profileUrl;
     _familyCode = familyCode;
+    _familyName = familyName;
     _movingState = movingState;
     _fcmToken = fcmToken;
   }
@@ -30,6 +26,7 @@ class Member {
   String get fcmToken => _fcmToken!;
   int get movingState => _movingState!;
   String get familyCode => _familyCode!;
+  String get familyName => _familyName!;
   String? get profileUrl => _profileUrl;
   int get isParent => _isParent!;
   String get phone => _phone!;
@@ -45,6 +42,7 @@ class Member {
       isParent: json['isParent'],
       profileUrl: json['profileUrl'],
       familyCode: json['familyCode'],
+      familyName: json['familyName'],
       movingState: json['movingState'],
       fcmToken: json['fcmToken'],
     );
