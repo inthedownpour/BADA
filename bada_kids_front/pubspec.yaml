@@ -39,9 +39,9 @@ flutter:
   assets:
     - assets/img/
     - assets/icons/
-    - assets/gif/
+    # - assets/gif/
     - assets/lottie/
-
+    - .env
   fonts:
     - family: Pretendard
       fonts:
