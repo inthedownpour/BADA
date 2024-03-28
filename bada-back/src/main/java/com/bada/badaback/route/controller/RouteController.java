@@ -1,6 +1,8 @@
 package com.bada.badaback.route.controller;
 
+import com.bada.badaback.currentLocation.service.CurrentLocationService;
 import com.bada.badaback.global.annotation.ExtractPayload;
+import com.bada.badaback.member.service.MemberService;
 import com.bada.badaback.route.dto.RouteRequestDto;
 import com.bada.badaback.route.dto.RouteResponseDto;
 import com.bada.badaback.route.service.RouteService;
@@ -15,6 +17,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class RouteController {
     private final RouteService routeService;
+    private final CurrentLocationService currentLocationService;
+    private final MemberService memberService;
 
     /**
      * 아이가 자신의 현재 경로를 생성한다
@@ -49,6 +53,8 @@ public class RouteController {
     @DeleteMapping
     public ResponseEntity<Void> deleteRoute(@ExtractPayload Long memberId) {
         routeService.deleteRoute(memberId);
+        currentLocationService.delete(memberId);
+        memberService.updateMovingState(memberId, 0);
         return ResponseEntity.ok().build();
     }
 }
