@@ -60,7 +60,11 @@ public class RouteService {
                 double Lng = Double.parseDouble(pointString[1]);
                 pointList.add(new Point(Lat, Lng));
             }
-            return RouteResponseDto.from(childRoute, pointList);
+            return RouteResponseDto.from(Double.parseDouble(childRoute.getStartLatitude()),
+                    Double.parseDouble(childRoute.getStartLongitude()),
+                    Double.parseDouble(childRoute.getEndLatitude()),
+                    Double.parseDouble(childRoute.getEndLongitude()),
+                    pointList);
         } else {
             //같은 가족이 아닐 때
             throw BaseException.type(RouteErrorCode.NOT_FAMILY);
