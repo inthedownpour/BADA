@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bada_kids_front/model/buttons.dart';
-import 'package:bada_kids_front/screen/home_screen.dart';
+import 'package:bada_kids_front/screen/main/home_screen.dart';
 import 'package:bada_kids_front/model/screen_size.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import '../firebase_options.dart';
+import '../../firebase_options.dart';
 
 class LoginScreen2 extends StatefulWidget {
   final String authCode;

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class Place {
-  final double myPlaceId;
+  final int myPlaceId;
   final String placeName;
   final double placeLatitude;
   final double placeLongitude;
@@ -32,7 +32,7 @@ class Place {
 
   factory Place.fromJson(Map<String, dynamic> json) {
     return Place(
-      myPlaceId: (json['myPlaceId'] as num).toDouble(),
+      myPlaceId: json['myPlaceId'],
       placeName: json['placeName'],
       placeLatitude: json['placeLatitude'].toDouble(),
       placeLongitude: json['placeLongitude'].toDouble(),
