@@ -1,6 +1,5 @@
 package com.bada.badaback.route.service;
 
-import com.bada.badaback.route.dto.TmapRequestDto;
 import com.bada.badaback.safefacility.domain.Point;
 import com.bada.badaback.safefacility.service.SafeFacilityService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +16,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -36,26 +37,32 @@ public class TmapApiService {
 
         String baseUrl = "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result";
 
-        TmapRequestDto tmapRequestDto = TmapRequestDto.builder()
-                .startX(String.valueOf(startLng))
-                .startY(String.valueOf(startLat))
-                .endX(String.valueOf(endLng))
-                .endY(String.valueOf(endLat))
-                .reqCoordType("WGS84GEO")
-                .resCoordType("WGS84GEO")
-                .startName("출발지")
-                .endName("도착지")
-                .passList(getPassList)
-                .build();
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("startX",startLng);
+        requestBody.put("startY",startLat);
+        requestBody.put("endX",endLng);
+        requestBody.put("endY",endLat);
+        requestBody.put("reqCoordType","WGS84GEO");
+        requestBody.put("resCoordType","WGS84GEO");
+        requestBody.put("startName","출발지");
+        requestBody.put("endName","도착지");
+        if(!getPassList.isEmpty()){
+            requestBody.put("passList", getPassList);
+        }
 
         ObjectMapper mapper = new ObjectMapper();
-        String jsonString = mapper.writeValueAsString(tmapRequestDto);
+        String jsonString = mapper.writeValueAsString(requestBody);
+        //passList가 있다면 apssList 추가
+
+
         String response = webClient.post().uri(baseUrl)
                 .header("appKey", appKey)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(jsonString))
                 .retrieve()
                 .bodyToMono(String.class).block();
+//        log.info("=========데이터 찾기=========");
+//        log.info(response);
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject1 = jsonParser.parse(response).getAsJsonObject();
         JsonArray jsonArray = (JsonArray) jsonParser.parse(jsonObject1.get("features").toString());
