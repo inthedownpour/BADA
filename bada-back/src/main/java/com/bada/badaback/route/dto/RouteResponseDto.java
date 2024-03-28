@@ -14,11 +14,11 @@ public record RouteResponseDto(
         double endLat,
         List<Point> pointList
 ) {
-    public static RouteResponseDto from(Route route, List<Point> pointList) {
-        return RouteResponseDto.builder().startLng(Double.parseDouble(route.getStartLongitude()))
-                .startLat(Double.parseDouble(route.getStartLatitude()))
-                .endLng(Double.parseDouble(route.getEndLongitude()))
-                .endLat(Double.parseDouble(route.getEndLatitude()))
+    public static RouteResponseDto from(double startLat, double startLng, double endLat, double endLng, List<Point> pointList) {
+        return RouteResponseDto.builder().startLng(startLng)
+                .startLat(startLat)
+                .endLng(endLng)
+                .endLat(endLat)
                 .pointList(pointList)
                 .build();
     }
