@@ -120,7 +120,7 @@ public class MemberApiControllerTest extends ControllerTest {
             // given
             doNothing()
                     .when(memberService)
-                    .update(anyLong(), any(), any());
+                    .update(anyLong(), anyLong(), any(), any());
 
             // when
             final MemberUpdateRequestDto requestDto = createMemberUpdateRequestDto();
@@ -202,6 +202,6 @@ public class MemberApiControllerTest extends ControllerTest {
     }
 
     private MemberUpdateRequestDto createMemberUpdateRequestDto() {
-        return new MemberUpdateRequestDto("새로운 이름");
+        return new MemberUpdateRequestDto("새로운 이름", 2L);
     }
 }
