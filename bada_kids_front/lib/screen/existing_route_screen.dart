@@ -12,10 +12,11 @@ class ExistingRouteScreen extends StatefulWidget {
 // TODO : 기존 경로를 불러오는 기능 구현
 class _ExistingRouteScreenState extends State<ExistingRouteScreen> {
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  Future<List>? myPlaces;
 
   void pathRequest() async {
     var accessToken = await secureStorage.read(key: 'accessToken');
-    var url = Uri.parse('https://j10b207.p.ssafy.io/api');
+    var url = Uri.parse('https://j10b207.p.ssafy.io/api/myplace');
     var response = await http.get(
       url,
       headers: {
@@ -28,6 +29,12 @@ class _ExistingRouteScreenState extends State<ExistingRouteScreen> {
     } else {
       print('요청 실패: ${response.statusCode}');
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    pathRequest();
   }
 
   @override

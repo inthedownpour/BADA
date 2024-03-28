@@ -1,5 +1,5 @@
 import 'package:bada_kids_front/model/screen_size.dart';
-import 'package:bada_kids_front/screen/path_find_screen.dart';
+import 'package:bada_kids_front/screen/main/navigator/path_find_screen.dart';
 import 'package:flutter/material.dart';
 
 class Button330_220 extends StatefulWidget {
@@ -138,7 +138,7 @@ class _Button714_300State extends State<Button714_300> {
               ),
               SizedBox(height: UIhelper.scaleHeight(context) * 10),
               const Text(
-                'CCTV가 많은 길로 아이가 다닐 수 있도록',
+                '안전한 길을 추천해 주세요!',
                 style: TextStyle(fontSize: 10),
               ),
             ],
@@ -355,21 +355,25 @@ class _AlarmSettingButtonState extends State<AlarmSettingButton> {
 }
 
 class MyPlaceButton extends StatefulWidget {
-  final String label;
-  final double x, y;
+  final String placeName, icon, addressName;
+  final int myPlaceId;
+  final double placeLatitude, placeLongitude;
   final String? navigateTo;
   final Color backgroundColor, foregroundColor;
   final void Function()? onPressed;
 
   const MyPlaceButton({
     super.key,
-    required this.label,
-    required this.x,
-    required this.y,
+    required this.icon,
+    required this.addressName,
+    required this.myPlaceId,
+    required this.placeLatitude,
+    required this.placeLongitude,
     this.backgroundColor = const Color(0xff696DFF),
     this.foregroundColor = Colors.white,
-    this.navigateTo,
     this.onPressed,
+    required this.placeName,
+    this.navigateTo,
   });
   @override
   State<MyPlaceButton> createState() => _MyPlaceButtonState();
@@ -400,7 +404,7 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
           child: Row(
             children: [
               Image.asset(
-                'assets/img/whistle.png',
+                widget.icon,
                 height: UIhelper.scaleWidth(context) * 50,
               ),
               SizedBox(
@@ -411,7 +415,7 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('이름: ${widget.label}'),
+                    Text('이름: ${widget.placeName}'),
                     const Text('주소: 대전광역시 유성구 덕명로 26'),
                   ],
                 ),
@@ -420,8 +424,8 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) =>
-                          PathFindScreen(y: widget.y, x: widget.x),
+                      builder: (context) => PathFindScreen(
+                          y: widget.placeLongitude, x: widget.placeLatitude),
                     ),
                   );
                 },

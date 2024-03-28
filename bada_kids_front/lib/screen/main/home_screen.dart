@@ -1,16 +1,16 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:bada_kids_front/model/buttons.dart';
 import 'package:bada_kids_front/model/member.dart';
 import 'package:bada_kids_front/model/screen_size.dart';
 import 'package:bada_kids_front/provider/map_provider.dart';
-import 'package:bada_kids_front/screen/destination_select_screen.dart';
+import 'package:bada_kids_front/screen/main/navigator/destination_select_screen.dart';
 import 'package:bada_kids_front/screen/existing_route_screen.dart';
 import 'package:bada_kids_front/screen/settings.dart';
+import 'package:bada_kids_front/widget/fam_member.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:lottie/lottie.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -97,9 +97,20 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
+          Positioned(child: Lottie.asset('assets/lottie/walking-cloud.json')),
+          Positioned(
+            right: UIhelper.scaleWidth(context) * -130,
+            bottom: UIhelper.scaleHeight(context) * 170,
+            child: Lottie.asset('assets/lottie/loading-cat.json',
+                width: UIhelper.scaleWidth(context) * 400),
+          ),
           Container(
-            padding: EdgeInsets.fromLTRB(deviceWidth * 0.1, deviceHeight * 0.08,
-                deviceWidth * 0.05, deviceHeight * 0.08),
+            padding: EdgeInsets.fromLTRB(
+              deviceWidth * 0.05,
+              deviceHeight * 0.08,
+              deviceWidth * 0.05,
+              deviceHeight * 0.08,
+            ),
             child: Column(
               children: [
                 Row(
@@ -145,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 SizedBox(height: deviceHeight * 0.05),
                 Button714_300(
-                  label: '경로 추천 받기',
+                  label: '어디로 갈까요?',
                   buttonImage: Image.asset('assets/img/map-phone.png'),
                   onPressed: () {
                     mapProvider.isGuideMode
@@ -173,76 +184,57 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else if (snapshot.hasError) {
                         return const Text("데이터 로드에 실패했습니다.");
                       } else if (snapshot.hasData) {
-                        return GridView.builder(
-                          itemCount: snapshot.data!.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio:
-                                (deviceWidth / 2) / (deviceHeight * 0.25),
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemBuilder: (context, index) {
-                            Member member = snapshot.data![index];
-                            // 아이템 내용 구성
-                            return ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff7B79FF),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                        // Separating members into parents and children
+                        List<Member> parents = snapshot.data!
+                            .where((m) => m.isParent == 1)
+                            .toList();
+                        List<Member> children = snapshot.data!
+                            .where((m) => m.isParent == 0)
+                            .toList();
+
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('부모'),
+                            Expanded(
+                              flex:
+                                  1, // Adjust flex factor to control the space allocation
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: parents
+                                      .map((member) => MemberItemWidget(
+                                            member: member,
+                                            myName: _name ?? '',
+                                          ))
+                                      .toList(),
                                 ),
-                                elevation: 5,
                               ),
-                              onPressed: () async {
-                                final Uri url = Uri(
-                                  scheme: 'tel',
-                                  path: member.phone,
-                                );
-                                if (await canLaunchUrl(url)) {
-                                  await launchUrl(url);
-                                } else {
-                                  debugPrint('전화 걸기 실패');
-                                }
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 45,
-                                    backgroundImage: member.profileUrl != null
-                                        ? NetworkImage(member.profileUrl!)
-                                        : Image.asset(
-                                                'assets/img/default_profile.png')
-                                            .image,
-                                  ),
-                                  SizedBox(height: deviceHeight * 0.02),
-                                  // 이름과 아이콘을 수평으로 배치
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.phone,
-                                          size: 20), // 전화 아이콘
-                                      const SizedBox(
-                                          width: 8), // 아이콘과 이름 사이의 간격
-                                      Text(
-                                        member.name,
-                                        style: const TextStyle(fontSize: 15),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                            ),
+                            const Text('아이'),
+                            Expanded(
+                              flex:
+                                  1, // Adjust flex factor to control the space allocation
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: children
+                                      .map((member) => MemberItemWidget(
+                                            member: member,
+                                            myName: _name ?? '',
+                                          ))
+                                      .toList(),
+                                ),
                               ),
-                            );
-                          },
+                            ),
+                          ],
                         );
                       } else {
                         return const Text("데이터가 없습니다.");
                       }
                     },
                   ),
-                ),
+                )
               ],
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:bada_kids_front/model/buttons.dart';
 import 'package:bada_kids_front/model/place.dart';
 import 'package:bada_kids_front/model/screen_size.dart';
+import 'package:bada_kids_front/screen/test/alarm-test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -43,8 +44,10 @@ class _DestinationSelectScreenState extends State<DestinationSelectScreen> {
       appBar: AppBar(
         title: const Text('어디로 가시나요?'),
         centerTitle: true,
+        backgroundColor: Colors.white,
       ),
       body: Container(
+        color: Colors.white,
         child: Column(
           children: [
             Expanded(
@@ -60,9 +63,12 @@ class _DestinationSelectScreenState extends State<DestinationSelectScreen> {
                           return Column(
                             children: [
                               MyPlaceButton(
-                                label: places[index].placeName,
-                                y: places[index].placeLatitude,
-                                x: places[index].placeLongitude,
+                                placeName: places[index].placeName,
+                                placeLatitude: places[index].placeLatitude,
+                                placeLongitude: places[index].placeLongitude,
+                                icon: places[index].icon,
+                                addressName: places[index].addressName,
+                                myPlaceId: places[index].myPlaceId,
                               ),
                               SizedBox(
                                 height: UIhelper.scaleHeight(context) * 5,
@@ -82,6 +88,14 @@ class _DestinationSelectScreenState extends State<DestinationSelectScreen> {
                 },
               ),
             ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AlarmTest()));
+                },
+                child: const Text('테스팅'))
           ],
         ),
       ),
