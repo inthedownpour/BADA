@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.bada.badaback.feature.AuthCodeFixture.AUTHCODE_0;
 import static com.bada.badaback.feature.FamilyFixture.FAMILY_0;
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
+import static com.bada.badaback.feature.MemberFixture.YONGJUN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -38,12 +39,14 @@ public class MemberServiceTest extends ServiceTest {
     private StateFindService stateFindService;
 
     private Member member;
+    private Member child;
     private AuthCode authCode;
     private Family family;
 
     @BeforeEach
     void setup() {
         member = memberRepository.save(SUNKYOUNG.toMember());
+        child = memberRepository.save(YONGJUN.toMember());
         authCode = authCodeRepository.save(AUTHCODE_0.toAuthCode(member));
         family = familyRepository.save(FAMILY_0.toFamily(member.getFamilyCode()));
     }
@@ -80,9 +83,9 @@ public class MemberServiceTest extends ServiceTest {
     class update {
         @Test
         @DisplayName("회원 정보 수정에 성공한다")
-        void success() {
+        void successParent() {
             // given
-            memberService.update(member.getId(), "새로운이름", null);
+            memberService.update(member.getId(), null,"새로운이름", null);
 
             // when
             Member findmember = memberFindService.findById(member.getId());
@@ -91,6 +94,22 @@ public class MemberServiceTest extends ServiceTest {
             assertAll(
                     () -> assertThat(findmember.getName()).isEqualTo("새로운이름"),
                     () -> assertThat(findmember.getProfileUrl()).isEqualTo(null)
+            );
+        }
+
+        @Test
+        @DisplayName("아이 회원 정보 수정에 성공한다")
+        void successChild() {
+            // given
+            memberService.update(member.getId(), child.getId(),"아이이름", null);
+
+            // when
+            Member findChild = memberFindService.findById(child.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(findChild.getName()).isEqualTo("아이이름"),
+                    () -> assertThat(findChild.getProfileUrl()).isEqualTo(null)
             );
         }
     }
