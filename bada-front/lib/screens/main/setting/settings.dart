@@ -1,10 +1,10 @@
 import 'package:bada/api_request/member_api.dart';
 import 'package:bada/provider/profile_provider.dart';
-import 'package:bada/screens/login/initial_screen.dart';
+import 'package:bada/screens/login/screen/initial_screen.dart';
 import 'package:bada/screens/login/login_screen.dart';
-import 'package:bada/screens/main/setting/alarm_setting.dart';
-import 'package:bada/screens/main/setting/setting_list.dart';
-import 'package:bada/screens/main/setting/terms_of_policy.dart';
+import 'package:bada/screens/main/setting/screen/alarm_setting.dart';
+import 'package:bada/screens/main/setting/screen/authentication._screendart';
+import 'package:bada/screens/main/setting/screen/terms_of_policy.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
