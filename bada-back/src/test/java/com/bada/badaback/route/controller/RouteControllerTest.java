@@ -16,8 +16,7 @@ import java.util.ArrayList;
 
 import static com.bada.badaback.feature.TokenFixture.ACCESS_TOKEN;
 import static com.bada.badaback.feature.TokenFixture.BEARER_TOKEN;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -83,7 +82,7 @@ class RouteControllerTest extends ControllerTest {
 
 
     @Nested
-    @DisplayName("경로 조회 API 테스트 [POST /api/route/{childId}]")
+    @DisplayName("경로 조회 API 테스트 [GET /api/route/{childId}]")
     class getRouteTest{
         private static final String BASE_URL ="/api/route/{childId}";
         private static final Long CHILD_ID = 1L;
@@ -131,7 +130,7 @@ class RouteControllerTest extends ControllerTest {
     }
 
     @Nested
-    @DisplayName("경로 삭제 API 테스트 [POST /api/route]")
+    @DisplayName("경로 삭제 API 테스트 [DELETE /api/route]")
     class deleteRouteTest{
         private static final String BASE_URL ="/api/route";
         @Test
@@ -163,6 +162,14 @@ class RouteControllerTest extends ControllerTest {
             doNothing()
                     .when(routeService)
                     .deleteRoute(any());
+
+            doNothing()
+                    .when(currentLocationService)
+                    .delete(anyLong());
+
+            doNothing()
+                    .when(memberService)
+                    .updateMovingState(anyLong(), anyInt());
 
             //when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
