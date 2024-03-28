@@ -28,9 +28,10 @@ public class RouteController {
      * @throws IOException
      */
     @PostMapping
-    public ResponseEntity<Void> creteRoute(@ExtractPayload Long memberId, @RequestBody RouteRequestDto routeRequestDto) throws IOException {
+    public ResponseEntity<RouteResponseDto> creteRoute(@ExtractPayload Long memberId, @RequestBody RouteRequestDto routeRequestDto) throws IOException {
         routeService.createRoute(memberId, routeRequestDto);
-        return ResponseEntity.ok().build();
+        RouteResponseDto routeResponseDto = routeService.getRoute(memberId, memberId);
+        return ResponseEntity.ok(routeResponseDto);
     }
 
     /**
