@@ -1,10 +1,20 @@
+import 'package:bada/api_request/member_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileEdit extends StatefulWidget {
-  const ProfileEdit({super.key});
+  var nickname;
+  var profileUrl;
+
+  ProfileEdit({
+    super.key,
+    memberId,
+    required this.nickname,
+    required this.profileUrl,
+  });
 
   @override
   State<ProfileEdit> createState() => _ProfileEditState();
@@ -12,24 +22,28 @@ class ProfileEdit extends StatefulWidget {
 
 class _ProfileEditState extends State<ProfileEdit> {
   final _storage = const FlutterSecureStorage();
+  final membersApi = MembersApi();
+  TextEditingController nicknameController = TextEditingController();
+  Future<void>? load;
   String? profileUrl;
-  String? nickname;
+  String? accessToken;
 
   @override
   void initState() {
     super.initState();
-    _loadProfileFromStorage();
+    load = _loadProfile();
   }
 
-  Future<void> _loadProfileFromStorage() async {
+  Future<void> _loadProfile() async {
+    String? storageNickname = await _storage.read(key: 'nickname');
     profileUrl = await _storage.read(key: 'profileImage');
-    nickname = await _storage.read(key: 'nickname');
+    accessToken = await _storage.read(key: 'accessToken');
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _loadProfileFromStorage(),
+      future: load,
       builder: (context, snapshot) {
         return Scaffold(
           body: Container(
@@ -89,7 +103,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                       final pickedFile =
                           await picker.pickImage(source: ImageSource.gallery);
                       if (pickedFile != null) {
-                        // 여기서 pickedFile.path를 사용하여 선택한 이미지로 프로필 사진을 업데이트하세요.
+                        profileUrl = pickedFile.path;
                       }
                     },
                     child: Stack(
@@ -133,17 +147,24 @@ class _ProfileEditState extends State<ProfileEdit> {
                 const SizedBox(
                   height: 10,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: '닉네임을 입력해주세요',
                   ),
+                  controller: nicknameController,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await membersApi.updateProfile(
+                      accessToken!,
+                      profileUrl!,
+                      nicknameController.text,
+                    );
+                  },
                   child: const Text('저장'),
                 ),
               ],
