@@ -1,5 +1,5 @@
 import 'package:bada_kids_front/model/buttons.dart';
-import 'package:bada_kids_front/screen/login_screen2.dart';
+import 'package:bada_kids_front/screen/login/login_screen2.dart';
 import 'package:bada_kids_front/model/screen_size.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
     double deviceHeight = UIhelper.deviceHeight(context);
     double deviceWidth = UIhelper.deviceWidth(context);
     // TODO : 테스트용 코드 나중에 지울 것
-    _authCodeController.text = '4X3GF';
+    _authCodeController.text = '5I9LN';
 
     return Scaffold(
       appBar: AppBar(
