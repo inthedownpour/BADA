@@ -60,10 +60,10 @@ class _SearchingPathState extends State<SearchingPath> {
       var accessToken = await secureStorage.read(key: 'accessToken');
       var url = Uri.parse('https://j10b207.p.ssafy.io/api/path');
       var requestBody = json.encode({
-        "startX": _departureLongitude.toString(),
-        "startY": _departureLatitude.toString(),
-        "endX": _destinationLongitude.toString(),
-        "endY": _destinationLatitude.toString(),
+        "startLng": _departureLongitude.toString(),
+        "startLat": _departureLatitude.toString(),
+        "endLng": _destinationLongitude.toString(),
+        "endLat": _destinationLatitude.toString(),
       });
       var response = await http.post(
         url,
