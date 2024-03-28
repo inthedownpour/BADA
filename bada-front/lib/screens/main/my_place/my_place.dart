@@ -1,5 +1,5 @@
-import 'package:bada/models/my_place_model.dart';
-import 'package:bada/screens/main/my_place/map_search.dart';
+import 'package:bada/screens/main/my_place/model/my_place_model.dart';
+import 'package:bada/screens/main/my_place/screen/map_search.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';

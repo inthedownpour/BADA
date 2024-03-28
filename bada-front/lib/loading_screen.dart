@@ -25,11 +25,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> _checkTokenAndNavigate() async {
     String? accessToken = await _storage.read(key: 'accessToken');
-
     await Future.delayed(const Duration(seconds: 2));
 
     if (accessToken == null) {
-      print('토큰 못잡음');
+      debugPrint('토큰 못잡음');
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -42,7 +41,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           MaterialPageRoute(builder: (context) => const HomeScreen()),
         );
       } else {
-        print('토큰 not valid');
+        debugPrint('토큰 not valid');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -62,7 +61,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (response.statusCode == 200) {
       return true;
     } else {
-      print(response.statusCode);
+      debugPrint(response.statusCode.toString());
       await _storage.delete(key: 'accessToken');
       return false;
     }
