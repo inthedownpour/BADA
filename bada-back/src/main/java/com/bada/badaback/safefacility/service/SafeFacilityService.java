@@ -92,6 +92,7 @@ public class SafeFacilityService {
 
             if (BigHexagon.contains(cctvHexagon)) {
                 Tile tile = new Tile(cctvHexagon);
+                tile.setLeftDist(h3.gridDistance(endHexAddr,cctvHexagon));
                 if (cctvHexagons.containsKey(cctvHexagon)) {
                     Tile preTile = cctvHexagons.get(cctvHexagon);
                     preTile.cctvCount++;
@@ -150,7 +151,7 @@ public class SafeFacilityService {
         //4. 각 layer마다 현재의 최선을 선택해서 경유지를 선택하도록 짠다. - dfs 완탐
         //4-1. 다음 layer에 cctvHexagon이 없으면 그 다음 layer 고려해서 판단
         List<String> pass = new ArrayList<>();
-        pass = PassCCTV(layer, 1, startHexAddr, pass);
+        pass = PassCCTV(layer, 1, layer.get(0).get(0), pass);
 
         //5. 결정된 hexagon에 있는 cctv의 좌표 passList를 만든다. (만약 여러개의 cctv가 있다면 랜덤으로 도착지에 보낸다.)
         List<Point> passList = hexagonsCoordinates(pass);
@@ -180,13 +181,16 @@ public class SafeFacilityService {
      *
      * @param layer
      * @param now
-     * @param beforeHexAddr
      * @return
      */
-    private List<String> PassCCTV(List<List<Tile>> layer, int now, String beforeHexAddr, List<String> route) throws IOException {
+    private List<String> PassCCTV(List<List<Tile>> layer, int now, Tile beforeTile, List<String> route) throws IOException {
         // now는 현재 레이어의 숫자이다.
         // 만약 layer가 4가 된다면 5개의 레이어까지 왔으므로 도착지까지 보낸다.
         // 만약 첫번째 레이어면 출발과 비교한다.
+
+        String beforeHexAddr = beforeTile.getHexAddr();
+
+        H3Core h3 = H3Core.newInstance();
         if (now >= 6) {
             //endlayer에서 hexaddr을 뽑아서 넣는다
             return route;
@@ -196,7 +200,6 @@ public class SafeFacilityService {
         int minIndex = -1;
         for (int i = 0; i < layer.get(now).size(); i++) {
             String nowHexAddr = layer.get(now).get(i).getHexAddr();
-            H3Core h3 = H3Core.newInstance();
             long dist = h3.gridDistance(nowHexAddr, beforeHexAddr);
             if (dist < min) {
                 minIndex = i;
@@ -205,10 +208,16 @@ public class SafeFacilityService {
         }
         //아직 minIndex가 -1이면 레이어에 값이 없었다는 것이니 추가하지 않고 다음 레이어로 넘어가는 함수를 호출한다.
         if (minIndex == -1) {
-            return PassCCTV(layer, now + 1, beforeHexAddr, route);
+            return PassCCTV(layer, now + 1, beforeTile, route);
         } else {
-            route.add(layer.get(now).get(minIndex).getHexAddr());
-            return PassCCTV(layer, now + 1, layer.get(now).get(minIndex).getHexAddr(), route);
+            //현재 넣을 타일의 도착지와의 거리가
+            long nowLeftDist = layer.get(now).get(minIndex).getLeftDist();
+            //이전의 거리보다 가까워졌으면 add
+            long beforeLeftDist = beforeTile.getLeftDist();
+            if (nowLeftDist < beforeLeftDist) {
+                route.add(layer.get(now).get(minIndex).getHexAddr());
+            }
+            return PassCCTV(layer, now + 1, layer.get(now).get(minIndex), route);
         }
     }//PassCCTV
 
