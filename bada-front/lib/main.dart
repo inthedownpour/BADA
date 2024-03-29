@@ -146,20 +146,6 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: ThemeData(fontFamily: 'Pretendard'),
       home: const LoadingScreen(),
-      // FutureBuilder<bool>(
-      //   future: initializeApp(),
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.done) {
-      //       if (snapshot.data == true) {
-      //         return const HomeScreen();
-      //       } else {
-      //         return const LoginScreen();
-      //       }
-      //     } else {
-      //       return const LoadingScreen();
-      //     }
-      //   },
-      // ),
     );
   }
 }
