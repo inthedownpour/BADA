@@ -16,17 +16,44 @@ import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
-void main() async {
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // await Firebase.initializeApp();
+  print("Handling a background message: ${message.messageId}");
+}
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
-  AuthRepository.initialize(appKey: dotenv.env['KAKAO_MAP_API'] ?? '');
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await dotenv.load(fileName: '.env');
+
+  AuthRepository.initialize(appKey: dotenv.env['KAKAO_MAP_API'] ?? '');
+
   KakaoSdk.init(
     nativeAppKey: '9d4c295f031b5c1f50269e353e895e12',
   );
+
+  requestNotificationPermission();
+
+  await FirebaseMessaging.instance.setAutoInitEnabled(true);
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    print('Got a message whilst in the foreground!');
+    print('Message data: ${message.data}');
+
+    if (message.notification != null) {
+      print('Message also contained a notification: ${message.notification}');
+    }
+  });
+
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print('fcmtoken main.dart 56 $fcmToken');
 
   runApp(
     MultiProvider(
@@ -42,6 +69,19 @@ void main() async {
       ],
       child: const MyApp(),
     ),
+  );
+}
+
+Future<void> requestNotificationPermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
   );
 }
 

@@ -38,8 +38,14 @@ flutter:
 
   assets:
     - assets/img/
+<<<<<<< HEAD
     - assets/lottie/
     - assets/icons/
+=======
+    - assets/icons/
+    # - assets/gif/
+    - assets/lottie/
+>>>>>>> feature/61-FCM
     - .env
   fonts:
     - family: Pretendard
