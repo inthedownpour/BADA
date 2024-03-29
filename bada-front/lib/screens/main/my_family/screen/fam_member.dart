@@ -2,9 +2,11 @@ import 'package:bada/screens/main/my_family/screen/alarm_list.dart';
 import 'package:bada/screens/main/my_family/screen/child_setting.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:lottie/lottie.dart';
 
 class FamilyMember extends StatefulWidget {
   final String name;
@@ -23,13 +25,17 @@ class FamilyMember extends StatefulWidget {
   State<FamilyMember> createState() => _FamilyMemberState();
 }
 
-class _FamilyMemberState extends State<FamilyMember> {
+class _FamilyMemberState extends State<FamilyMember>
+    with TickerProviderStateMixin {
+  late final AnimationController _lottieController;
+
   String myName = '';
 
   @override
   void initState() {
     super.initState();
     loadMyName();
+    _lottieController = AnimationController(vsync: this);
   }
 
   void loadMyName() async {
@@ -43,17 +49,27 @@ class _FamilyMemberState extends State<FamilyMember> {
   }
 
   @override
+  void dispose() {
+    _lottieController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xff696DFF), width: 0.5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          children: [
-            Row(
+    return Container(
+      padding: const EdgeInsets.fromLTRB(10, 20, 5, 20),
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color(0xff696DFF), width: 0.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            width: 100 * UIhelper.scaleWidth(context),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleAvatar(
@@ -70,11 +86,9 @@ class _FamilyMemberState extends State<FamilyMember> {
                         ) // Example: default icon
                       : null,
                 ),
-                SizedBox(width: UIhelper.scaleWidth(context) * 10),
-                // Text(
-                //   '이름 : ${widget.name}',
-                //   style: const TextStyle(fontSize: 16),
-                // ),
+                SizedBox(
+                  height: 10 * UIhelper.scaleHeight(context),
+                ),
                 if (widget.name == myName)
                   const Text(
                     '나!',
@@ -85,12 +99,30 @@ class _FamilyMemberState extends State<FamilyMember> {
                     widget.name,
                     style: const TextStyle(fontSize: 20),
                     overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                SizedBox(width: UIhelper.scaleWidth(context) * 10),
-                if (widget.isParent == 0) ...[
-                  Button281_77(
-                    label: const Text('알림 기록'),
-                    onPressed: () {
+              ],
+            ),
+          ),
+          Lottie.asset(
+            'assets/lottie/walking.json',
+            width: 100 * UIhelper.scaleWidth(context),
+            height: 100 * UIhelper.scaleHeight(context),
+            controller: _lottieController,
+            onLoaded: (p0) {
+              _lottieController.duration = p0.duration;
+              _lottieController.forward();
+            },
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                // mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -98,19 +130,19 @@ class _FamilyMemberState extends State<FamilyMember> {
                         ),
                       );
                     },
+                    child: Lottie.asset(
+                      'assets/lottie/notification.json',
+                      width: UIhelper.scaleWidth(context) * 40,
+                      height: UIhelper.scaleHeight(context) * 40,
+                      controller: _lottieController,
+                      onLoaded: ((p0) {
+                        _lottieController.duration = p0.duration;
+                        _lottieController.forward();
+                      }),
+                    ),
                   ),
-                ],
-              ],
-            ),
-            if (widget.isParent == 0) ...[
-              SizedBox(height: UIhelper.scaleHeight(context) * 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Button281_77(label: Text('정지 중')),
-                  Button281_77(
-                    label: const Text('설정'),
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -119,12 +151,24 @@ class _FamilyMemberState extends State<FamilyMember> {
                         ),
                       );
                     },
+                    child: Lottie.asset(
+                      'assets/lottie/kid-setting.json',
+                      width: UIhelper.scaleWidth(context) * 40,
+                      height: UIhelper.scaleHeight(context) * 40,
+                      controller: _lottieController,
+                      onLoaded: ((p0) {
+                        _lottieController.duration = p0.duration;
+                        _lottieController.stop();
+                      }),
+                    ),
                   ),
                 ],
               ),
+              // const Button281_77(label: Text('정지 중')),
             ],
-          ],
-        ),
+          ),
+          if (widget.isParent == 0) ...[],
+        ],
       ),
     );
   }
