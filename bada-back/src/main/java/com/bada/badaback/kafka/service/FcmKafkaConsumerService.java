@@ -46,6 +46,7 @@ public class FcmKafkaConsumerService {
       AlarmLogRequestDto alarmLogRequestDto = AlarmLogRequestDto.builder()
           .memberId(member.getId())
           .type(alarmDto.getType())
+          .childId(alarmDto.getMemberId())  // alarmDTO의 memberId는 전송받은 childID
           .build();
       log.info("################## alarmLogRequestDto : {} ", alarmLogRequestDto.toString() );
       alarmLogService.writeAlarmLog(alarmLogRequestDto);

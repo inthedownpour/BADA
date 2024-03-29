@@ -23,7 +23,7 @@ public class AlarmLogService {
   private final AlarmRepository alarmRepository;
   private final MemberRepository memberRepository;
 
-  public List<AlarmLogResponseDto> getAllAlarmLogs(Long memberId, Long childId) {
+  public List<AlarmLogResponseDto> getAlarmLogsByMemberIdAndChildId(Long memberId, Long childId) {
     Optional<Member> member = memberRepository.findById(memberId);
     if (member.isEmpty()) { // 찾는 회원 없다면 에러발생
       throw new BaseException(MemberErrorCode.MEMBER_NOT_FOUND);
@@ -41,10 +41,15 @@ public class AlarmLogService {
           .type(alarmLog.getType())
           .memberId(alarmLog.getId())
           .childId(alarmLog.getChildId())
+          .createAt(alarmLog.getCreatedAt())
           .build();
       alarmLogResponseDtoList.add(alarmLogResponseDto);
+
+      alarmLog.setRead(true);   // alarmLog isRead 읽음으로 수정
     }
 
+    /** 가지고 온경우는 모두 알림 읽음 처리를 진행한다. **/
+    alarmRepository.saveAllAndFlush(alarmLogs); // alarmLog isRead 전부 update 하는 쿼리 발생
     return alarmLogResponseDtoList;
   }
 
