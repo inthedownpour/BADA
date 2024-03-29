@@ -76,7 +76,7 @@ class MembersApi {
       if (response.statusCode == 200) {
         debugPrint('Member deleted successfully');
       } else {
-        throw Exception('Failed to delete member');
+        throw Exception('Failed to delete member ${response.statusCode}');
       }
     } catch (e) {
       debugPrint(e.toString());
