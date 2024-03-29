@@ -85,7 +85,7 @@ public class MemberServiceTest extends ServiceTest {
         @DisplayName("회원 정보 수정에 성공한다")
         void successParent() {
             // given
-            memberService.update(member.getId(), null,"새로운이름", null);
+            memberService.update(member.getId(), "","새로운이름", null);
 
             // when
             Member findmember = memberFindService.findById(member.getId());
@@ -101,7 +101,7 @@ public class MemberServiceTest extends ServiceTest {
         @DisplayName("아이 회원 정보 수정에 성공한다")
         void successChild() {
             // given
-            memberService.update(member.getId(), child.getId(),"아이이름", null);
+            memberService.update(member.getId(), String.valueOf(child.getId()),"아이이름", null);
 
             // when
             Member findChild = memberFindService.findById(child.getId());
