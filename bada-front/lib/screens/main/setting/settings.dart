@@ -19,6 +19,9 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final _storage = const FlutterSecureStorage();
+  Future<void>? _load;
+  String? accessToken;
+
   Future<Map<String, String?>> _fetchUserData() async {
     String? nickname = await _storage.read(key: 'nickname');
     String? email = await _storage.read(key: 'email');
@@ -32,187 +35,205 @@ class _SettingsState extends State<Settings> {
     };
   }
 
+  Future<void> _loadAccessToken() async {
+    accessToken = await _storage.read(key: 'accessToken');
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _load = _loadAccessToken();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('설정'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(color: Colors.white),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width:
-                    double.infinity, // Make the Container fit the screen width
-                child: FutureBuilder<Map<String, String?>>(
-                  future: _fetchUserData(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    } else {
-                      // Data loaded
-                      final data = snapshot.data!;
-                      return _buildUserDetails(data);
-                    }
-                  },
-                ),
-              ),
-              SizedBox(
-                height: UIhelper.scaleHeight(context) * 100,
-              ),
-              InkResponse(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const VerificationCode(),
+    return FutureBuilder(
+      future: _load,
+      builder: (context, snapshot) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('설정'),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+          ),
+          body: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(color: Colors.white),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: double
+                        .infinity, // Make the Container fit the screen width
+                    child: FutureBuilder<Map<String, String?>>(
+                      future: _fetchUserData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          );
+                        } else {
+                          // Data loaded
+                          final data = snapshot.data!;
+                          return _buildUserDetails(data);
+                        }
+                      },
                     ),
-                  );
-                },
-                containedInkWell: true,
-                child: const Text(
-                  '인증코드 발급',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              SizedBox(height: UIhelper.scaleHeight(context) * 40),
-              InkResponse(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AlarmSetting(),
-                    ),
-                  );
-                },
-                containedInkWell: true,
-                child: const Text(
-                  '알림 설정',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              SizedBox(height: UIhelper.scaleHeight(context) * 40),
-              InkResponse(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const TermsOfPolicy(),
-                    ),
-                  );
-                },
-                containedInkWell: true,
-                child: const Text(
-                  '이용약관',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              SizedBox(height: UIhelper.scaleHeight(context) * 40),
-              InkResponse(
-                onTap: () async {
-                  await Provider.of<ProfileProvider>(context, listen: false)
-                      .logout();
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const LoginScreen(),
-                    ),
-                    (Route<dynamic> route) => false,
-                  );
-                },
-                containedInkWell: true,
-                child: const Text(
-                  '로그아웃',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              SizedBox(height: UIhelper.scaleHeight(context) * 40),
-              InkResponse(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        backgroundColor: Colors.white,
-                        title: const Text('회원탈퇴'),
-                        content: const Text(
-                          '회원탈퇴를 진행하시겠습니까?',
+                  ),
+                  SizedBox(
+                    height: UIhelper.scaleHeight(context) * 100,
+                  ),
+                  InkResponse(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const VerificationCode(),
                         ),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () async {
-                              MembersApi membersApi = MembersApi();
-
-                              try {
-                                await Provider.of<ProfileProvider>(
-                                  context,
-                                  listen: false,
-                                ).logout();
-
-                                await membersApi.deleteMember();
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const InitialScreen(),
-                                  ),
-                                );
-                              } catch (error) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('에러'),
-                                      content: const Text(
-                                        '회원탈퇴에 실패하였습니다. 문제가 계속 발생되면 000@ssafy.com으로 문의 주시기 바랍니다',
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: const Text('확인'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            child: const Text('탈퇴하기'),
-                          ),
-                          // Delete button
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text('취소'),
-                          ),
-                        ],
                       );
                     },
-                  );
-                },
-                containedInkWell: true,
-                child: const Text(
-                  '회원탈퇴',
-                  style: TextStyle(fontSize: 18),
-                ),
+                    containedInkWell: true,
+                    child: const Text(
+                      '인증코드 발급',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  SizedBox(height: UIhelper.scaleHeight(context) * 40),
+                  InkResponse(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AlarmSetting(),
+                        ),
+                      );
+                    },
+                    containedInkWell: true,
+                    child: const Text(
+                      '알림 설정',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  SizedBox(height: UIhelper.scaleHeight(context) * 40),
+                  InkResponse(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TermsOfPolicy(),
+                        ),
+                      );
+                    },
+                    containedInkWell: true,
+                    child: const Text(
+                      '이용약관',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  SizedBox(height: UIhelper.scaleHeight(context) * 40),
+                  InkResponse(
+                    onTap: () async {
+                      await Provider.of<ProfileProvider>(context, listen: false)
+                          .logout();
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    containedInkWell: true,
+                    child: const Text(
+                      '로그아웃',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  SizedBox(height: UIhelper.scaleHeight(context) * 40),
+                  InkResponse(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.white,
+                            title: const Text('회원탈퇴'),
+                            content: const Text(
+                              '회원탈퇴를 진행하시겠습니까?',
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () async {
+                                  MembersApi membersApi = MembersApi();
+
+                                  try {
+                                    await Provider.of<ProfileProvider>(
+                                      context,
+                                      listen: false,
+                                    ).logout();
+
+                                    await membersApi.deleteMember(accessToken!);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const InitialScreen(),
+                                      ),
+                                    );
+                                  } catch (error) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('에러'),
+                                          content: const Text(
+                                            '회원탈퇴에 실패하였습니다. 문제가 계속 발생되면 000@ssafy.com으로 문의 주시기 바랍니다',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              child: const Text('확인'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                                child: const Text('탈퇴하기'),
+                              ),
+                              // Delete button
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('취소'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    containedInkWell: true,
+                    child: const Text(
+                      '회원탈퇴',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  SizedBox(height: UIhelper.scaleHeight(context) * 40),
+                ],
               ),
-              SizedBox(height: UIhelper.scaleHeight(context) * 40),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
