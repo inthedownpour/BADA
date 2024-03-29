@@ -4,11 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 
 // 임시 알람 DTO
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -16,7 +18,7 @@ import lombok.ToString;
 public class AlarmDto {
 
   private String type;    // 알람 종류 : enum으로 생성하기
-  private String memberId;  //
+  private Long memberId;  //
   private String familyCode;
   private String content;
 
