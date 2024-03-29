@@ -415,7 +415,11 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('이름: ${widget.placeName}'),
+                    Text(
+                      '이름: ${widget.placeName}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                     const Text('주소: 대전광역시 유성구 덕명로 26'),
                   ],
                 ),
