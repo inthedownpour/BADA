@@ -1,10 +1,15 @@
 package com.bada.badaback.member.domain;
 
+import com.bada.badaback.alarmlog.domain.AlarmLog;
 import com.bada.badaback.global.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.PERSIST;
 
 @Getter
 @Entity
@@ -46,7 +51,9 @@ public class Member extends BaseTimeEntity {
     @Column(length = 500, nullable = false)
     private String fcmToken;
 
-    @Builder
+    @OneToMany(mappedBy = "member", cascade = PERSIST, orphanRemoval = true)
+    private List<AlarmLog> alarmLogList = new ArrayList<>();
+
     private Member(String name, String phone, String email, SocialType social, int isParent,
                    String profileUrl, String familyCode, String fcmToken){
         this.name = name;
