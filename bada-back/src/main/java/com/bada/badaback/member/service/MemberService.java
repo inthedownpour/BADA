@@ -3,7 +3,6 @@ package com.bada.badaback.member.service;
 import com.bada.badaback.auth.service.AuthCodeService;
 import com.bada.badaback.auth.service.AuthService;
 import com.bada.badaback.auth.service.TokenService;
-import com.bada.badaback.currentLocation.exception.CurrentLocationErrorCode;
 import com.bada.badaback.family.domain.Family;
 import com.bada.badaback.family.service.FamilyFindService;
 import com.bada.badaback.family.service.FamilyService;
@@ -43,34 +42,26 @@ public class MemberService {
     }
 
     @Transactional
-    public void update(Long memberId, Long childId, String name, MultipartFile file) {
-        Member findMember = memberFindService.findById(memberId);
+    public void update(Long memberId, String childId, String name, MultipartFile file) {
+        Member updateMember = memberFindService.findById(memberId);
 
-        // 아이 프로필 수정
-        if(childId != null) {
-            Member findChild = memberFindService.findById(childId);
-            checkParent(findMember.getFamilyCode(), findChild.getFamilyCode());
+        // updateMember 아이로 변경
+        if(!childId.isEmpty()) {
+            Member findChild = memberFindService.findById(Long.valueOf(childId));
+            checkParent(updateMember.getFamilyCode(), findChild.getFamilyCode());
 
-            String profileUrl = null;
-            if (file != null)
-                profileUrl = fileService.uploadMemberFiles(file);
-
-            if(findChild.getProfileUrl() != null)
-                fileService.deleteFiles(findChild.getProfileUrl());
-
-            findChild.updateMember(name, profileUrl);
+            updateMember = findChild;
         }
-        // 본인 프로필 수정
-        else {
-            String profileUrl = null;
-            if (file != null)
-                profileUrl = fileService.uploadMemberFiles(file);
 
-            if(findMember.getProfileUrl() != null)
-                fileService.deleteFiles(findMember.getProfileUrl());
+        // 프로필 수정
+        String profileUrl = null;
+        if (file != null)
+            profileUrl = fileService.uploadMemberFiles(file);
 
-            findMember.updateMember(name, profileUrl);
-        }
+        if(updateMember.getProfileUrl() != null)
+            fileService.deleteFiles(updateMember.getProfileUrl());
+
+        updateMember.updateMember(name, profileUrl);
     }
 
     @Transactional
