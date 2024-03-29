@@ -236,7 +236,7 @@ class _Button281_77State extends State<Button281_77> {
           widget.isSelected ? widget.foregroundColor : widget.backgroundColor,
       textStyle: const TextStyle(fontSize: 16),
       fixedSize: Size(
-        UIhelper.scaleWidth(context) * 130,
+        UIhelper.scaleWidth(context) * 110,
         UIhelper.scaleHeight(context) * 30,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

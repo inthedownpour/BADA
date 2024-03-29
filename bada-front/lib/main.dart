@@ -1,7 +1,8 @@
 import 'package:bada/loading_screen.dart';
 import 'package:bada/models/screen_size.dart';
 import 'package:bada/provider/profile_provider.dart';
-import 'package:bada/screens/main/main_screen.dart';
+import 'package:bada/widgets/alarm.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +11,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:bada/screens/login/login_screen.dart';
-import 'package:bada/loading_screen.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
@@ -48,7 +48,24 @@ Future<void> main() async {
     print('Message data: ${message.data}');
 
     if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}');
+      showOverlayNotification(
+        (context) {
+          return ForeGroundAlarm(
+            childId: '1',
+            title: message.notification?.title ?? '알람',
+            message: message.notification?.body ?? '바디',
+            type: '글쎄',
+            onConfirm: () {
+              OverlaySupportEntry.of(context)!.dismiss();
+            },
+            onClose: () {
+              OverlaySupportEntry.of(context)!.dismiss();
+            },
+            imageUrl: 'assets/img/bag.png',
+          );
+        },
+        duration: const Duration(seconds: 4),
+      );
     }
   });
 
@@ -67,13 +84,14 @@ Future<void> main() async {
           lazy: false,
         ),
       ],
-      child: const MyApp(),
+      child: const OverlaySupport.global(child: MyApp()),
     ),
   );
 }
 
 Future<void> requestNotificationPermission() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     announcement: false,
