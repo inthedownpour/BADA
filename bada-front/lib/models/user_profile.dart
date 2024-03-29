@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 // 프로필 정보를 담을 클래스
+// 회원정보 상세 조회 API의 응답 데이터 구조와 일치
 class UserProfile {
   final int memberId; // int로 타입 변경
   final String name;

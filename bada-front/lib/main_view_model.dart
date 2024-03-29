@@ -1,4 +1,4 @@
-import 'package:bada/login/social_login.dart';
+import 'package:bada/social_login/social_login.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 

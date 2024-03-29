@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:bada/models/user_profile.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:bada/login/kakao_login.dart';
-import 'package:bada/login/login_platform.dart';
-import 'package:bada/login/naver_login.dart';
+import 'package:bada/social_login/kakao_login.dart';
+import 'package:bada/social_login/login_platform.dart';
+import 'package:bada/social_login/naver_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_login/flutter_naver_login.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

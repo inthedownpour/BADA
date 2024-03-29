@@ -35,17 +35,6 @@ class _SettingsState extends State<Settings> {
     };
   }
 
-  Future<void> _loadAccessToken() async {
-    accessToken = await _storage.read(key: 'accessToken');
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _load = _loadAccessToken();
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -178,7 +167,7 @@ class _SettingsState extends State<Settings> {
                                       listen: false,
                                     ).logout();
 
-                                    await membersApi.deleteMember(accessToken!);
+                                    await membersApi.deleteMember();
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
