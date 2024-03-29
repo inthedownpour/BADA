@@ -41,6 +41,12 @@ spring:
       now-topic: test-topic # alarm-topic
       alarm-topic: alarm-topic
 
+  # S3
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
 
 
 springdoc:
