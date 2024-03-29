@@ -54,7 +54,7 @@ class _FamilyMemberState extends State<FamilyMember> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleAvatar(
                   backgroundColor: Colors.black,
@@ -82,8 +82,8 @@ class _FamilyMemberState extends State<FamilyMember> {
                   )
                 else
                   Text(
-                    '이름 : ${widget.name}',
-                    style: const TextStyle(fontSize: 16),
+                    widget.name,
+                    style: const TextStyle(fontSize: 20),
                     overflow: TextOverflow.ellipsis,
                   ),
                 SizedBox(width: UIhelper.scaleWidth(context) * 10),
