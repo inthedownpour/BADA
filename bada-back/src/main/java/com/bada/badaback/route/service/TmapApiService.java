@@ -4,6 +4,7 @@ import com.bada.badaback.safefacility.domain.Point;
 import com.bada.badaback.safefacility.service.SafeFacilityService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.RequiredArgsConstructor;
@@ -73,13 +74,23 @@ public class TmapApiService {
             JsonObject jsonObject2 = jsonParser.parse(String.valueOf(jsonArray.get(i))).getAsJsonObject().get("geometry").getAsJsonObject();
             JsonObject jsonObject3 = jsonParser.parse(String.valueOf(jsonObject2)).getAsJsonObject();
             String type = jsonObject3.get("type").toString();
+            log.info(jsonObject3.toString());
             if (type.equals("\"Point\"")) {
                 JsonArray pointArray = (JsonArray) jsonParser.parse(jsonObject2.get("coordinates").toString());
                 double Lng = Double.parseDouble(String.valueOf(pointArray.get(0)));
                 double Lat = Double.parseDouble(String.valueOf(pointArray.get(1)));
                 pointList.add(new Point(Lat, Lng));
+            } else {
+                JsonArray pointArray = (JsonArray) jsonParser.parse(jsonObject2.get("coordinates").toString());
+                for(int k=0;k<pointArray.size();k++){
+                    JsonArray jsonArray2 = (JsonArray) jsonParser.parse(pointArray.get(k).toString());
+                    double Lng = Double.parseDouble(String.valueOf(jsonArray2.get(0)));
+                    double Lat = Double.parseDouble(String.valueOf(jsonArray2.get(1)));
+                    pointList.add(new Point(Lat, Lng));
+                }
             }
         }
+        System.out.println(pointList);
         return pointList;
     }
 }
