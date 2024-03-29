@@ -65,39 +65,6 @@ class _SearchMapForPathScreenState extends State<SearchMapForPathScreen> {
     Navigator.pop(context);
   }
 
-  // Future<void> sendPostRequest() async {
-  //   accessToken = await secureStorage.read(key: 'accessToken') ?? '';
-  //   debugPrint('accessToken: $accessToken');
-
-  //   var url = Uri.parse('https://j10b207.p.ssafy.io/api/myplace');
-
-  //   var headers = {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': 'Bearer $accessToken',
-  //   };
-  //   var requestBody = jsonEncode({
-  //     "placeName": widget.item.placeName,
-  //     "placeLatitude": widget.item.y,
-  //     "placeLongitude": widget.item.x,
-  //     "placeCategoryCode": widget.item.categoryGroupCode,
-  //     "placeCategoryName": widget.item.categoryGroupName,
-  //     "placePhoneNumber": widget.item.phone,
-  //     "addressName": widget.item.addressName,
-  //     "addressRoadName": widget.item.roadAddressName,
-  //     // "placeCode": "placeCode",
-  //   });
-
-  //   var response = await http.post(url, headers: headers, body: requestBody);
-
-  //   if (response.statusCode == 200) {
-  //     // 요청이 성공적으로 처리되었을 때의 로직
-  //     print('Request successful');
-  //   } else {
-  //     // 오류가 발생했을 때의 로직
-  //     print('Request failed with status: ${response.statusCode}.');
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     double deviceHeight = UIhelper.deviceHeight(context);

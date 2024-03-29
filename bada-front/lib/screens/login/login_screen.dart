@@ -1,4 +1,4 @@
-import 'package:bada/login/login_platform.dart';
+import 'package:bada/social_login/login_platform.dart';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/login/screen/initial_screen.dart';
 import 'package:bada/screens/main/main_screen.dart';
