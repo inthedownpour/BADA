@@ -22,8 +22,6 @@ public class KafkaController {
   @ResponseBody
   public String sendAlarm(@RequestBody AlarmDto alarmDto) {
     log.info("################## send alarm - AlarmDto : {}", alarmDto.toString());
-
-    kafkaProducerService.sendAlarm(alarmDto);
-    return "success";
+    return kafkaProducerService.sendAlarm(alarmDto);
   }
 }
