@@ -2,31 +2,31 @@ import 'package:bada/screens/main/my_place/screen/my_place_detail.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 
-class Button330_220 extends StatefulWidget {
+class MainLarge extends StatefulWidget {
   final String label;
   final Color backgroundColor, foregroundColor;
   final Widget? buttonImage;
   final double imageWidth, imageHeight, padRight, padBottom;
   final void Function()? onPressed;
 
-  const Button330_220({
+  const MainLarge({
     super.key,
     required this.label,
     this.backgroundColor = Colors.white,
     this.foregroundColor = Colors.black,
     this.buttonImage,
-    this.imageWidth = 50,
-    this.imageHeight = 50,
+    this.imageWidth = 120,
+    this.imageHeight = 120,
     this.padRight = 10,
     this.padBottom = 10,
     this.onPressed,
   });
 
   @override
-  State<Button330_220> createState() => _Button330_220State();
+  State<MainLarge> createState() => MainLargeState();
 }
 
-class _Button330_220State extends State<Button330_220> {
+class MainLargeState extends State<MainLarge> {
   @override
   Widget build(BuildContext context) {
     final hasImage = widget.buttonImage != null;
@@ -37,8 +37,86 @@ class _Button330_220State extends State<Button330_220> {
       foregroundColor: widget.foregroundColor,
       textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
       fixedSize: Size(
-        UIhelper.scaleWidth(context) * 180,
-        UIhelper.scaleHeight(context) * 120,
+        UIhelper.scaleWidth(context) * 240,
+        UIhelper.scaleHeight(context) * 180,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    );
+
+    return ElevatedButton(
+      style: style,
+      onPressed: widget.onPressed,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                widget.label,
+              ),
+            ],
+          ),
+          hasImage
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (hasImage)
+                      SizedBox(
+                        width: UIhelper.scaleWidth(context) * widget.imageWidth,
+                        height:
+                            UIhelper.scaleHeight(context) * widget.imageHeight,
+                        child: Transform.translate(
+                          offset: const Offset(0, 10),
+                          child: widget.buttonImage!,
+                        ),
+                      ),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+}
+
+class MainSmall extends StatefulWidget {
+  final String label;
+  final Color backgroundColor, foregroundColor;
+  final Widget? buttonImage;
+  final double imageWidth, imageHeight, padRight, padBottom;
+  final void Function()? onPressed;
+
+  const MainSmall({
+    super.key,
+    required this.label,
+    this.backgroundColor = const Color(0xffFEFEFE),
+    this.foregroundColor = Colors.black,
+    this.buttonImage,
+    this.imageWidth = 50,
+    this.imageHeight = 50,
+    this.padRight = 10,
+    this.padBottom = 10,
+    this.onPressed,
+  });
+
+  @override
+  State<MainSmall> createState() => MainSmallState();
+}
+
+class MainSmallState extends State<MainSmall> {
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = widget.buttonImage != null;
+    final ButtonStyle style = ElevatedButton.styleFrom(
+      elevation: 5,
+      padding: EdgeInsets.fromLTRB(20, 20, widget.padRight, widget.padBottom),
+      backgroundColor: widget.backgroundColor,
+      foregroundColor: widget.foregroundColor,
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 120,
+        UIhelper.scaleHeight(context) * 180,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
@@ -78,14 +156,10 @@ class _Button330_220State extends State<Button330_220> {
 }
 
 class Button714_300 extends StatefulWidget {
-  final String label; // Add a parameter to accept text
-  final Color backgroundColor;
-  final Color foregroundColor;
+  final String label;
+  final Color backgroundColor, foregroundColor;
   final Widget? buttonImage;
-  final double imageWidth;
-  final double imageHeight;
-  final double padRight;
-  final double padBottom;
+  final double imageWidth, imageHeight, padRight, padBottom;
   final void Function()? onPressed;
 
   const Button714_300({
@@ -118,7 +192,7 @@ class _Button714_300State extends State<Button714_300> {
       textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
       fixedSize: Size(
         UIhelper.scaleWidth(context) * 368,
-        UIhelper.scaleHeight(context) * 150,
+        UIhelper.scaleHeight(context) * 180,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
@@ -137,10 +211,6 @@ class _Button714_300State extends State<Button714_300> {
                 widget.label,
               ),
               SizedBox(height: UIhelper.scaleHeight(context) * 10),
-              const Text(
-                'CCTV가 많은 길로 아이가 다닐 수 있도록',
-                style: TextStyle(fontSize: 10),
-              ),
             ],
           ),
           hasImage

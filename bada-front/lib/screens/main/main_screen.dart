@@ -22,7 +22,9 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late final AnimationController _lottieController;
+
   final _storage = const FlutterSecureStorage();
   Future<void>? load;
   String? profileUrl;
@@ -31,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _lottieController = AnimationController(vsync: this);
     load = _loadProfileFromStorage();
   }
 
@@ -40,110 +43,157 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+  void dispose() {
+    _lottieController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: load,
       builder: (constext, snapshot) {
         return Scaffold(
           backgroundColor: Colors.white,
-          body: Stack(
-            children: [
-              Transform.translate(
-                offset: const Offset(60, 570),
-                child: Image.asset('assets/img/map-bg.png'),
-              ),
-              Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
+          body: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: UIhelper.scaleHeight(context) * 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     SizedBox(
-                      height: UIhelper.scaleHeight(context) * 50,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ProfileEdit(
-                                  nickname: nickname,
-                                  profileUrl: profileUrl,
-                                ),
-                              ),
-                            );
-                          },
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: profileUrl == '' ||
-                                    profileUrl == null
-                                ? Image.asset('assets/img/default_profile.png')
-                                    .image
-                                : NetworkImage(
-                                    profileUrl!,
+                      width: 200,
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProfileEdit(
+                                    nickname: nickname,
+                                    profileUrl: profileUrl,
                                   ),
+                                ),
+                              );
+                            },
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundImage:
+                                  profileUrl == '' || profileUrl == null
+                                      ? Image.asset(
+                                          'assets/img/default_profile.png',
+                                        ).image
+                                      : NetworkImage(
+                                          profileUrl!,
+                                        ),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          width: UIhelper.scaleWidth(context) * 10,
-                        ),
-                        Text(
-                          '안녕하세요, \n${nickname ?? '사용자'}님!',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                          SizedBox(
+                            width: UIhelper.scaleWidth(context) * 10,
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: UIhelper.scaleHeight(context) * 40,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Button330_220(
-                          label: '우리 가족',
-                          backgroundColor: const Color(0xff777CFF),
-                          foregroundColor: Colors.white,
-                          buttonImage: Image.asset(
-                            'assets/img/family-button.png',
+                          Text(
+                            '안녕하세요, \n${nickname ?? '사용자'}님!',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          imageWidth: UIhelper.scaleWidth(context) * 120,
-                          padBottom: 0,
-                          padRight: 5,
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const MyFamily(),
-                              ),
-                            );
-                          },
-                        ),
-                        Button330_220(
-                          label: '내 장소',
-                          buttonImage: Lottie.asset(
-                            'assets/lottie/location-pin.json',
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Settings(),
                           ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const MyPlace(),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                        );
+                      },
+                      icon: const Icon(Icons.settings),
                     ),
-                    SizedBox(
-                      height: UIhelper.scaleHeight(context) * 15,
+                  ],
+                ),
+                SizedBox(
+                  height: UIhelper.scaleHeight(context) * 40,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MainLarge(
+                      label: '우리 가족',
+                      backgroundColor: const Color(0xff777CFF),
+                      foregroundColor: Colors.white,
+                      buttonImage: Image.asset('assets/img/family-button.png'),
+                      imageWidth: UIhelper.scaleWidth(context) * 120,
+                      padBottom: 0,
+                      padRight: 5,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyFamily(),
+                          ),
+                        );
+                      },
                     ),
-                    Button714_300(
+                    MainSmall(
+                      label: '알림',
+                      buttonImage: Lottie.asset(
+                        'assets/lottie/notification.json',
+                        controller: _lottieController,
+                        onLoaded: ((p0) {
+                          _lottieController.duration = p0.duration;
+                          _lottieController.forward();
+                        }),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Settings(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: UIhelper.scaleHeight(context) * 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MainSmall(
+                      label: '내 장소',
+                      buttonImage: Lottie.asset(
+                        'assets/lottie/location-pin.json',
+                        controller: _lottieController,
+                        onLoaded: ((p0) {
+                          _lottieController.duration = p0.duration;
+                          _lottieController.forward();
+                        }),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MyPlace(),
+                          ),
+                        );
+                      },
+                    ),
+                    MainLarge(
                       label: '경로 추천 받기',
-                      buttonImage: Image.asset('assets/img/map-phone.png'),
+                      buttonImage: Image.asset(
+                        'assets/img/map-bg.png',
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -153,34 +203,31 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
-                    SizedBox(
-                      height: UIhelper.scaleHeight(context) * 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Button330_220(
-                          label: '설정',
-                          buttonImage:
-                              Lottie.asset('assets/lottie/settings.json'),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Settings(),
-                              ),
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          width: UIhelper.scaleWidth(context) * 10,
-                        ),
-                      ],
+                  ],
+                ),
+                SizedBox(
+                  height: UIhelper.scaleHeight(context) * 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Button714_300(
+                      label: '바래다줄게 설명서',
+                      buttonImage: Lottie.asset(
+                        'assets/lottie/tutorial.json',
+                        height: 50,
+                        width: 50,
+                        controller: _lottieController,
+                        onLoaded: ((p0) {
+                          _lottieController.duration = p0.duration;
+                          _lottieController.forward();
+                        }),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
