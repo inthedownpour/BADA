@@ -10,7 +10,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 import static com.bada.badaback.feature.MemberFixture.SUNKYOUNG;
