@@ -2,9 +2,9 @@ package com.bada.badaback.member.controller;
 
 import com.bada.badaback.global.annotation.ExtractPayload;
 import com.bada.badaback.member.dto.MemberDetailResponseDto;
-import com.bada.badaback.member.dto.MemberUpdateRequestDto;
 import com.bada.badaback.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +24,10 @@ public class MemberApiController {
 
     @PatchMapping
     public ResponseEntity<Void> update (@ExtractPayload Long memberId,
-                                       @RequestPart(value = "request") MemberUpdateRequestDto requestDto,
-                                       @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
-        memberService.update(memberId, requestDto.childId(), requestDto.name(), multipartFile);
+                                        @RequestParam(value = "name") @NotBlank(message = "이름은 필수입니다.") String name,
+                                        @RequestParam(value = "childId", required = false) String childId,
+                                        @RequestParam(value = "file", required = false) MultipartFile multipartFile) {
+        memberService.update(memberId, childId, name, multipartFile);
         return ResponseEntity.ok().build();
     }
 
