@@ -28,9 +28,10 @@ public class RouteController {
      * @throws IOException
      */
     @PostMapping
-    public ResponseEntity<RouteResponseDto> creteRoute(@ExtractPayload Long memberId, @RequestBody RouteRequestDto routeRequestDto) throws IOException {
+    public ResponseEntity<RouteResponseDto> createRoute(@ExtractPayload Long memberId, @RequestBody RouteRequestDto routeRequestDto) throws IOException {
         routeService.createRoute(memberId, routeRequestDto);
         RouteResponseDto routeResponseDto = routeService.getRoute(memberId, memberId);
+        memberService.updateMovingState(memberId, 1);
         return ResponseEntity.ok(routeResponseDto);
     }
 
@@ -54,7 +55,6 @@ public class RouteController {
     @DeleteMapping
     public ResponseEntity<Void> deleteRoute(@ExtractPayload Long memberId) {
         routeService.deleteRoute(memberId);
-        currentLocationService.delete(memberId);
         memberService.updateMovingState(memberId, 0);
         return ResponseEntity.ok().build();
     }
