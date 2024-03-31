@@ -16,6 +16,6 @@ public class AlarmLogResponseDto {
   private String type;
   private Long memberId;
   private Long childId;
-  private Long isRead;
+  private boolean isRead;
   private LocalDateTime createAt;
 }

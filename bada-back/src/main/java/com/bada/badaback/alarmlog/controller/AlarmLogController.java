@@ -23,19 +23,18 @@ public class AlarmLogController {
 
   // 아이 알림 기록 조회
   @GetMapping("/{childId}")  // alarm 이용
-  @ResponseBody
   public ResponseEntity<List<AlarmLogResponseDto>> getAlarmLogsByMemberIdAndChildId(@ExtractPayload Long memberId, @PathVariable Long childId) {
     return ResponseEntity.ok().body(alarmLogService.getAlarmLogsByMemberIdAndChildId(memberId, childId));
   }
 
-  // 안읽은 아이 알림 개수 조회
-
+  // 안읽은 아이 알림 개수 조회 => 테스트용으로 만듬 , 메인페이지에서 getUnreadAlarmCount메서드로 가져올수있음
+  @GetMapping("/count")
+  public ResponseEntity<Long> getUnreadAlarmCount(@ExtractPayload Long memberId) {
+    return ResponseEntity.ok().body(alarmLogService.getUnreadAlarmCount(memberId));
+  }
 
 
   // 알림 읽음 처리 - 동시에 쿼리가 진행되어야하지않나? - 무조건 동시에 처리되어야한다. 하나의 API요청으로 조회하면서 가져오고 쿼리가 나가야한다.
-
-
-
 
 
 }
