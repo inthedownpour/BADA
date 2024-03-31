@@ -27,8 +27,21 @@ public class KafkaProducerService {
   public String sendAlarm(AlarmDto alarmDto) {
     log.info("################## 아이 알림 발생. alarmDto.toString {}", alarmDto.toString());
 
+    /** 출발과 도착 감지 **/
+    if (alarmDto.getType().equals("DEPART")) {
+      Member member = memberFindService.findById(alarmDto.getMemberId());
+      alarmDto.setContent(member.getName() + "(이)가 목적지로 출발했습니다.");
+      kafkaTemplate.send(topic, alarmDto);
+      return "아이 목적지로 출발  : send alarm";
+    } else if (alarmDto.getType().equals("ARRIVE")) {
+      Member member = memberFindService.findById(alarmDto.getMemberId());
+      alarmDto.setContent(member.getName() + "(이)가 목적지에 도착하였습니다.");
+      kafkaTemplate.send(topic, alarmDto);
+      return "아이 목적지에 도착 : send alarm";
+    }
+
     /**
-     * 범위 이탈 로직 부분
+     * 범위 이탈 감지 로직
      * 현재 알림트리거 서비스 : 겅로 이탈여부 : 작동 불가 데이터베이스 데이터 없음 주석 수정 필요
      *  **/
     if (
@@ -44,7 +57,6 @@ public class KafkaProducerService {
       Member member = memberFindService.findById(alarmDto.getMemberId());
       alarmDto.setType("OFF COURSE");
       alarmDto.setContent(member.getName() + "(이)가 경로를 이탈하였습니다!");
-
       kafkaTemplate.send(topic, alarmDto);  // topic에 해당하는 이름 없으면 자동 생성됨
       return "child is OFF_COURSE : send alarm";
     } else {
