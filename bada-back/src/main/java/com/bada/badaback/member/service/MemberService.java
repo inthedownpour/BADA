@@ -53,13 +53,13 @@ public class MemberService {
             updateMember = findChild;
         }
 
+        String profileUrl = updateMember.getProfileUrl();
         // 프로필 수정
-        String profileUrl = null;
-        if (file != null)
+        if (file != null) {
+            if(profileUrl != null)
+                fileService.deleteFiles(updateMember.getProfileUrl());
             profileUrl = fileService.uploadMemberFiles(file);
-
-        if(updateMember.getProfileUrl() != null)
-            fileService.deleteFiles(updateMember.getProfileUrl());
+        }
 
         updateMember.updateMember(name, profileUrl);
     }
