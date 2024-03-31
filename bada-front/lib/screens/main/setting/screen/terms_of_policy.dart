@@ -1,3 +1,4 @@
+import 'package:bada/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
 class TermsOfPolicy extends StatelessWidget {
@@ -89,10 +90,8 @@ class TermsOfPolicy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('이용 약관'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
+      appBar: const CustomAppBar(
+        title: '이용 약관',
       ),
       body: Container(
         color: Colors.white,

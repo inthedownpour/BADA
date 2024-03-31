@@ -64,7 +64,7 @@ Future<void> main() async {
             imageUrl: 'assets/img/bag.png',
           );
         },
-        duration: const Duration(seconds: 4),
+        duration: const Duration(seconds: 10),
       );
     }
   });

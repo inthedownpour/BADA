@@ -1,3 +1,4 @@
+import 'package:bada/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
@@ -7,11 +8,7 @@ class AlarmSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('알람 설정'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
+      appBar: const CustomAppBar(title: '알림 설정'),
       body: Column(
         children: <Widget>[
           Text('displaySize : ${MediaQuery.of(context).size}'),
