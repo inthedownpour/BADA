@@ -4,7 +4,6 @@ import com.bada.badaback.currentLocation.dto.CurrentLocationRequestDto;
 import com.bada.badaback.currentLocation.dto.CurrentLocationResponseDto;
 import com.bada.badaback.currentLocation.service.CurrentLocationService;
 import com.bada.badaback.global.annotation.ExtractPayload;
-import com.bada.badaback.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/currentLocation")
 public class CurrentLocationApiController {
     private final CurrentLocationService currentLocationService;
-    private final MemberService memberService;
 
     @PostMapping
     public ResponseEntity<Void> create(@ExtractPayload Long memberId, @RequestBody @Valid CurrentLocationRequestDto requestDto) {
