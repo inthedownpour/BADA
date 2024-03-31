@@ -1,47 +1,69 @@
 import 'dart:convert';
 
 import 'package:bada_kids_front/provider/map_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
+import 'package:http/http.dart' as http;
 
-class ExistingRouteScreen extends StatefulWidget {
-  const ExistingRouteScreen({super.key});
+class PathFind extends StatefulWidget {
+  final LatLng destination;
+  final String addressName;
+  final String placeName;
+  const PathFind({
+    super.key,
+    required this.destination,
+    required this.placeName,
+    required this.addressName,
+  });
 
   @override
-  State<ExistingRouteScreen> createState() => _ExistingRouteScreenState();
+  State<PathFind> createState() => _PathFindState();
 }
 
-// TODO : 기존 경로를 불러오는 기능 구현
-class _ExistingRouteScreenState extends State<ExistingRouteScreen> {
-  FlutterSecureStorage secureStorage = const FlutterSecureStorage();
-  KakaoMapController? mapController;
+class _PathFindState extends State<PathFind>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+  late KakaoMapController mapController;
   MapProvider mapProvider = MapProvider.instance;
-  Future<List>? myPlaces;
-  int? memberId;
+
   List<LatLng> pathPoints = []; // 경로 포인트 리스트
   Set<Marker> markers = {}; // 마커 변수
   Set<Polyline> polylines = {}; // 폴리라인 변수
+  late LatLng destination;
   late LatLng middle;
+  late LatLng currentLocation;
   Future<void>? _loadPath;
-  late String placeName;
-  late String addressName;
 
-  // future memberId 불러오기
-  Future<void> _loadMemberId() async {
-    memberId = int.parse((await secureStorage.read(key: 'memberId'))!);
-  }
-
-  Future<void> _requestPath() async {
-    await _loadMemberId();
+  // 현재 위치 정보와 목적지 위치 정보를 POST 요청으로 보내기
+  Future<void> requestPath() async {
+    FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+    MapProvider mapProvider = MapProvider.instance;
     var accessToken = (await secureStorage.read(key: 'accessToken'))!;
-    var url = Uri.parse('https://j10b207.p.ssafy.io/api/route/$memberId');
+    debugPrint('accessToken: $accessToken');
+
+    var url = Uri.parse('https://j10b207.p.ssafy.io/api/route');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $accessToken',
     };
-    var response = await http.get(url, headers: headers);
+    var requestBody = jsonEncode({
+      "startLng": currentLocation.longitude.toString(),
+      "startLat": currentLocation.latitude.toString(),
+      "endLng": destination.longitude.toString(),
+      "endLat": destination.latitude.toString(),
+      "placeName": widget.placeName, // "목적지 이름"
+      "addressName": widget.addressName, // "출발지 이름"
+    });
+    debugPrint("startLng: ${currentLocation.longitude}");
+    debugPrint("startLat: ${currentLocation.latitude}");
+    debugPrint("endLng: ${destination.longitude}");
+    debugPrint("endLat: ${destination.latitude}");
+    debugPrint("placeName: ${widget.placeName}");
+    debugPrint("addressName: ${widget.addressName}");
+
+    var response = await http.post(url, headers: headers, body: requestBody);
 
     if (response.statusCode == 200) {
       debugPrint('리퀘스트 성공 : ${response.body}');
@@ -76,20 +98,45 @@ class _ExistingRouteScreenState extends State<ExistingRouteScreen> {
       // 지도에 경로 표시
       polylines.add(polyline);
 
-      placeName = responseData['placeName'];
-      addressName = responseData['addressName'];
-
       debugPrint('Request successful: ${response.body}');
+      mapProvider.isGuideMode = true; // 길 안내 모드 활성화
     } else {
       // 오류가 발생했을 때의 로직
       debugPrint('리퀘스트 실패 : ${response.statusCode}.');
     }
   }
 
+  late final AnimationController _lottieController;
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // Observer를 해제합니다.
+    _lottieController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // 앱이 다시 활성화될 때 애니메이션을 재시작합니다.
+    if (state == AppLifecycleState.resumed) {
+      _lottieController.forward();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadPath = _requestPath();
+    WidgetsBinding.instance.addObserver(this); // Observer 등록
+    _lottieController = AnimationController(vsync: this);
+    destination = widget.destination;
+    currentLocation = mapProvider.currentLocation;
+    middle = LatLng(
+      (destination.latitude + currentLocation.latitude) / 2,
+      (destination.longitude + currentLocation.longitude) / 2,
+    );
+    _loadPath = requestPath();
   }
 
   @override
@@ -109,7 +156,7 @@ class _ExistingRouteScreenState extends State<ExistingRouteScreen> {
                   // Flexible 대신 Expanded 사용
                   child: Center(
                     child: Text(
-                      addressName,
+                      widget.addressName,
                       style: const TextStyle(fontSize: 18),
                       overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략
                     ),
@@ -126,7 +173,7 @@ class _ExistingRouteScreenState extends State<ExistingRouteScreen> {
                   // Flexible 대신 Expanded 사용
                   child: Center(
                     child: Text(
-                      placeName,
+                      widget.placeName,
                       style: const TextStyle(fontSize: 18),
                       overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략
                     ),

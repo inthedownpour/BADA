@@ -17,8 +17,9 @@ class Settings extends StatefulWidget {
   State<Settings> createState() => _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class _SettingsState extends State<Settings> with TickerProviderStateMixin {
   final _storage = const FlutterSecureStorage();
+  late final AnimationController _lottieController;
   Future<void>? _load;
   String? accessToken;
 
@@ -33,6 +34,26 @@ class _SettingsState extends State<Settings> {
       'createdAt': createdAt,
       'phone': phone,
     };
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _lottieController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _lottieController.repeat(period: const Duration(seconds: 1));
+    });
+  }
+
+  @override
+  void dispose() {
+    if (_lottieController.isAnimating) {
+      _lottieController.stop();
+    }
+    _lottieController.dispose();
+    super.dispose();
   }
 
   @override

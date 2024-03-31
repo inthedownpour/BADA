@@ -42,9 +42,17 @@ class _DestinationSelectScreenState extends State<DestinationSelectScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('어디로 가시나요?'),
+        title: const Text(
+          '어디로 가시나요?',
+          style: TextStyle(fontFamily: 'Pretendard-Bold.otf'),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios), // 원하는 아이콘으로 변경
+          onPressed: () {
+            Navigator.pop(context); // 현재 화면을 닫고 이전 화면으로 돌아가기
+          },
+        ),
       ),
       body: Container(
         color: Colors.white,

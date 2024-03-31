@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:bada/api_request/member_api.dart';
+import 'package:bada_kids_front/screen/main/api/member_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -43,7 +43,7 @@ class _ProfileEditState extends State<ProfileEdit> {
     // AssetImage, NetworkImage, FileImage 중에 ImageProvider 타입이 아닌 다른 타입을 가진 변수가 있을 수 있기 때문에
     ImageProvider imageProvider;
     if (profileUrl == null || profileUrl == '') {
-      imageProvider = const AssetImage('assets/img/default_profile.png');
+      imageProvider = const AssetImage('assets/img/account-circle.png');
     } else {
       imageProvider = NetworkImage(profileUrl!);
     }

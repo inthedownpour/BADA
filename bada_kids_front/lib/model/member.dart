@@ -29,7 +29,7 @@ class Member {
   String get familyName => _familyName!;
   String? get profileUrl => _profileUrl;
   int get isParent => _isParent!;
-  String get phone => _phone!;
+  String? get phone => _phone;
   String get name => _name!;
   int get memberId => _memberId!;
 

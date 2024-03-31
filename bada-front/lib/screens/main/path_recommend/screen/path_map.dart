@@ -46,7 +46,58 @@ class _PathMapState extends State<PathMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('경로 추천'),
+        backgroundColor: const Color(0xff4d7cfe),
+        foregroundColor: Colors.white,
+        title: Row(
+          // Flex 대신 Row 사용
+          mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
+          children: [
+            const Expanded(
+              // Flexible 대신 Expanded 사용
+              child: Center(
+                child: Text(
+                  '현재 위치asdasdasd',
+                  style: TextStyle(fontSize: 18),
+                  overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략
+                ),
+              ),
+            ),
+            const Icon(
+              Icons.arrow_forward,
+              size: 20,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            const Expanded(
+              // Flexible 대신 Expanded 사용
+              child: Center(
+                child: Text(
+                  '목적지asdasdasdasd',
+                  style: TextStyle(fontSize: 18),
+                  overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, size: 30),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios), // 원하는 아이콘으로 변경
+          onPressed: () {
+            Navigator.pop(context); // 현재 화면을 닫고 이전 화면으로 돌아가기
+          },
+          padding: const EdgeInsets.only(right: 0),
+        ),
       ),
       body: Stack(
         // TODO : 아이의 정보를 받아오기 POST요청 및 그 숫자만큼 CircleAvatar 생성
