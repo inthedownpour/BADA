@@ -1,3 +1,4 @@
+import 'package:bada/widgets/appbar.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -151,11 +152,7 @@ class _VerificationCodeState extends State<VerificationCode> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('인증코드 발급'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
+      appBar: const CustomAppBar(title: '인증코드 발급'),
       body: Container(
         color: Colors.white,
         padding: const EdgeInsets.all(20),
