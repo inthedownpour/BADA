@@ -58,7 +58,7 @@ class RouteSearchControllerTest extends ControllerTest {
             //given
             doReturn(createRouteResponseDto())
                     .when(routeSearchService)
-                    .searchRoute(anyLong(),any(),any(),any(),any());
+                    .searchRoute(anyLong(),any(),any(),any(),any(),any(),any());
 
             //when
             final RouteRequestDto requestDto = createRouteRequestDto();
@@ -77,11 +77,11 @@ class RouteSearchControllerTest extends ControllerTest {
     }
 
     private RouteRequestDto createRouteRequestDto(){
-        return new RouteRequestDto("36.421518","127.391538","36.421914","127.38412");
+        return new RouteRequestDto("36.421518","127.391538","36.421914","127.38412","츌발지 이름", "도착지 이름");
     }
 
     private RouteResponseDto createRouteResponseDto(){
-        return new RouteResponseDto(36.421518,127.391538,36.421914,127.38412,new ArrayList<>());
+        return new RouteResponseDto(36.421518,127.391538,36.421914,127.38412,"출발지 이름","도착지 이름",new ArrayList<>());
     }
 
 }

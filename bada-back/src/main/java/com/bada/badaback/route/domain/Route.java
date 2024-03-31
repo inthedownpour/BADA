@@ -15,6 +15,12 @@ public class Route {
     private Long id;
 
     @Column(nullable = false, length = 100)
+    private String addressName;
+
+    @Column(nullable = false, length = 100)
+    private String placeName;
+
+    @Column(nullable = false, length = 100)
     private String startLatitude;
 
     @Column(nullable = false, length = 100)
@@ -34,17 +40,19 @@ public class Route {
     private Member member;
 
     private Route(String startLatitude, String startLongitude,
-                  String endLatitude, String endLongitude, String pointList, Member member) {
+                  String endLatitude, String endLongitude, String pointList, String addressName, String placeName, Member member) {
         this.startLatitude = startLatitude;
         this.startLongitude = startLongitude;
         this.endLatitude = endLatitude;
         this.endLongitude = endLongitude;
         this.pointList = pointList;
+        this.addressName = addressName;
+        this.placeName = placeName;
         this.member = member;
     }
 
     public static Route createRoute(String startLatitude, String startLongitude,
-                                    String endLatitude, String endLongitude, String pointList, Member member) {
-        return new Route(startLatitude, startLongitude, endLatitude, endLongitude, pointList, member);
+                                    String endLatitude, String endLongitude, String pointList, String addressName, String placeName, Member member) {
+        return new Route(startLatitude, startLongitude, endLatitude, endLongitude, pointList, addressName, placeName, member);
     }
 }
