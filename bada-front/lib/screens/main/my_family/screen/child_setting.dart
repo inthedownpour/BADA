@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bada/widgets/appbar.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
@@ -45,11 +46,7 @@ class _ChildeSettingState extends State<ChildeSetting> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('이름 수정'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
+      appBar: const CustomAppBar(title: '이름 수정'),
       body: Center(
         child: Column(
           children: [

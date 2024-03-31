@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:bada/screens/main/alarm/alarm_screen.dart';
 import 'package:bada/screens/main/my_family/my_family.dart';
 import 'package:bada/screens/main/my_place/my_place.dart';
 import 'package:bada/screens/main/path_recommend/searching_path.dart';
 import 'package:bada/screens/main/profile_edit.dart';
 import 'package:bada/screens/main/setting/settings.dart';
+import 'package:bada/screens/main/tutorial/tutorial-list.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -157,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Settings(),
+                            builder: (context) => const AlarmScreen(),
                           ),
                         );
                       },
@@ -223,6 +225,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           _lottieController.forward();
                         }),
                       ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TutorialList(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

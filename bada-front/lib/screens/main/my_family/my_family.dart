@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bada/widgets/appbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:bada/screens/main/my_family/screen/fam_member.dart';
 import 'package:bada/widgets/buttons.dart';
@@ -58,11 +59,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text('우리 가족'),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-      ),
+      appBar: const CustomAppBar(title: '우리 가족'),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Center(
@@ -112,6 +109,7 @@ class _MyFamilyState extends State<MyFamily> {
                             name: members[index]['name'],
                             isParent: members[index]['isParent'],
                             profileUrl: members[index]['profileUrl'],
+                            movingState: members[index]['movingState'],
                           );
                         },
                       ),
