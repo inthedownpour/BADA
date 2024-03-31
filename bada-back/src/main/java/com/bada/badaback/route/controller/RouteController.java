@@ -6,6 +6,7 @@ import com.bada.badaback.member.service.MemberService;
 import com.bada.badaback.route.dto.RouteRequestDto;
 import com.bada.badaback.route.dto.RouteResponseDto;
 import com.bada.badaback.route.service.RouteService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class RouteController {
      * @throws IOException
      */
     @PostMapping
-    public ResponseEntity<RouteResponseDto> creteRoute(@ExtractPayload Long memberId, @RequestBody RouteRequestDto routeRequestDto) throws IOException {
+    public ResponseEntity<RouteResponseDto> creteRoute(@ExtractPayload Long memberId, @RequestBody @Valid RouteRequestDto routeRequestDto) throws IOException {
         routeService.createRoute(memberId, routeRequestDto);
         RouteResponseDto routeResponseDto = routeService.getRoute(memberId, memberId);
         return ResponseEntity.ok(routeResponseDto);

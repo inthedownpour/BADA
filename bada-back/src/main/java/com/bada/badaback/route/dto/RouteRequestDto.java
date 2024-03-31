@@ -10,6 +10,10 @@ public record RouteRequestDto(
         @NotBlank(message = "도착 latitude는 필수입니다.")
         String endLat,
         @NotBlank(message = "도착 longitude는 필수입니다.")
-        String endLng
+        String endLng,
+        @NotBlank(message = "출발지 이름은 필수입니다.")
+        String addressName,
+        @NotBlank(message = "도착지 이름은 필수입니다.")
+        String placeName
 ) {
 }

@@ -39,7 +39,7 @@ public class RouteService {
                 sb.append("_");
             }
         }
-        Route route = Route.createRoute(routeRequestDto.startLat(), routeRequestDto.startLng(), routeRequestDto.endLat(), routeRequestDto.endLng(), sb.toString(), child);
+        Route route = Route.createRoute(routeRequestDto.startLat(), routeRequestDto.startLng(), routeRequestDto.endLat(), routeRequestDto.endLng(), sb.toString(), routeRequestDto.addressName(), routeRequestDto.placeName(), child);
 
         if(routeRepository.existsRouteByMember(child)){
             throw BaseException.type(RouteErrorCode.ALREADY_EXIST_ROUTE);
@@ -69,7 +69,9 @@ public class RouteService {
                     Double.parseDouble(childRoute.getStartLongitude()),
                     Double.parseDouble(childRoute.getEndLatitude()),
                     Double.parseDouble(childRoute.getEndLongitude()),
-                    pointList);
+                    pointList,
+                    childRoute.getAddressName(),
+                    childRoute.getPlaceName());
         } else {
             //같은 가족이 아닐 때
             throw BaseException.type(RouteErrorCode.NOT_FAMILY);

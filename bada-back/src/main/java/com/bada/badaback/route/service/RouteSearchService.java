@@ -20,11 +20,13 @@ public class RouteSearchService {
     private final TmapApiService tmapApiService;
     private final MemberFindService memberFindService;
 
-    public RouteResponseDto searchRoute(Long memberId, String startLat, String startLng, String endLat, String endLng) throws IOException {
+    public RouteResponseDto searchRoute(Long memberId, String startLat, String startLng, String endLat, String endLng, String addressName, String placeName) throws IOException {
         Member child = memberFindService.findById(memberId);
         List<Point> pointList = tmapApiService.getPoint(startLat, startLng, endLat, endLng);
         return RouteResponseDto.from(Double.parseDouble(startLat), Double.parseDouble(startLng),
                 Double.parseDouble(endLat), Double.parseDouble(endLng),
-                pointList);
+                pointList,
+                addressName,
+                placeName);
     }
 }
