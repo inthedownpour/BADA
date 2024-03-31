@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-// 임시 알람 DTO
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,13 +14,19 @@ import lombok.ToString;
 @ToString
 @Builder
 public class AlarmDto {
+  private String type;              // 알림 타입
 
-  private String type;    // 알람 종류 : enum으로 생성하기
-  private Long memberId;  //
+  private Long memberId;            // 전달되는 항목
   private String familyCode;
-  private String content;
-
+  private Long myPlaceId;
   private String latitude;
   private String longitude;
+
+  private String content;
+  private String childName;
+  private String phone;
+  private String profileUrl;
+  private String destinationName;   // 변경되는 항목
+  private String destinationIcon;
 
 }

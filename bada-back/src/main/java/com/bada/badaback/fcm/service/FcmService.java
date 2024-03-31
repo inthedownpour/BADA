@@ -54,7 +54,16 @@ public class FcmService   {
                 .body(alarmDto.getContent())
                 .image(null)
                 .build()
-            ).build()).validateOnly(false).build();
+            )
+            .data(FcmMessageDto.Data.builder()
+                .childName(alarmDto.getChildName())
+                .phone(alarmDto.getPhone())
+                .profileUrl(alarmDto.getProfileUrl())
+                .destinationName(alarmDto.getDestinationName())
+                .destinationIcon(alarmDto.getDestinationIcon())
+                .build()
+            )
+            .build()).validateOnly(false).build();
 
     return om.writeValueAsString(fcmMessageDto);
   }
@@ -69,25 +78,5 @@ public class FcmService   {
     googleCredentials.refreshIfExpired();
     return googleCredentials.getAccessToken().getTokenValue();
   }
-
-
-//  @Async
-//  private void fcmSendUrl(Object body){
-//    ObjectMapper mapper = new ObjectMapper();
-//    try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-//      HttpPost postRequest = new HttpPost(fcmServerDomain);
-//      String authorization = "Bearer " + getAccessToken();
-//
-//      postRequest.setHeader("Authorization", authorization);
-//      postRequest.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-//
-//      postRequest.setEntity(new StringEntity(mapper.writeValueAsString(body), Consts.UTF_8));
-//
-//      client.execute(postRequest);
-//
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//  }
 
 }
