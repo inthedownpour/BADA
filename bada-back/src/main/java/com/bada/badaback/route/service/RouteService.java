@@ -40,7 +40,12 @@ public class RouteService {
             }
         }
         Route route = Route.createRoute(routeRequestDto.startLat(), routeRequestDto.startLng(), routeRequestDto.endLat(), routeRequestDto.endLng(), sb.toString(), child);
-        routeRepository.save(route);
+
+        if(routeRepository.existsRouteByMember(child)){
+            throw BaseException.type(RouteErrorCode.ALREADY_EXIST_ROUTE);
+        }else {
+            routeRepository.save(route);
+        }
     }
 
     public RouteResponseDto getRoute(Long memberId, Long childId) {
