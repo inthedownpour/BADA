@@ -27,12 +27,12 @@ class RouteControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("경로 등록 API 테스트 [POST /api/route]")
-    class createRouteTest{
-        private static final String BASE_URL ="/api/route";
+    class createRouteTest {
+        private static final String BASE_URL = "/api/route";
 
         @Test
         @DisplayName("Authorization_Header에 RefreshToken이 없으면 예외가 발생한다")
-        void throwExceptionByInvalidPermission() throws Exception{
+        void throwExceptionByInvalidPermission() throws Exception {
             //when
             final RouteRequestDto requestDto = createRouteRequestDto();
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -72,7 +72,7 @@ class RouteControllerTest extends ControllerTest {
                     .post(BASE_URL)
                     .content(convertObjectToJson(requestDto))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .header(AUTHORIZATION,BEARER_TOKEN+ACCESS_TOKEN);
+                    .header(AUTHORIZATION, BEARER_TOKEN + ACCESS_TOKEN);
 
             //Then
             mockMvc.perform(requestBuilder)
@@ -85,15 +85,16 @@ class RouteControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("경로 조회 API 테스트 [GET /api/route/{childId}]")
-    class getRouteTest{
-        private static final String BASE_URL ="/api/route/{childId}";
+    class getRouteTest {
+        private static final String BASE_URL = "/api/route/{childId}";
         private static final Long CHILD_ID = 1L;
+
         @Test
         @DisplayName("Authorization_Header에 RefreshToken이 없으면 예외가 발생한다")
-        void throwExceptionByInvalidPermission() throws Exception{
+        void throwExceptionByInvalidPermission() throws Exception {
             //when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .get(BASE_URL,CHILD_ID);
+                    .get(BASE_URL, CHILD_ID);
 
             //then
             final AuthErrorCode expectedError = AuthErrorCode.INVALID_PERMISSION;
@@ -116,12 +117,12 @@ class RouteControllerTest extends ControllerTest {
             //given
             doReturn(createRouteResponseDto())
                     .when(routeService)
-                    .getRoute(anyLong(),anyLong());
+                    .getRoute(anyLong(), anyLong());
 
             //when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
-                    .get(BASE_URL,CHILD_ID)
-                    .header(AUTHORIZATION,BEARER_TOKEN+ACCESS_TOKEN);
+                    .get(BASE_URL, CHILD_ID)
+                    .header(AUTHORIZATION, BEARER_TOKEN + ACCESS_TOKEN);
 
             //Then
             mockMvc.perform(requestBuilder)
@@ -133,11 +134,12 @@ class RouteControllerTest extends ControllerTest {
 
     @Nested
     @DisplayName("경로 삭제 API 테스트 [DELETE /api/route]")
-    class deleteRouteTest{
-        private static final String BASE_URL ="/api/route";
+    class deleteRouteTest {
+        private static final String BASE_URL = "/api/route";
+
         @Test
         @DisplayName("Authorization_Header에 RefreshToken이 없으면 예외가 발생한다")
-        void throwExceptionByInvalidPermission() throws Exception{
+        void throwExceptionByInvalidPermission() throws Exception {
             //when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                     .delete(BASE_URL);
@@ -171,7 +173,7 @@ class RouteControllerTest extends ControllerTest {
             //when
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                     .delete(BASE_URL)
-                    .header(AUTHORIZATION,BEARER_TOKEN+ACCESS_TOKEN);
+                    .header(AUTHORIZATION, BEARER_TOKEN + ACCESS_TOKEN);
 
             //Then
             mockMvc.perform(requestBuilder)
@@ -181,11 +183,11 @@ class RouteControllerTest extends ControllerTest {
         }
     }
 
-    private RouteRequestDto createRouteRequestDto(){
-        return new RouteRequestDto("36.421518","127.391538","36.421914","127.38412");
+    private RouteRequestDto createRouteRequestDto() {
+        return new RouteRequestDto("36.421518", "127.391538", "36.421914", "127.38412", "출발", "도착");
     }
 
-    private RouteResponseDto createRouteResponseDto(){
-        return new RouteResponseDto(36.421518,127.391538,36.421914,127.38412,new ArrayList<>());
+    private RouteResponseDto createRouteResponseDto() {
+        return new RouteResponseDto(36.421518, 127.391538, 36.421914, 127.38412, "출발", "도착", new ArrayList<>());
     }
 }
