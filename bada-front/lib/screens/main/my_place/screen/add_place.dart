@@ -162,8 +162,8 @@ class _AddPlaceState extends State<AddPlace> {
                     onPressed: () async {
                       await _postPlace(
                         placeName: _titleController.text,
-                        placeLatitude: widget.x,
-                        placeLongitude: widget.y,
+                        placeLatitude: widget.y,
+                        placeLongitude: widget.x,
                         placeCategoryCode: widget.categoryGroupCode ?? '',
                         placeCategoryName: widget.categoryGroupName ?? '',
                         placePhoneNumber: widget.phone ?? '',

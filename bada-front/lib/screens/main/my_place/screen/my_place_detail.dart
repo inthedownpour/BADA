@@ -47,14 +47,15 @@ class _PlaceDetailState extends State<PlaceDetail> {
 
   void _onMapCreated(KakaoMapController controller) {
     setState(() {
-      controller.setCenter(LatLng(widget.placeLongitude, widget.placeLatitude));
-      debugPrint("위도 : ${widget.placeLatitude}, 경도 : ${widget.placeLongitude}");
+      controller.setCenter(LatLng(widget.placeLatitude, widget.placeLongitude));
+      debugPrint(
+          "위도(가로) : ${widget.placeLatitude}, 경도(세로) : ${widget.placeLongitude}");
       markers.add(
         Marker(
           markerId: 'searched_location',
           latLng: LatLng(
-            widget.placeLongitude,
             widget.placeLatitude,
+            widget.placeLongitude,
           ),
           width: 30,
           height: 44,

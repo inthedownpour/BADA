@@ -54,8 +54,17 @@ class _SettingsState extends State<Settings> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('설정'),
+        title: const Text(
+          '설정',
+          style: TextStyle(fontFamily: 'Pretendard-Bold.otf'),
+        ),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios), // 원하는 아이콘으로 변경
+          onPressed: () {
+            Navigator.pop(context); // 현재 화면을 닫고 이전 화면으로 돌아가기
+          },
+        ),
       ),
       body: Container(
         child: Column(
@@ -65,7 +74,10 @@ class _SettingsState extends State<Settings> {
             ),
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(deviceWidth * 0.1, 0, 0, 0),
-              title: const Text('로그아웃'),
+              title: const Text(
+                '로그아웃',
+                style: TextStyle(fontSize: 20),
+              ),
               onTap: () {
                 showDialog(
                   context: context,
@@ -104,9 +116,15 @@ class _SettingsState extends State<Settings> {
                 );
               },
             ),
+            SizedBox(
+              height: deviceHeight * 0.012,
+            ),
             ListTile(
               contentPadding: EdgeInsets.fromLTRB(deviceWidth * 0.1, 0, 0, 0),
-              title: const Text('회원탈퇴'),
+              title: const Text(
+                '회원탈퇴',
+                style: TextStyle(color: Colors.red, fontSize: 20),
+              ),
               onTap: () {
                 showDialog(
                   context: context,

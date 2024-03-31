@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:bada_kids_front/model/screen_size.dart';
-import 'package:bada_kids_front/screen/main/navigator/path_find_screen.dart';
+import 'package:bada_kids_front/screen/main/navigator/path_find/path_find.dart';
 import 'package:flutter/material.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class Button330_220 extends StatefulWidget {
   final String label;
@@ -91,8 +94,8 @@ class Button714_300 extends StatefulWidget {
   const Button714_300({
     super.key,
     required this.label,
-    this.backgroundColor = Colors.white,
-    this.foregroundColor = Colors.black,
+    this.backgroundColor = const Color(0xff696DFF),
+    this.foregroundColor = Colors.white,
     this.buttonImage,
     this.imageWidth = 50,
     this.imageHeight = 50,
@@ -118,7 +121,7 @@ class _Button714_300State extends State<Button714_300> {
       textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
       fixedSize: Size(
         UIhelper.scaleWidth(context) * 368,
-        UIhelper.scaleHeight(context) * 150,
+        UIhelper.scaleHeight(context) * 240,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     );
@@ -138,7 +141,7 @@ class _Button714_300State extends State<Button714_300> {
               ),
               SizedBox(height: UIhelper.scaleHeight(context) * 10),
               const Text(
-                '안전한 길을 추천해 주세요!',
+                '안전한 길을 추천해줘요!',
                 style: TextStyle(fontSize: 10),
               ),
             ],
@@ -382,8 +385,26 @@ class MyPlaceButton extends StatefulWidget {
 class _MyPlaceButtonState extends State<MyPlaceButton> {
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    final LatLng destination =
+        LatLng(widget.placeLatitude, widget.placeLongitude);
+
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        debugPrint(
+            '내 장소 위치 : ${widget.placeLatitude}, ${widget.placeLongitude}');
+        Navigator.push(
+          (context),
+          MaterialPageRoute(
+            builder: (context) => PathFind(
+              destination: destination,
+              placeName: widget.placeName,
+              addressName: widget.addressName,
+            ),
+          ),
+        );
+      },
       child: Container(
         width: UIhelper.scaleWidth(context) * 368,
         height: UIhelper.scaleHeight(context) * 80,
@@ -400,7 +421,12 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          padding: EdgeInsets.fromLTRB(
+            deviceWidth * 0.05,
+            deviceHeight * 0.00,
+            deviceWidth * 0.00,
+            deviceHeight * 0.00,
+          ),
           child: Row(
             children: [
               Image.asset(
@@ -420,7 +446,13 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    const Text('주소: 대전광역시 유성구 덕명로 26'),
+                    SizedBox(height: UIhelper.scaleHeight(context) * 5),
+                    Text(
+                      widget.addressName,
+                      style: const TextStyle(fontSize: 12),
+                      overflow: TextOverflow.ellipsis, // 텍스트가 넘칠 때 ...으로 표시
+                      maxLines: 1,
+                    ),
                   ],
                 ),
               ),
@@ -428,8 +460,11 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                 onPressed: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => PathFindScreen(
-                          y: widget.placeLongitude, x: widget.placeLatitude),
+                      builder: (context) => PathFind(
+                        destination: destination,
+                        placeName: widget.placeName,
+                        addressName: widget.addressName,
+                      ),
                     ),
                   );
                 },
@@ -441,6 +476,67 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MainSmallButton extends StatefulWidget {
+  final String label;
+  final Color backgroundColor, foregroundColor;
+  final Widget? buttonImage;
+  final double imageWidth, imageHeight;
+  final void Function()? onPressed;
+
+  const MainSmallButton({
+    super.key,
+    required this.label,
+    this.backgroundColor = Colors.white,
+    this.foregroundColor = Colors.black,
+    this.buttonImage,
+    this.imageWidth = 160,
+    this.imageHeight = 160,
+    this.onPressed,
+  });
+
+  @override
+  State<MainSmallButton> createState() => _MainSmallButtonState();
+}
+
+class _MainSmallButtonState extends State<MainSmallButton> {
+  @override
+  Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+
+    final hasImage = widget.buttonImage != null;
+    final ButtonStyle style = ElevatedButton.styleFrom(
+      elevation: 5,
+      padding: EdgeInsets.fromLTRB(deviceWidth * 0.06, deviceHeight * 0.025,
+          deviceWidth * 0, deviceHeight * 0),
+      backgroundColor: widget.backgroundColor,
+      foregroundColor: widget.foregroundColor,
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 180,
+        UIhelper.scaleHeight(context) * 200,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    );
+
+    return ElevatedButton(
+      style: style,
+      onPressed: widget.onPressed,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                widget.label,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

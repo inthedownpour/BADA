@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bada/api_request/member_api.dart';
 import 'package:bada/screens/main/my_family/my_family.dart';
 import 'package:bada/screens/main/my_place/my_place.dart';
 import 'package:bada/screens/main/path_recommend/searching_path.dart';
@@ -22,8 +23,10 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _lottieController;
+  MembersApi membersApi = MembersApi();
 
   final _storage = const FlutterSecureStorage();
   Future<void>? load;
@@ -33,26 +36,42 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this); // Observer 등록
     _lottieController = AnimationController(vsync: this);
-    load = _loadProfileFromStorage();
   }
 
-  Future<void> _loadProfileFromStorage() async {
-    profileUrl = await _storage.read(key: 'profileImage');
-    nickname = await _storage.read(key: 'nickname');
+  Future<void> _loadProfile() async {
+    await membersApi.fetchProfile().then((value) {
+      setState(() {
+        profileUrl = value.profileUrl;
+        nickname = value.name;
+      });
+    });
+    await _storage.write(key: 'profileImage', value: profileUrl);
+    await _storage.write(key: 'nickname', value: nickname);
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // Observer를 해제합니다.
     _lottieController.dispose();
 
     super.dispose();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // 앱이 다시 활성화될 때 애니메이션을 재시작합니다.
+    if (state == AppLifecycleState.resumed) {
+      _lottieController.repeat();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: load,
+      future: _loadProfile(),
       builder: (constext, snapshot) {
         return Scaffold(
           backgroundColor: Colors.white,
@@ -84,6 +103,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             },
                             child: CircleAvatar(
                               radius: 30,
+                              backgroundColor:
+                                  Colors.transparent, // 배경 색상을 투명하게 설정
                               backgroundImage:
                                   profileUrl == '' || profileUrl == null
                                       ? Image.asset(
@@ -150,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         controller: _lottieController,
                         onLoaded: ((p0) {
                           _lottieController.duration = p0.duration;
-                          _lottieController.forward();
+                          _lottieController.repeat();
                         }),
                       ),
                       onPressed: () {
@@ -177,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         controller: _lottieController,
                         onLoaded: ((p0) {
                           _lottieController.duration = p0.duration;
-                          _lottieController.forward();
+                          _lottieController.repeat();
                         }),
                       ),
                       onPressed: () {
@@ -220,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         controller: _lottieController,
                         onLoaded: ((p0) {
                           _lottieController.duration = p0.duration;
-                          _lottieController.forward();
+                          _lottieController.repeat();
                         }),
                       ),
                     ),

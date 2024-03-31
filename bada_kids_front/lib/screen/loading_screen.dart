@@ -3,8 +3,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 
-class LoadingScreen extends StatelessWidget {
+class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
+
+  @override
+  State<LoadingScreen> createState() => _LoadingScreenState();
+}
+
+class _LoadingScreenState extends State<LoadingScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
+  late final AnimationController _lottieController;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this); // Observer 등록
+    _lottieController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // Observer를 해제합니다.
+    _lottieController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // 앱이 다시 활성화될 때 애니메이션을 재시작합니다.
+    if (state == AppLifecycleState.resumed) {
+      _lottieController.repeat();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +79,20 @@ class LoadingScreen extends StatelessWidget {
                   Lottie.asset(
                     'assets/lottie/walking-cloud.json',
                     width: deviceWidth * 0.7,
+                    controller: _lottieController,
+                    onLoaded: ((p0) {
+                      _lottieController.duration = p0.duration;
+                      _lottieController.repeat();
+                    }),
                   ),
                   Lottie.asset(
                     'assets/lottie/walking-pencil.json',
                     width: deviceWidth * 0.7,
+                    controller: _lottieController,
+                    onLoaded: ((p0) {
+                      _lottieController.duration = p0.duration;
+                      _lottieController.repeat();
+                    }),
                   ),
                 ],
               ),

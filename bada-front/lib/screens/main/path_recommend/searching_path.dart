@@ -275,7 +275,8 @@ class _SearchingPathState extends State<SearchingPath> {
                       icon: Transform.rotate(
                         angle:
                             90 * 3.141592653589793 / 180, // 라디안으로 변환하여 90도 회전
-                        child: const Icon(Icons.compare_arrows_rounded),
+                        child:
+                            const Icon(Icons.compare_arrows_rounded, size: 30),
                       ),
                       onPressed: () {
                         // 출발지와 도착지를 서로 바꾸기
