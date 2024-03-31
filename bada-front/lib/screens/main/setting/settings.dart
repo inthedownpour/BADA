@@ -3,8 +3,9 @@ import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/login/screen/initial_screen.dart';
 import 'package:bada/screens/login/login_screen.dart';
 import 'package:bada/screens/main/setting/screen/alarm_setting.dart';
-import 'package:bada/screens/main/setting/screen/authentication._screendart';
+import 'package:bada/screens/main/setting/screen/authentication_screen.dart';
 import 'package:bada/screens/main/setting/screen/terms_of_policy.dart';
+import 'package:bada/widgets/appbar.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -62,10 +63,8 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
       future: _load,
       builder: (context, snapshot) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('설정'),
-            centerTitle: true,
-            backgroundColor: Colors.white,
+          appBar: const CustomAppBar(
+            title: '설정',
           ),
           body: Container(
             padding: const EdgeInsets.all(20),
