@@ -1,6 +1,5 @@
 package com.bada.badaback.route.controller;
 
-import com.bada.badaback.currentLocation.service.CurrentLocationService;
 import com.bada.badaback.global.annotation.ExtractPayload;
 import com.bada.badaback.member.service.MemberService;
 import com.bada.badaback.route.dto.RouteRequestDto;
@@ -17,7 +16,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class RouteController {
     private final RouteService routeService;
-    private final CurrentLocationService currentLocationService;
     private final MemberService memberService;
 
     /**
