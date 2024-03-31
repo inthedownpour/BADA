@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class RouteControllerTest extends ControllerTest {
 
-
     @Nested
     @DisplayName("경로 등록 API 테스트 [POST /api/route]")
     class createRouteTest{
@@ -63,6 +62,9 @@ class RouteControllerTest extends ControllerTest {
             doNothing()
                     .when(routeService)
                     .createRoute(anyLong(),any());
+            doNothing()
+                    .when(memberService)
+                    .updateMovingState(anyLong(), anyInt());
 
             //when
             final RouteRequestDto requestDto = createRouteRequestDto();
@@ -162,11 +164,6 @@ class RouteControllerTest extends ControllerTest {
             doNothing()
                     .when(routeService)
                     .deleteRoute(any());
-
-            doNothing()
-                    .when(currentLocationService)
-                    .delete(anyLong());
-
             doNothing()
                     .when(memberService)
                     .updateMovingState(anyLong(), anyInt());
