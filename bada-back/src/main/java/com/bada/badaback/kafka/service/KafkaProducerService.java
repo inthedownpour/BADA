@@ -4,6 +4,8 @@ import com.bada.badaback.alarmtrigger.AlarmTriggerService;
 import com.bada.badaback.kafka.dto.AlarmDto;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.service.MemberFindService;
+import com.bada.badaback.myplace.domain.MyPlace;
+import com.bada.badaback.myplace.service.MyPlaceFindService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ public class KafkaProducerService {
 
   private final AlarmTriggerService alarmTriggerService;
   private final MemberFindService memberFindService;
+  private final MyPlaceFindService myPlaceFindService;
 
   @Autowired
   private final KafkaTemplate<String, AlarmDto> kafkaTemplate;
@@ -30,12 +33,29 @@ public class KafkaProducerService {
     /** 출발과 도착 감지 **/
     if (alarmDto.getType().equals("DEPART")) {
       Member member = memberFindService.findById(alarmDto.getMemberId());
-      alarmDto.setContent(member.getName() + "(이)가 목적지로 출발했습니다.");
+      MyPlace myPlace = myPlaceFindService.findById(alarmDto.getMyPlaceId());
+
+      alarmDto.setContent(member.getName() + "님이 " + alarmDto.getDestinationName() + "로 출발했습니다.");
+      alarmDto.setChildName(member.getName());
+      alarmDto.setPhone(member.getPhone());
+      alarmDto.setProfileUrl(member.getProfileUrl());
+      alarmDto.setDestinationName(myPlace.getPlaceName());
+      alarmDto.setDestinationIcon(myPlace.getIcon());
+
       kafkaTemplate.send(topic, alarmDto);
       return "아이 목적지로 출발  : send alarm";
+
     } else if (alarmDto.getType().equals("ARRIVE")) {
       Member member = memberFindService.findById(alarmDto.getMemberId());
-      alarmDto.setContent(member.getName() + "(이)가 목적지에 도착하였습니다.");
+      MyPlace myPlace = myPlaceFindService.findById(alarmDto.getMyPlaceId());
+
+      alarmDto.setContent(member.getName() + "님이 " + alarmDto.getDestinationName() + "에 도착하였습니다.");
+      alarmDto.setChildName(member.getName());
+      alarmDto.setPhone(member.getPhone());
+      alarmDto.setProfileUrl(member.getProfileUrl());
+      alarmDto.setDestinationName(myPlace.getPlaceName());
+      alarmDto.setDestinationIcon(myPlace.getIcon());
+
       kafkaTemplate.send(topic, alarmDto);
       return "아이 목적지에 도착 : send alarm";
     }
@@ -55,8 +75,16 @@ public class KafkaProducerService {
       log.info("!!!!!!!!!! 아이 경로 이탈 감지 !!!!!!!!!");
 
       Member member = memberFindService.findById(alarmDto.getMemberId());
+      MyPlace myPlace = myPlaceFindService.findById(alarmDto.getMyPlaceId());
+
       alarmDto.setType("OFF COURSE");
-      alarmDto.setContent(member.getName() + "(이)가 경로를 이탈하였습니다!");
+      alarmDto.setContent(member.getName() + "님이 경로를 이탈하였습니다!");
+      alarmDto.setChildName(member.getName());
+      alarmDto.setPhone(member.getPhone());
+      alarmDto.setProfileUrl(member.getProfileUrl());
+      alarmDto.setDestinationName(myPlace.getPlaceName());
+      alarmDto.setDestinationIcon(myPlace.getIcon());
+
       kafkaTemplate.send(topic, alarmDto);  // topic에 해당하는 이름 없으면 자동 생성됨
       return "child is OFF_COURSE : send alarm";
     } else {

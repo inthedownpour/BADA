@@ -16,6 +16,7 @@ public class FcmMessageDto {
   public static class Message {
     private FcmMessageDto.Notification notification;
     private String token;
+    private FcmMessageDto.Data data;
   }
 
   @Builder
@@ -25,5 +26,16 @@ public class FcmMessageDto {
     private String title;
     private String body;
     private String image;
+  }
+
+  @Builder
+  @AllArgsConstructor
+  @Getter
+  public static class Data {
+    private String childName;
+    private String phone;
+    private String profileUrl;
+    private String destinationName;
+    private String destinationIcon;
   }
 }
