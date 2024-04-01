@@ -54,10 +54,12 @@ class _SearchingPathState extends State<SearchingPath> {
       var accessToken = await secureStorage.read(key: 'accessToken');
       var url = Uri.parse('https://j10b207.p.ssafy.io/api/path');
       var requestBody = json.encode({
-        "startLng": _departureLongitude.toString(),
-        "startLat": _departureLatitude.toString(),
-        "endLng": _destinationLongitude.toString(),
-        "endLat": _destinationLatitude.toString(),
+        "startLng": _departureLongitude.toStringAsFixed(5),
+        "startLat": _departureLatitude.toStringAsFixed(5),
+        "endLng": _destinationLongitude.toStringAsFixed(5),
+        "endLat": _destinationLatitude.toStringAsFixed(5),
+        "addressName": '현재 위치',
+        "placeName": '목적지',
       });
       var response = await http.post(
         url,
@@ -147,6 +149,8 @@ class _SearchingPathState extends State<SearchingPath> {
           MaterialPageRoute(
             builder: (context) => PathMap(
               pathList: pointList,
+              departure: _departureController.text,
+              destination: _destinationController.text,
             ),
           ),
         );

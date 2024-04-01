@@ -11,6 +11,7 @@ class ProfileProvider with ChangeNotifier {
   String? _name;
   String? _phone;
   int? _memberId;
+  int? _movingState;
 
   // private static 인스턴스
   static final ProfileProvider _instance = ProfileProvider._internal();
@@ -25,6 +26,7 @@ class ProfileProvider with ChangeNotifier {
   String? get phone => _instance._phone;
   int get memberId => _instance._memberId!;
   String get accessToken => _instance._accessToken!;
+  int get movingState => _instance._movingState!;
 
   Future<void> loadProfile() async {
     // TODO : 사용자 프로필 정보를 서버에서 불러오는 코드 작성
@@ -46,6 +48,7 @@ class ProfileProvider with ChangeNotifier {
       _name = data['name'];
       _memberId = data['memberId'];
       _phone = data['phone'];
+      _movingState = data['movingState'];
     }
   }
 

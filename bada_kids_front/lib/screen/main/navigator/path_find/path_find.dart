@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bada_kids_front/model/route_info.dart';
 import 'package:bada_kids_front/provider/map_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,18 +27,19 @@ class PathFind extends StatefulWidget {
 class _PathFindState extends State<PathFind>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late KakaoMapController mapController;
-  MapProvider mapProvider = MapProvider.instance;
-
   List<LatLng> pathPoints = []; // 경로 포인트 리스트
   Set<Marker> markers = {}; // 마커 변수
   Set<Polyline> polylines = {}; // 폴리라인 변수
   late LatLng destination;
   late LatLng middle;
   late LatLng currentLocation;
-  Future<void>? _loadPath;
+  Future<bool>? _loadPath;
+  late double verticalForLevel;
+  late double horizontalForLevel;
+  StrokeStyle strokeStyle = StrokeStyle.solid;
 
   // 현재 위치 정보와 목적지 위치 정보를 POST 요청으로 보내기
-  Future<void> requestPath() async {
+  Future<bool> requestPath() async {
     FlutterSecureStorage secureStorage = const FlutterSecureStorage();
     MapProvider mapProvider = MapProvider.instance;
     var accessToken = (await secureStorage.read(key: 'accessToken'))!;
@@ -49,10 +51,10 @@ class _PathFindState extends State<PathFind>
       'Authorization': 'Bearer $accessToken',
     };
     var requestBody = jsonEncode({
-      "startLng": currentLocation.longitude.toString(),
-      "startLat": currentLocation.latitude.toString(),
-      "endLng": destination.longitude.toString(),
-      "endLat": destination.latitude.toString(),
+      "startLng": currentLocation.longitude.toStringAsFixed(5),
+      "startLat": currentLocation.latitude.toStringAsFixed(5),
+      "endLng": destination.longitude.toStringAsFixed(5),
+      "endLat": destination.latitude.toStringAsFixed(5),
       "placeName": widget.placeName, // "목적지 이름"
       "addressName": widget.addressName, // "출발지 이름"
     });
@@ -67,42 +69,39 @@ class _PathFindState extends State<PathFind>
 
     if (response.statusCode == 200) {
       debugPrint('리퀘스트 성공 : ${response.body}');
-      final responseData = json.decode(response.body);
+      final responseData = json.decode(utf8.decode(response.bodyBytes));
+      debugPrint('responseData: $responseData');
+
+      RouteInfo routeInfo = RouteInfo.fromJson(responseData);
 
       // 시작점 추가
-      pathPoints.add(LatLng(double.parse(responseData['startLat']),
-          double.parse(responseData['startLng'])));
+      pathPoints.add(LatLng(routeInfo.startLat, routeInfo.startLng));
 
       // 경로 추가
-      if (responseData.containsKey('pointList') &&
-          responseData['pointList'].isNotEmpty) {
-        List<dynamic> pointList = responseData['pointList'];
-        for (var point in pointList) {
-          double lat = double.parse(point['latitude']);
-          double lng = double.parse(point['longitude']);
-          pathPoints.add(LatLng(lat, lng));
-        }
+      List<Point> pointList = routeInfo.pointList;
+      for (var point in pointList) {
+        pathPoints.add(LatLng(point.latitude, point.longitude));
       }
 
       // 종점 추가
-      pathPoints.add(LatLng(double.parse(responseData['endLat']),
-          double.parse(responseData['endLng'])));
+      pathPoints.add(LatLng(routeInfo.endLat, routeInfo.endLng));
 
-      // 경로를 지도에 그리기 위한 Polyline 객체 생성
-      Polyline polyline = Polyline(
-        polylineId: 'path',
-        points: pathPoints,
-        fillColor: Colors.blue, // 경로 색상 설정
-      );
-
-      // 지도에 경로 표시
-      polylines.add(polyline);
+      setState(() {});
+      for (var point in pathPoints) {
+        debugPrint('point: $point');
+      }
 
       debugPrint('Request successful: ${response.body}');
-      mapProvider.isGuideMode = true; // 길 안내 모드 활성화
+      mapProvider.startLatLng = currentLocation;
+      mapProvider.endLatLng = destination;
+      mapProvider.initCurrentLocationUpdate();
+
+      debugPrint('전부 성공적으로 처리되었습니다.');
+      return true;
     } else {
       // 오류가 발생했을 때의 로직
       debugPrint('리퀘스트 실패 : ${response.statusCode}.');
+      return false;
     }
   }
 
@@ -130,6 +129,8 @@ class _PathFindState extends State<PathFind>
     super.initState();
     WidgetsBinding.instance.addObserver(this); // Observer 등록
     _lottieController = AnimationController(vsync: this);
+    MapProvider mapProvider = MapProvider.instance;
+
     destination = widget.destination;
     currentLocation = mapProvider.currentLocation;
     middle = LatLng(
@@ -137,6 +138,9 @@ class _PathFindState extends State<PathFind>
       (destination.longitude + currentLocation.longitude) / 2,
     );
     _loadPath = requestPath();
+    verticalForLevel = (destination.latitude - currentLocation.latitude).abs();
+    horizontalForLevel =
+        (destination.longitude - currentLocation.longitude).abs();
   }
 
   @override
@@ -144,6 +148,16 @@ class _PathFindState extends State<PathFind>
     return FutureBuilder(
       future: _loadPath,
       builder: (context, snapshot) {
+        // if (snapshot.connectionState != ConnectionState.done) {
+        //   return const Center(
+        //     child: CircularProgressIndicator(),
+        //   );
+        // }
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Scaffold(
           appBar: AppBar(
             backgroundColor: const Color(0xff4d7cfe),
@@ -202,6 +216,39 @@ class _PathFindState extends State<PathFind>
           body: KakaoMap(
             onMapCreated: ((controller) async {
               mapController = controller;
+              if (verticalForLevel > 0.127 || horizontalForLevel > 0.096) {
+                mapController.setLevel(9);
+              } else if (verticalForLevel > 0.0676 ||
+                  horizontalForLevel > 0.0518) {
+                mapController.setLevel(8);
+              } else if (verticalForLevel > 0.0395 ||
+                  horizontalForLevel > 0.0246) {
+                mapController.setLevel(7);
+              } else if (verticalForLevel > 0.0177 ||
+                  horizontalForLevel > 0.014) {
+                mapController.setLevel(6);
+              } else if (verticalForLevel > 0.009 ||
+                  horizontalForLevel > 0.00551) {
+                mapController.setLevel(5);
+              } else if (verticalForLevel > 0.0049 ||
+                  horizontalForLevel > 0.0023) {
+                mapController.setLevel(4);
+              } else {
+                mapController.setLevel(3);
+              }
+
+              // 경로를 지도에 그리기 위한 Polyline 객체 생성
+              polylines.add(
+                Polyline(
+                  polylineId: 'path_${polylines.length}',
+                  points: pathPoints,
+                  strokeColor: Colors.blue,
+                  strokeOpacity: 1,
+                  strokeWidth: 5,
+                  strokeStyle: StrokeStyle.solid,
+                ),
+              );
+              setState(() {});
             }),
             markers: markers.toList(),
             polylines: polylines.toList(),

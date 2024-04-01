@@ -7,9 +7,16 @@ import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 
 class PathMap extends StatefulWidget {
   List<Point> pathList;
+  String departure;
+  String destination;
 
   // TODO : 경로 List 받아오기 및 경로 폴리라인 그리기
-  PathMap({super.key, required this.pathList});
+  PathMap({
+    super.key,
+    required this.pathList,
+    required this.departure,
+    required this.destination,
+  });
 
   @override
   State<PathMap> createState() => _PathMapState();
@@ -19,6 +26,8 @@ class _PathMapState extends State<PathMap> {
   late KakaoMapController mapController;
   late List<LatLng> latLngList;
   late LatLng center;
+  late double verticalForLevel;
+  late double horizontalForLevel;
   Set<Polyline> polylines = {};
 
   // Point 리스트를 LatLng 리스트로 변환하는 함수
@@ -37,6 +46,8 @@ class _PathMapState extends State<PathMap> {
     debugPrint("start: $start");
     LatLng end = latLngList.last;
     debugPrint("end: $end");
+    verticalForLevel = (start.latitude - end.latitude).abs();
+    horizontalForLevel = (start.longitude - end.longitude).abs();
     double lat = (start.latitude + end.latitude) / 2;
     double lng = (start.longitude + end.longitude) / 2;
     center = LatLng(lat, lng);
@@ -52,12 +63,12 @@ class _PathMapState extends State<PathMap> {
           // Flex 대신 Row 사용
           mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
           children: [
-            const Expanded(
+            Expanded(
               // Flexible 대신 Expanded 사용
               child: Center(
                 child: Text(
-                  '현재 위치asdasdasd',
-                  style: TextStyle(fontSize: 18),
+                  widget.departure,
+                  style: const TextStyle(fontSize: 18),
                   overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략
                 ),
               ),
@@ -69,12 +80,12 @@ class _PathMapState extends State<PathMap> {
             const SizedBox(
               width: 5,
             ),
-            const Expanded(
+            Expanded(
               // Flexible 대신 Expanded 사용
               child: Center(
                 child: Text(
-                  '목적지asdasdasdasd',
-                  style: TextStyle(fontSize: 18),
+                  widget.destination,
+                  style: const TextStyle(fontSize: 18),
                   overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략
                 ),
               ),
@@ -107,33 +118,40 @@ class _PathMapState extends State<PathMap> {
             onMapCreated: (controller) {
               mapController = controller;
               mapController.setCenter(center);
+              if (verticalForLevel > 0.127 || horizontalForLevel > 0.096) {
+                mapController.setLevel(9);
+              } else if (verticalForLevel > 0.0676 ||
+                  horizontalForLevel > 0.0518) {
+                mapController.setLevel(8);
+              } else if (verticalForLevel > 0.0395 ||
+                  horizontalForLevel > 0.0246) {
+                mapController.setLevel(7);
+              } else if (verticalForLevel > 0.0177 ||
+                  horizontalForLevel > 0.014) {
+                mapController.setLevel(6);
+              } else if (verticalForLevel > 0.009 ||
+                  horizontalForLevel > 0.00551) {
+                mapController.setLevel(5);
+              } else if (verticalForLevel > 0.0049 ||
+                  horizontalForLevel > 0.0023) {
+                mapController.setLevel(4);
+              } else {
+                mapController.setLevel(3);
+              }
+
               polylines.add(
                 Polyline(
                   polylineId: 'polyline_${polylines.length}',
                   points: latLngList,
                   strokeColor: Colors.blue,
                   strokeOpacity: 1,
-                  strokeWidth: 10,
+                  strokeWidth: 5,
                   strokeStyle: StrokeStyle.solid,
                 ),
               );
               setState(() {});
             },
             polylines: polylines.toList(),
-          ),
-          Positioned(
-            right: 12, // 오른쪽으로부터 20px 떨어진 위치
-            top: 15, // 상단으로부터 20px 떨어진 위치
-            child: GestureDetector(
-              onTap: () {
-                debugPrint("CircleAvatar 터치!");
-              },
-              child: const CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.blue,
-                child: Icon(Icons.person),
-              ),
-            ),
           ),
         ],
       ),
