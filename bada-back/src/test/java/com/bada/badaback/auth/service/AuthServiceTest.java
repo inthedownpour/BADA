@@ -133,7 +133,7 @@ public class AuthServiceTest extends ServiceTest {
     void login() {
         // when
         Long saveMemberId = authService.signup("윤선경", "010-1111-1111","abc@naver.com", "NAVER", null, "우리 가족", "fcmToken");
-        LoginResponseDto loginResponseDto = authService.login(saveMemberId);
+        LoginResponseDto loginResponseDto = authService.login(saveMemberId, "fcmToken");
 
         // then
         Member findMember = memberFindService.findById(saveMemberId);
