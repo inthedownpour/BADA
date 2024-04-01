@@ -89,4 +89,6 @@ public class Member extends BaseTimeEntity {
     public void updateMovingState(int movingState) {
         this.movingState = movingState;
     }
+
+    public void updateFcmToken(String fcmToken) { this.fcmToken = fcmToken; }
 }
