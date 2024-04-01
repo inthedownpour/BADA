@@ -10,6 +10,7 @@ import com.bada.badaback.route.dto.RouteResponseDto;
 import com.bada.badaback.route.exception.RouteErrorCode;
 import com.bada.badaback.safefacility.domain.Point;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RouteService {
@@ -49,22 +51,27 @@ public class RouteService {
     }
 
     public RouteResponseDto getRoute(Long memberId, Long childId) {
+        log.info("============경로 찾기 서비스 호출==============");
         // 부모가 있는지 확인
         Member member = memberFindService.findById(memberId);
         // 자식이 있는지 확인
         Member child = memberFindService.findById(childId);
+        log.info("==============가족 확인 시작===============");
         if (member.getFamilyCode().equals(child.getFamilyCode())) {
+            log.info("{}번과 {}번은 가족입니다.",memberId, childId);
             //같은 가족일 때
             Route childRoute = routeFindService.findByMember(child);
             //pointList를 String에서 PointList로 변환 작업
             List<Point> pointList = new ArrayList<>();
             String[] str = childRoute.getPointList().split("_");
+            log.info("==========pointList로 변환 작업 시작==============");
             for (String s : str) {
                 String[] pointString = s.split(", ");
                 double Lat = Double.parseDouble(pointString[0]);
                 double Lng = Double.parseDouble(pointString[1]);
                 pointList.add(new Point(Lat, Lng));
             }
+            log.info("=====================변환 완료=====================");
             return RouteResponseDto.from(Double.parseDouble(childRoute.getStartLatitude()),
                     Double.parseDouble(childRoute.getStartLongitude()),
                     Double.parseDouble(childRoute.getEndLatitude()),
