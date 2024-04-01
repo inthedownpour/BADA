@@ -12,7 +12,6 @@ import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.domain.MemberRepository;
 import com.bada.badaback.member.domain.SocialType;
 import com.bada.badaback.member.service.MemberFindService;
-import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
