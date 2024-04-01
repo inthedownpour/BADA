@@ -6,6 +6,7 @@ import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.service.MemberFindService;
 import com.bada.badaback.myplace.domain.MyPlace;
 import com.bada.badaback.myplace.service.MyPlaceFindService;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,8 @@ public class KafkaProducerService {
   private final KafkaTemplate<String, AlarmDto> kafkaTemplate;
 
   public String sendAlarm(AlarmDto alarmDto) {
-    log.info("################## 아이 알림 발생. alarmDto.toString {}", alarmDto.toString());
+    log.info("====================================== 아이 알림 요청. alarmDto.toString {}", alarmDto.toString());
+    log.info("====================================== 아이 알림 생성 시각 {}", LocalDateTime.now());
 
     /** 출발과 도착 감지 **/
     if (alarmDto.getType().equals("DEPART")) {
@@ -86,6 +88,7 @@ public class KafkaProducerService {
       alarmDto.setDestinationIcon(myPlace.getIcon());
 
       kafkaTemplate.send(topic, alarmDto);  // topic에 해당하는 이름 없으면 자동 생성됨
+      log.info("====================================== DB 조회후 알림 토픽으로 메세지 전송 시각 {}", LocalDateTime.now());
       return "child is OFF_COURSE : send alarm";
     } else {
       return "child is ON_COURSE : not send alarm";
