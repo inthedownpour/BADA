@@ -39,7 +39,7 @@ class AuthApiControllerTest extends ControllerTest {
                     .signup(any(), any(), any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
-                    .login(anyLong());
+                    .login(anyLong(), any());
 
             // when
             final AuthSignUpRequestDto request = createAuthSignUpRequestDto();
@@ -71,7 +71,7 @@ class AuthApiControllerTest extends ControllerTest {
                     .join(any(), any(), any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
-                    .login(anyLong());
+                    .login(anyLong(), any());
 
             // when
             final AuthJoinRequestDto request = createAuthJoinRequestDto();
@@ -103,7 +103,7 @@ class AuthApiControllerTest extends ControllerTest {
                     .joinChild(any(), any(), any(), any(), any());
             doReturn(loginResponseDto)
                     .when(authService)
-                    .login(anyLong());
+                    .login(anyLong(), any());
 
             // when
             final AuthJoinRequestDto request = createAuthJoinRequestDto();
@@ -156,7 +156,7 @@ class AuthApiControllerTest extends ControllerTest {
                     .AlreadyMember(any(), any());
             doReturn(createLoginResponseDto())
                     .when(authService)
-                    .login(anyLong());
+                    .login(anyLong(), any());
 
             // when
             final AuthAlreadyRequestDto request = createAuthAlreadyRequestDto();
@@ -236,7 +236,7 @@ class AuthApiControllerTest extends ControllerTest {
     }
 
     private AuthAlreadyRequestDto createAuthAlreadyRequestDto() {
-        return new AuthAlreadyRequestDto("abc@naver.com", "KAKAO");
+        return new AuthAlreadyRequestDto("abc@naver.com", "KAKAO", "fcmToken");
     }
 }
 
