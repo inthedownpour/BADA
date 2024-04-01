@@ -39,8 +39,12 @@ public class KafkaProducerService {
 
       alarmDto.setContent(member.getName() + "님이 " + alarmDto.getDestinationName() + "로 출발했습니다.");
       alarmDto.setChildName(member.getName());
-      alarmDto.setPhone(member.getPhone());
-      alarmDto.setProfileUrl(member.getProfileUrl());
+
+      String phoneString = alarmDto.getPhone() == null ? "" : alarmDto.getPhone();
+      alarmDto.setPhone(phoneString);
+      String profileUrlString = alarmDto.getProfileUrl() == null ? "" : alarmDto.getProfileUrl();
+      alarmDto.setProfileUrl(profileUrlString);
+
       alarmDto.setDestinationName(myPlace.getPlaceName());
       alarmDto.setDestinationIcon(myPlace.getIcon());
 
@@ -53,8 +57,12 @@ public class KafkaProducerService {
 
       alarmDto.setContent(member.getName() + "님이 " + alarmDto.getDestinationName() + "에 도착하였습니다.");
       alarmDto.setChildName(member.getName());
-      alarmDto.setPhone(member.getPhone());
-      alarmDto.setProfileUrl(member.getProfileUrl());
+
+      String phoneString = alarmDto.getPhone() == null ? "" : alarmDto.getPhone();
+      alarmDto.setPhone(phoneString);
+      String profileUrlString = alarmDto.getProfileUrl() == null ? "" : alarmDto.getProfileUrl();
+      alarmDto.setProfileUrl(profileUrlString);
+
       alarmDto.setDestinationName(myPlace.getPlaceName());
       alarmDto.setDestinationIcon(myPlace.getIcon());
 
@@ -82,8 +90,12 @@ public class KafkaProducerService {
       alarmDto.setType("OFF COURSE");
       alarmDto.setContent(member.getName() + "님이 경로를 이탈하였습니다!");
       alarmDto.setChildName(member.getName());
-      alarmDto.setPhone(member.getPhone());
-      alarmDto.setProfileUrl(member.getProfileUrl());
+
+      String phoneString = alarmDto.getPhone() == null ? "" : alarmDto.getPhone();
+      alarmDto.setPhone(phoneString);
+      String profileUrlString = alarmDto.getProfileUrl() == null ? "" : alarmDto.getProfileUrl();
+      alarmDto.setProfileUrl(profileUrlString);
+
       alarmDto.setDestinationName(myPlace.getPlaceName());
       alarmDto.setDestinationIcon(myPlace.getIcon());
 
