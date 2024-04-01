@@ -29,10 +29,11 @@ public class FcmService   {
   public void sendMessageTo(AlarmDto alarmDto, Member member) throws IOException {
     String message = makeMessage(alarmDto, member);
     log.info("################## 작성된 message 내용 출력 : {}", message);
-
     OkHttpClient client = new OkHttpClient();
-    RequestBody requestBody = RequestBody.create(message,
-        MediaType.get("application/json; charset=utf-8"));
+
+    RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
+    log.info("################## requestBody.toString() : {}", requestBody.toString());
+
     Request request = new Request.Builder()
         .url(FCM_API_URL)
         .post(requestBody)
@@ -40,8 +41,11 @@ public class FcmService   {
         .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
         .build();
 
-    Response response = client.newCall(request).execute();
-    log.info("##################  response.body().string() : {}", response.body().string());
+    // Response response = client.newCall(request).execute();
+    try (Response response = client.newCall(request).execute()) {
+      log.info("##################  response.body().string() : {}", response.body().string());
+    }
+
   }
 
   private String makeMessage(AlarmDto alarmDto, Member member) throws JsonProcessingException {
