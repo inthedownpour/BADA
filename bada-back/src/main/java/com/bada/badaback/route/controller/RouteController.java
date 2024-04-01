@@ -7,11 +7,13 @@ import com.bada.badaback.route.dto.RouteResponseDto;
 import com.bada.badaback.route.service.RouteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/route")
 @RequiredArgsConstructor
@@ -42,7 +44,10 @@ public class RouteController {
      */
     @GetMapping("/{childId}")
     public ResponseEntity<RouteResponseDto> getRoute(@ExtractPayload Long memberId, @PathVariable("childId") Long childId) {
+        log.info("===============childId로 경로 조회 Controller==================");
         RouteResponseDto routeResponseDto = routeService.getRoute(memberId, childId);
+        log.info("==================Service에서 결과 도착======================");
+        log.info("결과: {}",routeResponseDto);
         return ResponseEntity.ok(routeResponseDto);
     }
 
