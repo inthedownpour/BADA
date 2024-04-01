@@ -22,7 +22,7 @@ public class AuthApiController {
     public ResponseEntity<LoginResponseDto> signup(@RequestBody @Valid AuthSignUpRequestDto requestDto) {
         Long memberId = authService.signup(requestDto.name(), requestDto.phone(), requestDto.email(),
                 requestDto.social(), requestDto.profileUrl(), requestDto.familyName(), requestDto.fcmToken());
-        LoginResponseDto responseDto = authService.login(memberId);
+        LoginResponseDto responseDto = authService.login(memberId, requestDto.fcmToken());
         authCodeService.issueCode(memberId);
         return ResponseEntity.ok(responseDto);
     }
@@ -31,7 +31,7 @@ public class AuthApiController {
     public ResponseEntity<LoginResponseDto> join(@RequestBody @Valid AuthJoinRequestDto requestDto) {
         Long memberId = authService.join(requestDto.name(), requestDto.phone(), requestDto.email(),
                 requestDto.social(), requestDto.profileUrl(), requestDto.code(), requestDto.fcmToken());
-        LoginResponseDto responseDto = authService.login(memberId);
+        LoginResponseDto responseDto = authService.login(memberId, requestDto.fcmToken());
         authCodeService.issueCode(memberId);
         return ResponseEntity.ok(responseDto);
     }
@@ -40,7 +40,7 @@ public class AuthApiController {
     public ResponseEntity<LoginResponseDto> joinChild(@RequestBody @Valid AuthJoinChildRequestDto requestDto) {
         Long memberId = authService.joinChild(requestDto.name(), requestDto.phone(), requestDto.profileUrl(), requestDto.code(),
                 requestDto.fcmToken());
-        LoginResponseDto responseDto = authService.login(memberId);
+        LoginResponseDto responseDto = authService.login(memberId, requestDto.fcmToken());
         authCodeService.issueCode(memberId);
         return ResponseEntity.ok(responseDto);
     }
@@ -51,7 +51,7 @@ public class AuthApiController {
         if(memberId == null){
             return ResponseEntity.noContent().build();
         }
-        LoginResponseDto responseDto = authService.login(memberId);
+        LoginResponseDto responseDto = authService.login(memberId, requestDto.fcmToken());
         authCodeService.issueCode(memberId);
         return ResponseEntity.ok(responseDto);
     }

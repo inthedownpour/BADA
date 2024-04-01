@@ -42,10 +42,6 @@ public class AuthService {
             Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, familyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
-        else {
-            Member findMember = memberFindService.findById(memberId);
-            findMember.updateFcmToken(fcmToken);
-        }
 
         return memberId;
     }
@@ -63,10 +59,6 @@ public class AuthService {
             Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, findFamilyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
-        else {
-            Member findMember = memberFindService.findById(memberId);
-            findMember.updateFcmToken(fcmToken);
-        }
 
         return memberId;
     }
@@ -83,17 +75,13 @@ public class AuthService {
             Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
-        else {
-            Member findMember = memberFindService.findById(memberId);
-            findMember.updateFcmToken(fcmToken);
-        }
 
         return memberId;
     }
 
 
     @Transactional
-    public LoginResponseDto login(Long memberId) {
+    public LoginResponseDto login(Long memberId, String fcmToken) {
         Member member = memberFindService.findById(memberId);
         Family family = familyFindService.findByFamilyCode(member.getFamilyCode());
 
@@ -104,6 +92,7 @@ public class AuthService {
         String accessToken = jwtProvider.createAccessToken(member.getId(), member.getRole());
         String refreshToken = jwtProvider.createRefreshToken(member.getId(), member.getRole());
         tokenService.synchronizeRefreshToken(member.getId(), refreshToken);
+        member.updateFcmToken(fcmToken);
 
         return LoginResponseDto.builder()
                 .memberId(member.getId())
