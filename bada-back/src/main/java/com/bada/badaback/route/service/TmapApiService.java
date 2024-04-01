@@ -74,7 +74,6 @@ public class TmapApiService {
             JsonObject jsonObject2 = jsonParser.parse(String.valueOf(jsonArray.get(i))).getAsJsonObject().get("geometry").getAsJsonObject();
             JsonObject jsonObject3 = jsonParser.parse(String.valueOf(jsonObject2)).getAsJsonObject();
             String type = jsonObject3.get("type").toString();
-            log.info(jsonObject3.toString());
             if (type.equals("\"Point\"")) {
                 JsonArray pointArray = (JsonArray) jsonParser.parse(jsonObject2.get("coordinates").toString());
                 double Lng = Double.parseDouble(String.valueOf(pointArray.get(0)));
