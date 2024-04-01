@@ -12,6 +12,7 @@ import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.domain.MemberRepository;
 import com.bada.badaback.member.domain.SocialType;
 import com.bada.badaback.member.service.MemberFindService;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,10 @@ public class AuthService {
             Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, familyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
+        else {
+            Member findMember = memberFindService.findById(memberId);
+            findMember.updateFcmToken(fcmToken);
+        }
 
         return memberId;
     }
@@ -59,6 +64,10 @@ public class AuthService {
             Member member = Member.createMember(name, phone, email, SocialType.valueOf(social), 1, profileUrl, findFamilyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
         }
+        else {
+            Member findMember = memberFindService.findById(memberId);
+            findMember.updateFcmToken(fcmToken);
+        }
 
         return memberId;
     }
@@ -74,6 +83,10 @@ public class AuthService {
         if(memberId == null) {
             Member member = Member.createMember(name, phone, "", SocialType.valueOf("CHILD"), 0, profileUrl, findFamilyCode, fcmToken);
             memberId = memberRepository.save(member).getId();
+        }
+        else {
+            Member findMember = memberFindService.findById(memberId);
+            findMember.updateFcmToken(fcmToken);
         }
 
         return memberId;
