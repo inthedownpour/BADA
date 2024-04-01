@@ -6,7 +6,7 @@ import 'package:bada_kids_front/model/screen_size.dart';
 import 'package:bada_kids_front/provider/map_provider.dart';
 import 'package:bada_kids_front/provider/profile_provider.dart';
 import 'package:bada_kids_front/screen/main/navigator/destination_select_screen.dart';
-import 'package:bada_kids_front/screen/existing_route_screen.dart';
+import 'package:bada_kids_front/screen/main/navigator/path_find/existing_route_screen.dart';
 import 'package:bada_kids_front/screen/main/navigator/fam_member.dart';
 import 'package:bada_kids_front/screen/main/navigator/profile_edit.dart';
 import 'package:bada_kids_front/screen/main/navigator/settings.dart';
@@ -29,9 +29,8 @@ class _HomeScreenState extends State<HomeScreen>
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   final ImagePicker _picker = ImagePicker();
 
-  // Provider
-  MapProvider mapProvider = MapProvider.instance;
-  final ProfileProvider _profileProvider = ProfileProvider.instance;
+  late ProfileProvider _profileProvider;
+  late MapProvider _mapProvider;
 
   // 변수
   XFile? _imageFile;
@@ -39,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen>
   String? _profileUrl;
   String? _name;
   int? _memberId;
+  int? _movingState;
   Future<void>? _load;
 
   Future<void> _loadProfile() async {
@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen>
       _profileUrl = _profileProvider.profileUrl;
       _name = _profileProvider.name;
       _memberId = _profileProvider.memberId;
+      _movingState = _profileProvider.movingState;
     });
   }
 
@@ -57,6 +58,9 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this); // Observer 등록
     _lottieController = AnimationController(vsync: this);
+    _mapProvider = MapProvider.instance;
+    _profileProvider = ProfileProvider.instance;
+
     _load = _loadProfile().then((value) => setState(() {}));
   }
 
@@ -74,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen>
     // 앱이 다시 활성화될 때 애니메이션을 재시작합니다.
     if (state == AppLifecycleState.resumed) {
       _lottieController.repeat();
-      _load = _loadProfile();
+      _profileProvider = ProfileProvider.instance;
+      _load = _loadProfile().then((value) => setState(() {}));
     }
   }
 
@@ -131,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen>
                         Button714_300(
                           label: '안심 경로 찾기',
                           onPressed: () {
-                            mapProvider.isGuideMode
+                            _profileProvider.movingState == 1
                                 ? Navigator.push(
                                         context,
                                         MaterialPageRoute(

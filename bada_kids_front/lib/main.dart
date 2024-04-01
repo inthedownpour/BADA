@@ -21,6 +21,7 @@ void main() async {
   KakaoSdk.init(
     nativeAppKey: '9d4c295f031b5c1f50269e353e895e12',
   );
+
   runApp(const MyApp());
 }
 
