@@ -14,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class AlarmLogResponseDto {
   private String type;
-  private Long memberId;
+  private Long alarmId;
   private Long childId;
   private boolean isRead;
   private LocalDateTime createAt;
