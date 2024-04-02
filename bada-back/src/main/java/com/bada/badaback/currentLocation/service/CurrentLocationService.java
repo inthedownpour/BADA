@@ -8,9 +8,13 @@ import com.bada.badaback.global.exception.BaseException;
 import com.bada.badaback.member.domain.Member;
 import com.bada.badaback.member.service.MemberFindService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class CurrentLocationService {
         Member findMember= memberFindService.findById(memberId);
 
         CurrentLocation currentLocation = CurrentLocation.createCurrentLocation(findMember, currentLatitude, currentLongitude);
+        log.info(LocalDateTime.now() + " 현재 위치 생성");
         return currentLocationRepository.save(currentLocation).getId();
     }
 
@@ -33,6 +38,7 @@ public class CurrentLocationService {
         CurrentLocation currentLocation = currentLocationFindService.findByMember(findMember);
 
         currentLocation.updateCurrentLocation(currentLatitude, currentLongitude);
+        log.info(LocalDateTime.now() + " 현재 위치 업데이트");
     }
 
     @Transactional
@@ -41,6 +47,7 @@ public class CurrentLocationService {
         CurrentLocation currentLocation = currentLocationFindService.findByMember(findMember);
 
         currentLocationRepository.delete(currentLocation);
+        log.info(LocalDateTime.now() + " 현재 위치 삭제");
     }
 
     // 부모가 읽는 아이 위치 정보
