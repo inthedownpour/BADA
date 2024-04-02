@@ -1,5 +1,4 @@
 import 'package:bada/models/category_icon_mapper.dart';
-import 'package:bada/provider/map_provider.dart';
 import 'package:bada/screens/main/my_place/screen/add_place.dart';
 import 'package:bada/screens/main/path_recommend/model/departure_destination.dart';
 import 'package:bada/widgets/longText_handler.dart';
@@ -29,7 +28,6 @@ class SearchMapForPathScreen extends StatefulWidget {
 
 class _SearchMapForPathScreenState extends State<SearchMapForPathScreen> {
   late KakaoMapController mapController;
-  late MapProvider mapProvider;
   late LatLng searchedLocation;
   late String accessToken;
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();

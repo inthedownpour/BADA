@@ -233,7 +233,7 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
                     containedInkWell: true,
                     child: const Text(
                       '회원탈퇴',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18, color: Colors.red),
                     ),
                   ),
                   SizedBox(height: UIhelper.scaleHeight(context) * 40),
@@ -256,6 +256,11 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
       return phoneNumber;
     }
 
+    String formatCreatedAt(String createdAt) {
+      createdAt = createdAt.substring(0, 10);
+      return '$createdAt 가입';
+    }
+
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +278,7 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.tag),
+                      const Icon(Icons.person),
                       SizedBox(
                         width: deviceWidth * 0.02,
                       ),
@@ -298,15 +303,8 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
                       Text("${userData['email']}"),
                     ],
                   ),
-                  Row(
-                    children: [
-                      const Icon(Icons.person),
-                      SizedBox(
-                        width: deviceWidth * 0.02,
-                      ),
-                      Text("${userData['createdAt']}"),
-                    ],
-                  ),
+                  SizedBox(height: deviceHeight * 0.02),
+                  Text(formatCreatedAt(userData['createdAt']!)),
                 ],
               ),
             ),

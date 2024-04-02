@@ -1,5 +1,4 @@
 import 'package:bada/models/category_icon_mapper.dart';
-import 'package:bada/provider/map_provider.dart';
 import 'package:bada/screens/main/my_place/screen/add_place.dart';
 import 'package:bada/widgets/longText_handler.dart';
 import 'package:bada/widgets/screensize.dart';
@@ -33,7 +32,6 @@ class SearchMapScreen extends StatefulWidget {
 class _SearchMapScreenState extends State<SearchMapScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late KakaoMapController mapController;
-  late MapProvider mapProvider;
   late LatLng searchedLocation;
   late String accessToken;
   FlutterSecureStorage secureStorage = const FlutterSecureStorage();
@@ -167,7 +165,9 @@ class _SearchMapScreenState extends State<SearchMapScreen>
                     readOnly: true,
                     maxLines: 1,
                     style: const TextStyle(
-                        fontSize: 16, overflow: TextOverflow.ellipsis),
+                      fontSize: 16,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
                       filled: true,
