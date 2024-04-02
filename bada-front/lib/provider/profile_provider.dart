@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bada/models/user_profile.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:bada/social_login/kakao_login.dart';
@@ -13,7 +14,6 @@ import 'package:sms_autofill/sms_autofill.dart';
 
 class ProfileProvider extends ChangeNotifier {
   final _storage = const FlutterSecureStorage();
-
   ProfileProvider() {
     _loadProfileFromStorage();
   }
@@ -46,11 +46,18 @@ class ProfileProvider extends ChangeNotifier {
   final _createdAtKey = 'createdAt';
   final _familyNameKey = 'familyName';
 
+  Future<String?> getFcmToken() async {
+    return await FirebaseMessaging.instance.getToken();
+  }
+
   Future<bool> profileDbCheck() async {
+    final fcmToken = await getFcmToken();
+
     // requestBody 설정
     final Map<String, dynamic> requestBody = {
       'email': email,
       'social': social,
+      'fcmToken': fcmToken,
     };
     debugPrint('email: $email, social: $social');
     // HTTP POST 요청 수행
