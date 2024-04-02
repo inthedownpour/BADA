@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bada/screens/main/my_family/screen/fam_member.dart';
+import 'package:bada/widgets/alarm.dart';
 import 'package:bada/widgets/appbar.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,15 @@ class _AlarmScreenState extends State<AlarmScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('사진을 클릭하여 알림 목록을 확인하세요!'),
+            const Row(
+              children: [
+                Text(
+                  '사진',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('을 클릭하여 알림 목록을 확인하세요!'),
+              ],
+            ),
             SizedBox(
               height: UIhelper.deviceHeight(context) * .02,
             ),
@@ -105,18 +114,24 @@ class _AlarmScreenState extends State<AlarmScreen> {
                 ),
               ],
             ),
-            const Column(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text('알람 종류와 설명'),
-                  ],
+                const Text(
+                  '알림 종류와 설명',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                Row(
-                  children: [
-                    Text('바래다줄게 앱의 알람은 총 5가지 종류가 있습니다'),
-                  ],
+                const Text('바래다줄게 앱의 알림은 총 5가지 종류가 있습니다'),
+                Alarm(type: 'DEPART', createdAt: DateTime.now().toString()),
+                const Text('아이가 출발하기 버튼을 눌렀을 때 오는 알림입니다'),
+                Alarm(type: 'ARRIVE', createdAt: DateTime.now().toString()),
+                const Text('장소에 도착하거나, 도착하기 버튼을 눌렀을 때 오는 알립입니다'),
+                Alarm(type: 'OFF COURSE', createdAt: DateTime.now().toString()),
+                const Text('정해진 경로나 지역에서 이탈했을 때 오는 알림입니다'),
+                SizedBox(
+                  height: UIhelper.deviceHeight(context) * 0.02,
                 ),
+                const Text('버튼을 클릭하여 애니메이션을 확인해보세요!'),
               ],
             ),
           ],

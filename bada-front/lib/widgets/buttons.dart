@@ -1,6 +1,10 @@
+import 'dart:ui';
+
 import 'package:bada/screens/main/my_place/screen/my_place_detail.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:lottie/lottie.dart';
 
 class MainLarge extends StatefulWidget {
   final String label;
@@ -149,6 +153,113 @@ class MainSmallState extends State<MainSmall> {
                   ],
                 )
               : const SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+}
+
+class MainSmall2 extends StatefulWidget {
+  final String label;
+  final Color backgroundColor, foregroundColor;
+  final Widget? buttonImage;
+  final double imageWidth, imageHeight, padRight, padBottom;
+  final void Function()? onPressed;
+  final String unreadAlarm;
+
+  const MainSmall2({
+    super.key,
+    required this.label,
+    this.backgroundColor = const Color(0xffFEFEFE),
+    this.foregroundColor = Colors.black,
+    this.buttonImage,
+    this.imageWidth = 50,
+    this.imageHeight = 50,
+    this.padRight = 10,
+    this.padBottom = 10,
+    this.onPressed,
+    required this.unreadAlarm,
+  });
+
+  @override
+  State<MainSmall2> createState() => MainSmall2State();
+}
+
+class MainSmall2State extends State<MainSmall2> with TickerProviderStateMixin {
+  late final AnimationController _alarmController;
+
+  @override
+  void initState() {
+    super.initState();
+    _alarmController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _alarmController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = widget.buttonImage != null;
+    final ButtonStyle style = ElevatedButton.styleFrom(
+      elevation: 5,
+      padding: EdgeInsets.fromLTRB(20, 20, widget.padRight, widget.padBottom),
+      backgroundColor: widget.backgroundColor,
+      foregroundColor: widget.foregroundColor,
+      textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
+      fixedSize: Size(
+        UIhelper.scaleWidth(context) * 120,
+        UIhelper.scaleHeight(context) * 180,
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    );
+
+    return ElevatedButton(
+      style: style,
+      onPressed: widget.onPressed,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.label,
+              ),
+              if (widget.unreadAlarm != '0')
+                CircleAvatar(
+                  backgroundColor: const Color(0xffFF6969),
+                  radius: 15,
+                  child: Text(
+                    widget.unreadAlarm,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: UIhelper.scaleWidth(context) * widget.imageWidth,
+                height: UIhelper.scaleHeight(context) * widget.imageHeight,
+                child: Lottie.asset(
+                  'assets/lottie/notification.json',
+                  controller: _alarmController,
+                  onLoaded: ((p0) {
+                    _alarmController.duration = p0.duration;
+                    if (widget.unreadAlarm == 0) {
+                      _alarmController.stop();
+                    } else {
+                      _alarmController.repeat();
+                    }
+                  }),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
