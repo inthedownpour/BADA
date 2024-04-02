@@ -63,12 +63,33 @@ class Data {
   }
 }
 
-// Example of how to parse the JSON message
+class AlarmModel {
+  final int alarmId, childId;
+  final String createdAt, type;
+  final bool read;
+
+  AlarmModel({
+    required this.alarmId,
+    required this.createdAt,
+    required this.type,
+    required this.childId,
+    required this.read,
+  });
+
+  factory AlarmModel.fromJson(Map<String, dynamic> json) {
+    return AlarmModel(
+      alarmId: json['alarmId'],
+      createdAt: json['createAt'],
+      type: json['type'],
+      childId: json['childId'],
+      read: json['read'],
+    );
+  }
+}
+
 void handleIncomingFcmMessage(String jsonString) {
   final parsedJson = json.decode(jsonString);
   final fcmMessage = FcmMessage.fromJson(parsedJson['message']);
 
-  // Now you can access your data easily
   print(fcmMessage.data.childName);
-  // Add your handling logic here
 }
