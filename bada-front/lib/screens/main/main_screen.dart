@@ -246,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen>
                         controller: _lottieController,
                         onLoaded: ((p0) {
                           _lottieController.duration = p0.duration;
-                          _lottieController.forward();
+                          _lottieController.stop();
                         }),
                       ),
                       onPressed: () {
