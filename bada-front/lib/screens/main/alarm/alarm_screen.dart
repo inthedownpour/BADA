@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bada/screens/main/my_family/screen/fam_member.dart';
+import 'package:bada/widgets/appbar.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -51,10 +52,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('알람'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
+      appBar: const CustomAppBar(
+        title: '알림',
       ),
       body: Container(
         padding: const EdgeInsets.all(20),

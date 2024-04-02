@@ -16,7 +16,7 @@ class AlarmTest extends StatefulWidget {
 
 class _AlarmTestState extends State<AlarmTest> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  String? _familyCode, _name;
+  String? _familyCode, _name, _phone, _profileUrl;
   int? _memberId;
   MapProvider mapProvider = MapProvider.instance;
 
@@ -41,6 +41,8 @@ class _AlarmTestState extends State<AlarmTest> {
         _familyCode = data['familyCode'];
         _name = data['name'];
         _memberId = data['memberId'];
+        _phone = data['phone'];
+        _profileUrl = data['profileUrl'];
         fcmToken = FirebaseMessaging.instance.getToken();
       });
     }
@@ -71,8 +73,14 @@ class _AlarmTestState extends State<AlarmTest> {
                 sendAlarm(
                   familyCode: _familyCode!,
                   memberId: _memberId!,
-                  latitude: currentLocation.latitude,
-                  longitude: currentLocation.longitude,
+                  childeName: _name!,
+                  latitude: currentLocation.latitude.toString(),
+                  longitude: currentLocation.longitude.toString(),
+                  type: 'DEFAULT',
+                  phone: _phone ?? '',
+                  profileUrl: _profileUrl ?? '',
+                  destinationName: '10시35분 테스트',
+                  destinationIcon: 'assets/img/bag.png',
                 );
               },
               child: const Text('test'),
@@ -85,9 +93,15 @@ class _AlarmTestState extends State<AlarmTest> {
 
   Future<void> sendAlarm({
     required String familyCode,
+    required String childeName,
+    required String type,
+    required String phone,
+    required String profileUrl,
+    required String destinationName,
+    required String destinationIcon,
+    required String latitude,
+    required String longitude,
     required int memberId,
-    required double latitude,
-    longitude,
   }) async {
     var url = Uri.parse('https://j10b207.p.ssafy.io/api/kafka/alarm');
 
@@ -101,23 +115,28 @@ class _AlarmTestState extends State<AlarmTest> {
         // 'Authorization': 'Bearer $accessToken'
       },
       body: jsonEncode(<String, dynamic>{
-        'type': 'ALARM-TYPE',
-        'familyCode': familyCode,
-        'memberId': memberId,
-        'content': '용준씨 엠엠 보세요',
-        'latitude': currLocation.latitude,
-        'longitude': currLocation.longitude,
+        "type": "DEPART",
+        "memberId": memberId,
+        "familyCode": familyCode,
+        "myPlaceId": 10,
+        "latitude": currLocation.latitude,
+        "longitude": currLocation.longitude,
+        "content": "용준씨 어디계세요 지금 찾고 있습니다. 13시 46분",
+        "childName": childeName,
+        "phone": phone,
+        "profileUrl": profileUrl,
+        "destinationName": destinationName,
+        "destinationIcon": destinationIcon
       }),
     );
 
     var fcmToken = await FirebaseMessaging.instance.getToken();
 
     if (response.statusCode == 200) {
-      print(currLocation);
-      print('Success: ${response.body}');
-      print('$familyCode $memberId');
+      debugPrint(fcmToken);
     } else {
-      throw Exception('Failed to load data');
+      String decodedBody = utf8.decode(response.bodyBytes);
+      throw Exception('Failed to load data $decodedBody, $fcmToken');
     }
   }
 }
