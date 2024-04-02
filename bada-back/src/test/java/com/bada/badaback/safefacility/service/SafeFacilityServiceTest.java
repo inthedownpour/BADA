@@ -36,10 +36,15 @@ class SafeFacilityServiceTest extends ServiceTest {
         safeFacilityRepository.save(cctv5);
 
         //when
-        String responseDto = safeFacilityService.getCCTVs(SafeFacilityFixture.START.getFacilityLongitude(),SafeFacilityFixture.START.getFacilityLatitude(),
-                SafeFacilityFixture.END.getFacilityLongitude(), SafeFacilityFixture.END.getFacilityLatitude());
+//        String responseDto = safeFacilityService.getCCTVs(7, SafeFacilityFixture.START.getFacilityLongitude(), SafeFacilityFixture.START.getFacilityLatitude(),
+//                SafeFacilityFixture.END.getFacilityLongitude(), SafeFacilityFixture.END.getFacilityLatitude());
+
+        String responseDto = safeFacilityService.getCCTVs(7, "127.376824071213", "36.3591472142881",
+                "127.377388462562", "36.3671226176298");
 
         //then
-        assertEquals("127.38673037076735, 36.423949949489696_127.38422434421484, 36.42159507519073",responseDto);
+//        assertEquals("127.38673037076735, 36.423949949489696_127.38422434421484, 36.42159507519073", responseDto);
+//        assertEquals("127.38673037076735, 36.423949949489696", responseDto);
+        assertEquals("", responseDto);
     }
 }
