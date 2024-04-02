@@ -29,8 +29,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+
+            </intent-filter>
+            <intent-filter>
                 <data android:host="kakaolink"
-                    android:scheme="kakao9d4c295f031b5c1f50269e353e895e12" />
+                android:scheme="kakao9d4c295f031b5c1f50269e353e895e12" />
             </intent-filter>
         </activity>
 

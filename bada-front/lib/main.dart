@@ -1,4 +1,5 @@
 import 'package:bada/loading_screen.dart';
+import 'package:bada/models/alarm_model.dart';
 import 'package:bada/models/screen_size.dart';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/widgets/alarm.dart';
@@ -18,7 +19,7 @@ import 'firebase_options.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   print("Handling a background message: ${message.messageId}");
 }
 
@@ -44,27 +45,32 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
+    print('Got a message whilst in the 아오 씨발!');
+    print('Message data 수정 2: ${message.data}');
+
+    FcmMessage fcmMessage = FcmMessage(
+      token: message.data['token'] ?? '',
+      notification: NotificationData(
+        title: message.notification?.title ?? '',
+        body: message.notification?.body ?? '',
+      ),
+      data: Data.fromJson(message.data),
+    );
 
     if (message.notification != null) {
       showOverlayNotification(
         (context) {
           return ForeGroundAlarm(
-            childId: '1',
-            title: message.notification?.title ?? '알람',
-            message: message.notification?.body ?? '바디',
-            type: '글쎄',
+            fcmMessage: fcmMessage,
             onConfirm: () {
               OverlaySupportEntry.of(context)!.dismiss();
             },
             onClose: () {
               OverlaySupportEntry.of(context)!.dismiss();
             },
-            imageUrl: 'assets/img/bag.png',
           );
         },
-        duration: const Duration(seconds: 10),
+        duration: const Duration(minutes: 10),
       );
     }
   });
