@@ -26,7 +26,7 @@ public class Route {
     @Column(nullable = false, length = 100)
     private String endLongitude;
 
-    @Column(nullable = false, length = 5000)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String pointList;
 
     @OneToOne(fetch = FetchType.LAZY)
