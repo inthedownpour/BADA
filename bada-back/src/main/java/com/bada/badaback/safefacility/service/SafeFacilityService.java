@@ -7,12 +7,14 @@ import com.bada.badaback.safefacility.domain.Tile;
 import com.uber.h3core.H3Core;
 import com.uber.h3core.util.LatLng;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class SafeFacilityService {
 
     /**
      * 경로찾기 알고리즘 구현
+     * @param layerDepth
      * @param startX
      * @param startY
      * @param endX
@@ -28,7 +31,8 @@ public class SafeFacilityService {
      * @return
      * @throws IOException
      */
-    public String getCCTVs(String startX, String startY, String endX, String endY) throws IOException {
+    public String getCCTVs(int layerDepth, String startX, String startY, String endX, String endY) throws IOException {
+        log.info("============getCCTVs Service start==============");
         Point start = new Point(Double.parseDouble(startY), Double.parseDouble(startX));
         Point end = new Point(Double.parseDouble(endY), Double.parseDouble(endX));
 
@@ -92,7 +96,8 @@ public class SafeFacilityService {
 
             if (BigHexagon.contains(cctvHexagon)) {
                 Tile tile = new Tile(cctvHexagon);
-                tile.setLeftDist(h3.gridDistance(endHexAddr,cctvHexagon));
+                tile.setLeftDist(h3.gridDistance(endHexAddr, cctvHexagon));
+                tile.setDist(h3.gridDistance(startHexAddr, cctvHexagon));
                 if (cctvHexagons.containsKey(cctvHexagon)) {
                     Tile preTile = cctvHexagons.get(cctvHexagon);
                     preTile.cctvCount++;
@@ -117,36 +122,16 @@ public class SafeFacilityService {
 
         //3. cctv를 starthexagon을 헥사곤 거리로 기준으로 5등분해서 거리별로 균등하게 cctv를 택할 수 있게 한다.
         //3-1. layer 5개를 만든다.
-        long stoeDistance = h3.gridDistance(startHexAddr, endHexAddr);
         //빈 layer 세팅
-        List<List<Tile>> layer = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            layer.add(new ArrayList<>());
-        }
-
-        layer.get(0).add(new Tile(startHexAddr));
-        //전체 탐색을 돌리고 출발지로부터의 거기를 구하고 전체거리에서 1/5 각 레이어마다 cctv를 넣는다
-        for (String key : cctvHexagons.keySet()) {
-            //출발지부터 현재 까지의 거리
-            long dist = h3.gridDistance(startHexAddr, key);
-            if (dist <= stoeDistance * 0.2) {
-                //첫번째 구간
-                layer.get(1).add(cctvHexagons.get(key));
-            } else if (dist <= stoeDistance * 0.4 && dist > stoeDistance * 0.2) {
-                //두번째 구간
-                layer.get(2).add(cctvHexagons.get(key));
-            } else if (dist <= stoeDistance * 0.6 && dist > stoeDistance * 0.4) {
-                //세번째 구간
-                layer.get(3).add(cctvHexagons.get(key));
-            } else if (dist <= stoeDistance * 0.8 && dist > stoeDistance * 0.6) {
-                //네번째 구간
-                layer.get(4).add(cctvHexagons.get(key));
-            } else {
-                //다섯번째 구간
-                layer.get(5).add(cctvHexagons.get(key));
-            }
-        }
-        layer.get(6).add(new Tile(endHexAddr));
+        List<List<Tile>> layer;
+        layer = makeLayer(layerDepth, startHexAddr, endHexAddr, cctvHexagons);
+//        log.info("============cctv 전체 개수==========");
+//        log.info("개수: {}",cctvHexagons.size());
+//        log.info("============layer 결과==========");
+//        log.info("layer size: {}",layer.size());
+//        for (int i = 0; i < layer.size(); i++) {
+//            log.info("{}번 layer: {}", i, layer.get(i).toString());
+//        }
 
         //4. 각 layer마다 현재의 최선을 선택해서 경유지를 선택하도록 짠다. - dfs 완탐
         //4-1. 다음 layer에 cctvHexagon이 없으면 그 다음 layer 고려해서 판단
@@ -155,6 +140,8 @@ public class SafeFacilityService {
 
         //5. 결정된 hexagon에 있는 cctv의 좌표 passList를 만든다. (만약 여러개의 cctv가 있다면 랜덤으로 도착지에 보낸다.)
         List<Point> passList = hexagonsCoordinates(pass);
+//        log.info("=============경유지 목록==========");
+//        log.info(passList.toString());
 
         StringBuilder sb = new StringBuilder();
         Iterator<Point> passIte = passList.iterator();
@@ -169,7 +156,48 @@ public class SafeFacilityService {
             }
         }
 
+        log.info("===============getCCTVs Service end===============");
         return sb.toString();
+    }
+
+    private List<List<Tile>> makeLayer(int count, String startHexAddr, String endHexAddr, Map<String, Tile> cctvHexagons) throws IOException {
+        List<List<Tile>> layer = new ArrayList<>();
+        H3Core h3 = H3Core.newInstance();
+
+        long stoeDistance = h3.gridDistance(startHexAddr, endHexAddr);
+
+        for (int i = 0; i <= count; i++) {
+            layer.add(new ArrayList<>());
+        }
+        Tile tile = new Tile(startHexAddr);
+        tile.setLeftDist(stoeDistance);
+//        log.info("=============출발지부터 도착지까지의 거리===============");
+//        log.info("stoeDistance: {}",stoeDistance);
+
+        layer.get(0).add(tile);
+        layer.get(count).add(new Tile(endHexAddr));
+        //전체 탐색을 돌리고 출발지로부터의 거기를 구하고 전체거리에서 1/n 각 레이어마다 cctv를 넣는다
+
+        //cctv를 돌면서 알맞은 layer에 넣는다. 만약
+//        log.info("======cctv 레이어 하나 길이=======");
+//        log.info("count: {}",count-1);
+//        log.info("cctv: {}", stoeDistance/(count-1));
+        for (String key : cctvHexagons.keySet()) {
+            int layerNum = getLayerNum(stoeDistance,cctvHexagons.get(key).dist,count-2);
+//            log.info("============cctv Dist 비교===========");
+//            log.info("{}위치의 cctv dist {} | layer: {}",key,cctvHexagons.get(key).dist,layerNum);
+            layer.get(layerNum).add(cctvHexagons.get(key));
+        }
+        return layer;
+    }
+
+    public int getLayerNum(long stoeDistance, long dist, int layerCount){
+        double result = dist / (stoeDistance/layerCount);
+        if(dist%(stoeDistance/layerCount)==0){
+            return (int) result;
+        }else {
+            return (int) result+1;
+        }
     }
 
 
@@ -191,7 +219,7 @@ public class SafeFacilityService {
         String beforeHexAddr = beforeTile.getHexAddr();
 
         H3Core h3 = H3Core.newInstance();
-        if (now >= 6) {
+        if (now >= layer.size() - 2) {
             //endlayer에서 hexaddr을 뽑아서 넣는다
             return route;
         }
