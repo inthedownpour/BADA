@@ -108,6 +108,7 @@ public class TmapApiService {
 
             if (Double.parseDouble(totalDistance) > 1000 && layer > 4) {
                 layer--;
+                pointList = new ArrayList<>();
             } else {
                 break;
             }
