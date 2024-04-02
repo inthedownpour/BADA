@@ -73,6 +73,9 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+
     return FutureBuilder(
       future: _loadProfile(),
       builder: (constext, snapshot) {
@@ -88,12 +91,61 @@ class _HomeScreenState extends State<HomeScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: 200,
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
+                    Stack(
+                      children: [
+                        SizedBox(
+                          width: 200,
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfileEdit(
+                                        nickname: nickname,
+                                        profileUrl: profileUrl,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor:
+                                      Colors.transparent, // 배경 색상을 투명하게 설정
+                                  backgroundImage:
+                                      profileUrl == '' || profileUrl == null
+                                          ? Image.asset(
+                                              'assets/img/default_profile.png',
+                                            ).image
+                                          : NetworkImage(
+                                              profileUrl!,
+                                            ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: UIhelper.scaleWidth(context) * 20,
+                              ),
+                              Text(
+                                '안녕하세요, \n${nickname ?? '사용자'}님!',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          top: deviceHeight * 0.19,
+                          left: deviceWidth * 0.15,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.add_circle,
+                              color: Color(0xff696DFF),
+                              size: 20,
+                            ),
+                            onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -104,32 +156,9 @@ class _HomeScreenState extends State<HomeScreen>
                                 ),
                               );
                             },
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundColor:
-                                  Colors.transparent, // 배경 색상을 투명하게 설정
-                              backgroundImage:
-                                  profileUrl == '' || profileUrl == null
-                                      ? Image.asset(
-                                          'assets/img/default_profile.png',
-                                        ).image
-                                      : NetworkImage(
-                                          profileUrl!,
-                                        ),
-                            ),
                           ),
-                          SizedBox(
-                            width: UIhelper.scaleWidth(context) * 10,
-                          ),
-                          Text(
-                            '안녕하세요, \n${nickname ?? '사용자'}님!',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                     IconButton(
                       onPressed: () {

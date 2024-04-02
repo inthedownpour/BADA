@@ -54,13 +54,15 @@ class _FamMemberState extends State<FamMember> {
     if (response.statusCode == 200) {
       final data = json.decode(utf8.decode(response.bodyBytes));
       final familyListJson = data['familyList'] as List;
-      List<Member> familyList =
+      List<Member> tmpList =
           familyListJson.map((json) => Member.fromJson(json)).toList();
 
-      debugPrint('프로필 정보를 성공적으로 불러왔습니다');
-      for (Member member in familyList) {
-        debugPrint('가족 정보: ${member.name}, ${member.phone}');
-      }
+      List<Member> familyList = tmpList
+          .where((member) =>
+              member.memberId != _memberId &&
+              member.phone != null &&
+              member.phone != "")
+          .toList();
       return familyList; // Future<List<Member>>를 반환합니다.
     } else {
       debugPrint('프로필 정보를 불러오는데 실패했습니다: ${response.body}');
@@ -116,62 +118,54 @@ class _FamMemberState extends State<FamMember> {
                           return const Divider();
                         }
                         Member member = snapshot.data![index];
-                        // _memberId와 동일하지 않을 때만 ListTile을 렌더링합니다.
-                        if (member.memberId != _memberId) {
-                          return Row(
-                            children: [
-                              Expanded(
-                                child: ListTile(
-                                  dense: true,
-                                  leading: member.profileUrl != null
-                                      ? CircleAvatar(
-                                          backgroundImage:
-                                              NetworkImage(member.profileUrl!),
-                                        )
-                                      : const Icon(Icons.account_circle,
-                                          size: 50),
-                                  title: Text(
-                                    member.name,
-                                    style: const TextStyle(fontSize: 20),
-                                  ),
-                                  subtitle: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: deviceHeight * 0.01),
-                                    child: Text(
-                                        formatPhoneNumber(member.phone ?? "")),
-                                  ),
-                                  onTap: () async {},
-                                ),
+
+                        return Row(children: [
+                          Expanded(
+                            child: ListTile(
+                              dense: true,
+                              leading: member.profileUrl != null
+                                  ? CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(member.profileUrl!),
+                                    )
+                                  : const Icon(Icons.account_circle, size: 50),
+                              title: Text(
+                                member.name,
+                                style: const TextStyle(fontSize: 20),
                               ),
-                              GestureDetector(
-                                onTap: () async {
-                                  final Uri launchUri = Uri(
-                                    scheme: 'tel',
-                                    path: member.phone,
-                                  );
-                                  if (await canLaunchUrl(launchUri)) {
-                                    await launchUrl(launchUri);
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text("이 장치에서는 전화를 걸 수 없습니다."),
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: const Icon(
-                                  Icons.phone,
-                                  color: Colors.green,
-                                  size: 30,
-                                ),
+                              subtitle: Padding(
+                                padding:
+                                    EdgeInsets.only(top: deviceHeight * 0.01),
+                                child:
+                                    Text(formatPhoneNumber(member.phone ?? "")),
                               ),
-                              SizedBox(width: deviceWidth * 0.05)
-                            ],
-                          );
-                        } else {
-                          // _memberId와 동일할 때는 아무 것도 렌더링하지 않습니다.
-                          return const SizedBox.shrink();
-                        }
+                              onTap: () async {},
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              final Uri launchUri = Uri(
+                                scheme: 'tel',
+                                path: member.phone,
+                              );
+                              if (await canLaunchUrl(launchUri)) {
+                                await launchUrl(launchUri);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("이 장치에서는 전화를 걸 수 없습니다."),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Icon(
+                              Icons.phone,
+                              color: Colors.green,
+                              size: 30,
+                            ),
+                          ),
+                          SizedBox(width: deviceWidth * 0.05)
+                        ]);
                       },
                       separatorBuilder: (context, index) {
                         // 마지막 아이템의 경우 구분선을 렌더링하지 않습니다.

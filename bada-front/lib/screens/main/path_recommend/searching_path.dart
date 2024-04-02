@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:bada/screens/main/path_recommend/model/path_response.dart';
 import 'package:bada/social_login/login_platform.dart';
 import 'package:bada/screens/main/path_recommend/screen/path_map.dart';
+import 'package:bada/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,6 +32,7 @@ class _SearchingPathState extends State<SearchingPath> {
   List<String> _departureLongitudeList = [];
   List<String> _destinationLatitudeList = [];
   List<String> _destinationLongitudeList = [];
+  bool _isLoading = false;
 
   Future<void> _loadPathSearchHistory() async {
     final prefs = await SharedPreferences.getInstance();
@@ -51,6 +53,7 @@ class _SearchingPathState extends State<SearchingPath> {
 
   Future<void> pathRequest() async {
     try {
+      _isLoading = true;
       var accessToken = await secureStorage.read(key: 'accessToken');
       var url = Uri.parse('https://j10b207.p.ssafy.io/api/path');
       var requestBody = json.encode({
@@ -159,6 +162,10 @@ class _SearchingPathState extends State<SearchingPath> {
       }
     } catch (e) {
       debugPrint('에러 발생: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -171,201 +178,212 @@ class _SearchingPathState extends State<SearchingPath> {
       future: _loadPathSearchHistory(),
       builder: (context, snapshot) {
         return Scaffold(
-          body: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(
-                  deviceWidth * 0.06,
-                  deviceHeight * 0.07,
-                  deviceWidth * 0.00,
-                  deviceHeight * 0.00,
-                ),
-                child: Row(
+          appBar: const CustomAppBar(title: '경로 검색'),
+          body: _isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Column(
                   children: [
-                    Expanded(
-                      child: Column(
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        deviceWidth * 0.06,
+                        deviceHeight * 0.02,
+                        deviceWidth * 0.00,
+                        deviceHeight * 0.02,
+                      ),
+                      child: Row(
                         children: [
-                          GestureDetector(
-                            onTap: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SearchPlaceForPath(),
-                                ),
-                              );
-                              if (result != null) {
-                                setState(() {
-                                  _departureController.text =
-                                      result.pointKeyword;
-                                  _departureLatitude = result.pointY;
-                                  _departureLongitude = result.pointX;
-                                });
-                              }
-                            },
-                            child: AbsorbPointer(
-                              child: SizedBox(
-                                height: deviceHeight * 0.06,
-                                child: TextField(
-                                  controller: _departureController,
-                                  decoration: InputDecoration(
-                                    hintText: '출발지',
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                        color: Colors.black,
-                                        width: 0.1,
+                          Expanded(
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SearchPlaceForPath(),
                                       ),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10.0,
-                                      horizontal: 15.0,
+                                    );
+                                    if (result != null) {
+                                      setState(() {
+                                        _departureController.text =
+                                            result.pointKeyword;
+                                        _departureLatitude = result.pointY;
+                                        _departureLongitude = result.pointX;
+                                      });
+                                    }
+                                  },
+                                  child: AbsorbPointer(
+                                    child: SizedBox(
+                                      height: deviceHeight * 0.06,
+                                      child: TextField(
+                                        controller: _departureController,
+                                        decoration: InputDecoration(
+                                          hintText: '출발지',
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.black,
+                                              width: 0.1,
+                                            ),
+                                          ),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            vertical: 10.0,
+                                            horizontal: 15.0,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                SizedBox(height: deviceHeight * 0.005),
+                                GestureDetector(
+                                  onTap: () async {
+                                    final result = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SearchPlaceForPath(),
+                                      ),
+                                    );
+                                    if (result != null) {
+                                      setState(() {
+                                        _destinationController.text =
+                                            result.pointKeyword;
+                                        _destinationLatitude = result.pointY;
+                                        _destinationLongitude = result.pointX;
+                                      });
+                                    }
+                                  },
+                                  child: AbsorbPointer(
+                                    child: SizedBox(
+                                      height: deviceHeight *
+                                          0.06, // TextField의 표준 높이
+                                      child: TextField(
+                                        controller: _destinationController,
+                                        decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: const BorderSide(
+                                              color: Colors.black,
+                                              width: 0.1,
+                                            ),
+                                          ),
+                                          hintText: '도착지',
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            vertical: 10.0,
+                                            horizontal: 15.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: deviceHeight * 0.005),
-                          GestureDetector(
-                            onTap: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const SearchPlaceForPath(),
-                                ),
-                              );
-                              if (result != null) {
-                                setState(() {
-                                  _destinationController.text =
-                                      result.pointKeyword;
-                                  _destinationLatitude = result.pointY;
-                                  _destinationLongitude = result.pointX;
-                                });
-                              }
-                            },
-                            child: AbsorbPointer(
-                              child: SizedBox(
-                                height: deviceHeight * 0.06, // TextField의 표준 높이
-                                child: TextField(
-                                  controller: _destinationController,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                        color: Colors.black,
-                                        width: 0.1,
-                                      ),
-                                    ),
-                                    hintText: '도착지',
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 10.0,
-                                      horizontal: 15.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                          IconButton(
+                            icon: Transform.rotate(
+                              angle: 90 *
+                                  3.141592653589793 /
+                                  180, // 라디안으로 변환하여 90도 회전
+                              child: const Icon(Icons.compare_arrows_rounded,
+                                  size: 30),
                             ),
+                            onPressed: () {
+                              // 출발지와 도착지를 서로 바꾸기
+                              String tmpText = _departureController.text;
+                              double tmpLatitude = _departureLatitude;
+                              double tmpLongitude = _departureLongitude;
+                              setState(() {
+                                _departureController.text =
+                                    _destinationController.text;
+                                _departureLatitude = _destinationLatitude;
+                                _departureLongitude = _destinationLongitude;
+                                _destinationController.text = tmpText;
+                                _destinationLatitude = tmpLatitude;
+                                _destinationLongitude = tmpLongitude;
+                              });
+                            },
                           ),
                         ],
                       ),
                     ),
-                    IconButton(
-                      icon: Transform.rotate(
-                        angle:
-                            90 * 3.141592653589793 / 180, // 라디안으로 변환하여 90도 회전
-                        child:
-                            const Icon(Icons.compare_arrows_rounded, size: 30),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(
+                        deviceWidth * 0.02,
+                        deviceHeight * 0.01,
+                        deviceWidth * 0.02,
+                        deviceHeight * 0.01,
                       ),
-                      onPressed: () {
-                        // 출발지와 도착지를 서로 바꾸기
-                        String tmpText = _departureController.text;
-                        double tmpLatitude = _departureLatitude;
-                        double tmpLongitude = _departureLongitude;
-                        setState(() {
-                          _departureController.text =
-                              _destinationController.text;
-                          _departureLatitude = _destinationLatitude;
-                          _departureLongitude = _destinationLongitude;
-                          _destinationController.text = tmpText;
-                          _destinationLatitude = tmpLatitude;
-                          _destinationLongitude = tmpLongitude;
-                        });
-                      },
+                      width: deviceWidth * 0.928,
+                      height: deviceHeight * 0.08,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xff696DFF),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // 둥근 정도 조정
+                          ),
+                        ),
+                        onPressed: () async {
+                          await pathRequest();
+                        },
+                        child: const Text('경로 요청'),
+                      ),
+                    ),
+                    Expanded(
+                      child: _departureKeywordList.isEmpty
+                          ? const Center(
+                              // 검색 기록이 없을 때 표시될 위젯
+                              child: Text("경로 검색 기록이 없습니다."),
+                            )
+                          : ListView.builder(
+                              itemCount: _departureKeywordList.length,
+                              itemBuilder: (context, index) {
+                                if (_departureKeywordList.length > index &&
+                                    _destinationKeywordList.length > index) {
+                                  return ListTile(
+                                    title: Text(
+                                      '${_departureKeywordList[index]} -> ${_destinationKeywordList[index]}',
+                                    ),
+                                    trailing: const Icon(Icons.history),
+                                    onTap: () {
+                                      // 해당 검색 기록으로 다시 검색
+                                      _departureController.text =
+                                          _departureKeywordList[index];
+                                      _destinationController.text =
+                                          _destinationKeywordList[index];
+                                      _departureLatitude = double.parse(
+                                          _departureLatitudeList[index]);
+                                      _departureLongitude = double.parse(
+                                        _departureLongitudeList[index],
+                                      );
+                                      _destinationLatitude = double.parse(
+                                        _destinationLatitudeList[index],
+                                      );
+                                      _destinationLongitude = double.parse(
+                                        _destinationLongitudeList[index],
+                                      );
+                                    },
+                                  );
+                                }
+                                return null;
+                              },
+                            ),
                     ),
                   ],
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(
-                  deviceWidth * 0.02,
-                  deviceHeight * 0.01,
-                  deviceWidth * 0.02,
-                  deviceHeight * 0.01,
-                ),
-                width: deviceWidth * 0.928,
-                height: deviceHeight * 0.08,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xff696DFF),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10), // 둥근 정도 조정
-                    ),
-                  ),
-                  onPressed: () async {
-                    await pathRequest();
-                  },
-                  child: const Text('경로 요청'),
-                ),
-              ),
-              Expanded(
-                child: _departureKeywordList.isEmpty
-                    ? const Center(
-                        // 검색 기록이 없을 때 표시될 위젯
-                        child: Text("경로 검색 기록이 없습니다."),
-                      )
-                    : ListView.builder(
-                        itemCount: _departureKeywordList.length,
-                        itemBuilder: (context, index) {
-                          if (_departureKeywordList.length > index &&
-                              _destinationKeywordList.length > index) {
-                            return ListTile(
-                              title: Text(
-                                '${_departureKeywordList[index]} -> ${_destinationKeywordList[index]}',
-                              ),
-                              trailing: const Icon(Icons.history),
-                              onTap: () {
-                                // 해당 검색 기록으로 다시 검색
-                                _departureController.text =
-                                    _departureKeywordList[index];
-                                _destinationController.text =
-                                    _destinationKeywordList[index];
-                                _departureLatitude =
-                                    double.parse(_departureLatitudeList[index]);
-                                _departureLongitude = double.parse(
-                                  _departureLongitudeList[index],
-                                );
-                                _destinationLatitude = double.parse(
-                                  _destinationLatitudeList[index],
-                                );
-                                _destinationLongitude = double.parse(
-                                  _destinationLongitudeList[index],
-                                );
-                              },
-                            );
-                          }
-                          return null;
-                        },
-                      ),
-              ),
-            ],
-          ),
         );
       },
     );

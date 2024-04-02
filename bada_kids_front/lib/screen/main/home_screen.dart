@@ -196,6 +196,30 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
             Positioned(
+              top: deviceHeight * 0.19,
+              left: deviceWidth * 0.15,
+              child: IconButton(
+                icon: const Icon(Icons.add_circle,
+                    color: Color(0xff696DFF), size: 20),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileEdit(
+                        nickname: _name,
+                        memberId: _memberId,
+                        profileUrl: _profileUrl,
+                      ),
+                    ),
+                  ).then((_) {
+                    // 화면 복귀 후 실행할 로직
+                    _load = _loadProfile(); // _load 재할당
+                    setState(() {}); // 필요 시 상태 업데이트
+                  });
+                },
+              ),
+            ),
+            Positioned(
               left: deviceWidth * 0.26,
               top: deviceHeight * 0.161,
               child: Column(
