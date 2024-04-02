@@ -34,13 +34,17 @@ public class RouteService {
         Iterator<Point> pointIte = pointList.iterator();
         while (pointIte.hasNext()) {
             Point p = pointIte.next();
-            sb.append(p.getLatitude() + ", " + p.getLongitude());
+            sb.append(String.format("%.6f",p.getLatitude()) + ", " + String.format("%.6f",p.getLongitude()));
             if (pointIte.hasNext()) {
                 sb.append("_");
             }
         }
         Route route = Route.createRoute(routeRequestDto.startLat(), routeRequestDto.startLng(), routeRequestDto.endLat(), routeRequestDto.endLng(), sb.toString(), child);
-        routeRepository.save(route);
+        try{
+            routeRepository.save(route);
+        }catch (Exception e){
+            throw BaseException.type(RouteErrorCode.CANT_SAVE);
+        }
     }
 
     public RouteResponseDto getRoute(Long memberId, Long childId) {
