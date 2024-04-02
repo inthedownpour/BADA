@@ -30,7 +30,8 @@ class SearchMapScreen extends StatefulWidget {
 }
 
 // TODO : 지도를 켰을 때 마지막으로 검색했던 위치로 이동하도록 수정
-class _SearchMapScreenState extends State<SearchMapScreen> {
+class _SearchMapScreenState extends State<SearchMapScreen>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late KakaoMapController mapController;
   late MapProvider mapProvider;
   late LatLng searchedLocation;
@@ -94,10 +95,36 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
 
     if (response.statusCode == 200) {
       // 요청이 성공적으로 처리되었을 때의 로직
-      print('Request successful');
+      debugPrint('Request successful');
     } else {
       // 오류가 발생했을 때의 로직
-      print('Request failed with status: ${response.statusCode}.');
+      debugPrint('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  late final AnimationController _lottieController;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this); // Observer 등록
+    _lottieController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // Observer를 해제합니다.
+    _lottieController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // 앱이 다시 활성화될 때 애니메이션을 재시작합니다.
+    if (state == AppLifecycleState.resumed) {
+      _lottieController.repeat();
     }
   }
 
@@ -119,24 +146,6 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
                   _updateSearchedLocation(); // 검색 위치 업데이트
                   moveToSearchedLocation(); // 검색 위치로 이동
                 },
-                // TODO : 지도를 클릭하면 마커가 생성되고 해당 위치의 위도와 경도를 검색하여 나온 정보를 표시하도록 수정
-                // onMapTap: ((latLng) async {
-                //   marker = Marker(
-                //     markerId: markers.length.toString(),
-                //     latLng: await mapController.getCenter(),
-                //     width: 30,
-                //     height: 44,
-                //     offsetX: 15,
-                //     offsetY: 44,
-                //   );
-                //   marker.latLng = latLng;
-
-                //   mapController.panTo(latLng);
-                //   setState(() {
-                //     markers.clear();
-                //     markers.add(marker);
-                //   });
-                // }),
                 markers: markers.toList(),
               ),
             ),
@@ -156,6 +165,9 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
                   child: TextField(
                     controller: TextEditingController(text: widget.keyword),
                     readOnly: true,
+                    maxLines: 1,
+                    style: const TextStyle(
+                        fontSize: 16, overflow: TextOverflow.ellipsis),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.fromLTRB(20, 15, 15, 15),
                       filled: true,
@@ -170,6 +182,13 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.search),
                         onPressed: () {},
+                      ),
+                      prefixIcon: IconButton(
+                        icon: const Icon(Icons.arrow_back_ios),
+                        iconSize: deviceWidth * 0.04,
+                        onPressed: () {
+                          backToPreviousScreen();
+                        },
                       ),
                     ),
                   ),
@@ -186,47 +205,48 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
               color: Colors.white,
               padding: EdgeInsets.fromLTRB(
                 deviceWidth * 0.08,
-                deviceHeight * 0.03,
-                deviceWidth * 0.08,
-                deviceHeight * 0.03,
+                deviceHeight * 0.04,
+                deviceWidth * 0.07,
+                deviceHeight * 0.02,
               ),
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: UIhelper.scaleWidth(context) * 300,
-                            height: UIhelper.scaleHeight(context) * 50,
-                            child: OptionalScrollingText(
-                              text: widget.item.placeName,
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                          ),
-                          SizedBox(height: UIhelper.scaleHeight(context) * 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: UIhelper.scaleWidth(context) * 300,
-                                height: UIhelper.scaleHeight(context) * 50,
-                                child: OptionalScrollingText(
-                                  text: widget.item.addressName,
-                                  style: const TextStyle(fontSize: 16),
+                      Expanded(
+                        // Column 위젯을 Expanded로 감싸서 사용 가능한 공간을 모두 차지하도록 함
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: UIhelper.scaleWidth(context) * 260,
+                              height: UIhelper.scaleHeight(context) * 50,
+                              child: OptionalScrollingText(
+                                text: widget.item.placeName,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: UIhelper.scaleHeight(context) * 8,
-                          ),
-                        ],
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: UIhelper.scaleWidth(context) * 260,
+                                  height: UIhelper.scaleHeight(context) * 50,
+                                  child: OptionalScrollingText(
+                                    text: widget.item.addressName,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       Image.asset(
+                        // 아이콘 배치
                         CategoryIconMapper.getIconUrl(
                           widget.item.categoryGroupName,
                         ),
@@ -234,14 +254,28 @@ class _SearchMapScreenState extends State<SearchMapScreen> {
                       ),
                     ],
                   ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).push(_createRoute());
-                      },
-                      child: const Text("추가하기"),
-                    ),
+                  SizedBox(
+                    height: deviceHeight * 0.03,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(_createRoute());
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff7B79FF),
+                          foregroundColor: Colors.white,
+                          fixedSize:
+                              Size(deviceWidth * 0.85, deviceHeight * 0.05),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text("추가하기"),
+                      ),
+                    ],
                   ),
                 ],
               ),

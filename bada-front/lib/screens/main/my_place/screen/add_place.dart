@@ -62,8 +62,10 @@ class _AddPlaceState extends State<AddPlace> {
   }
 
   Future<void> back() async {
-    Navigator.of(context).pushReplacement(
+    Navigator.pushAndRemoveUntil(
+      context,
       MaterialPageRoute(builder: (context) => const MyPlace()),
+      (Route<dynamic> route) => route.isFirst,
     );
   }
 
@@ -109,6 +111,10 @@ class _AddPlaceState extends State<AddPlace> {
                       width: 200,
                       child: TextField(
                         controller: _titleController,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     SizedBox(height: UIhelper.scaleHeight(context) * 8),
@@ -117,7 +123,7 @@ class _AddPlaceState extends State<AddPlace> {
                       children: [
                         Text(
                           widget.addressName,
-                          style: const TextStyle(fontSize: 18),
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
@@ -128,12 +134,14 @@ class _AddPlaceState extends State<AddPlace> {
                 ),
                 SizedBox(
                   height: 100,
-                  width: 70,
+                  width: 60,
                   child: Stack(
-                    alignment: Alignment.center,
+                    alignment: Alignment.centerRight,
                     children: [
                       GestureDetector(
-                        onTap: _showIconSelection,
+                        onTap: () {
+                          if (!_checkPlace) _showIconSelection;
+                        },
                         child: Image.asset(
                           _selectedIcon,
                           width: UIhelper.scaleWidth(context) * 60,
@@ -154,8 +162,37 @@ class _AddPlaceState extends State<AddPlace> {
                 ),
               ],
             ),
+            SizedBox(height: UIhelper.scaleHeight(context) * 50),
+            Container(
+              alignment: Alignment.topLeft,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.categoryGroupName != null &&
+                          widget.categoryGroupName != ''
+                      ? Row(
+                          children: [
+                            const Icon(Icons.place),
+                            const SizedBox(width: 5),
+                            Text('${widget.categoryGroupName}'),
+                          ],
+                        )
+                      : const SizedBox(),
+                  widget.phone != null && widget.phone != ''
+                      ? Row(
+                          children: [
+                            const Icon(Icons.phone),
+                            const SizedBox(width: 5),
+                            Text('${widget.phone}'),
+                          ],
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
+            SizedBox(height: UIhelper.scaleHeight(context) * 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (!_checkPlace)
                   ElevatedButton(
@@ -174,34 +211,30 @@ class _AddPlaceState extends State<AddPlace> {
                       );
                       await back();
                     },
-                    child: const Text('추가하기'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff7B79FF),
+                      foregroundColor: Colors.white,
+                      fixedSize: Size(deviceWidth * 0.85, deviceHeight * 0.05),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text("추가하기"),
                   )
                 else
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      foregroundColor: Colors.black,
+                      fixedSize: Size(deviceWidth * 0.85, deviceHeight * 0.05),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
-                    child: const Text('저장됨', style: TextStyle(fontSize: 16)),
+                    child: const Text("저장됨"),
                   ),
               ],
-            ),
-            Container(
-              alignment: Alignment.topLeft,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  widget.categoryGroupName != null &&
-                          widget.categoryGroupName != ''
-                      ? Text('분류: ${widget.categoryGroupName}')
-                      : const SizedBox(),
-                  widget.phone != null && widget.phone != ''
-                      ? Text('전화번호: ${widget.phone}')
-                      : const SizedBox(),
-                ],
-              ),
             ),
           ],
         ),

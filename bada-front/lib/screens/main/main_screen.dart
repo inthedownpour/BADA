@@ -27,20 +27,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  late final AnimationController _lottieController;
   MembersApi membersApi = MembersApi();
 
   final _storage = const FlutterSecureStorage();
   Future<void>? load;
   String? profileUrl;
   String? nickname;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this); // Observer 등록
-    _lottieController = AnimationController(vsync: this);
-  }
 
   Future<void> _loadProfile() async {
     await membersApi.fetchProfile().then((value) {
@@ -51,6 +43,15 @@ class _HomeScreenState extends State<HomeScreen>
     });
     await _storage.write(key: 'profileImage', value: profileUrl);
     await _storage.write(key: 'nickname', value: nickname);
+  }
+
+  late final AnimationController _lottieController;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this); // Observer 등록
+    _lottieController = AnimationController(vsync: this);
   }
 
   @override

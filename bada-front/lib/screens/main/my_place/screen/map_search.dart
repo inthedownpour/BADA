@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bada/models/search_history.dart';
 import 'package:bada/models/search_results.dart';
 import 'package:bada/screens/main/my_place/screen/search_map_screen.dart';
+import 'package:bada/widgets/appbar.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -19,17 +20,12 @@ class MapSearch extends StatefulWidget {
   State<MapSearch> createState() => _MapSearchState();
 }
 
-class _MapSearchState extends State<MapSearch> {
+class _MapSearchState extends State<MapSearch>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   final TextEditingController _controller = TextEditingController();
   Future<List<SearchResultItem>>? _searchResult;
   List<SearchHistory> _searchHistory = [];
   bool _isSearching = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSearchHistory();
-  }
 
   Future<List<SearchResultItem>> fetchSearchResults(String keyword) async {
     var url = Uri.parse(
@@ -106,20 +102,40 @@ class _MapSearchState extends State<MapSearch> {
     _loadSearchHistory();
   }
 
+  late final AnimationController _lottieController;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this); // Observer 등록
+    _lottieController = AnimationController(vsync: this);
+    _loadSearchHistory();
+  }
+
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // Observer를 해제합니다.
+    _lottieController.dispose();
     _controller.dispose();
     super.dispose();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // 앱이 다시 활성화될 때 애니메이션을 재시작합니다.
+    if (state == AppLifecycleState.resumed) {
+      _lottieController.forward();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('검색'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
+      appBar: const CustomAppBar(title: '검색'),
       body: Container(
         color: Colors.white,
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -208,8 +224,14 @@ class _MapSearchState extends State<MapSearch> {
                               ),
                             );
                           },
-                          title: Text(item.placeName),
-                          subtitle: Text(item.addressName),
+                          title: Text(
+                            item.placeName,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(
+                            item.addressName,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         );
                       },
                     );
@@ -223,21 +245,26 @@ class _MapSearchState extends State<MapSearch> {
                         final formattedDate =
                             '${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
                         return ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: UIhelper.scaleWidth(context) * 280,
-                                child: Text(
-                                  keyword,
-                                  overflow: TextOverflow.ellipsis,
+                          title: Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: UIhelper.scaleWidth(context) * 250,
+                                  child: Text(
+                                    keyword,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                formattedDate,
-                                style: const TextStyle(color: Colors.black26),
-                              ),
-                            ],
+                                SizedBox(
+                                  width: UIhelper.scaleWidth(context) * 10,
+                                ),
+                                Text(
+                                  formattedDate,
+                                  style: const TextStyle(color: Colors.black26),
+                                ),
+                              ],
+                            ),
                           ),
                           onTap: () {
                             // 검색어를 클릭했을 때의 동작

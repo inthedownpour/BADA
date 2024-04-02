@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bada/api_request/member_api.dart';
+import 'package:bada/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -54,39 +55,13 @@ class _ProfileEditState extends State<ProfileEdit> {
       future: load,
       builder: (context, snapshot) {
         return Scaffold(
+          appBar: const CustomAppBar(title: '프로필 수정'),
           body: Container(
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
                 const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Icon(
-                        Icons.arrow_back_ios,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      '프로필 수정',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
                 const Text(
                   '프로필 사진',

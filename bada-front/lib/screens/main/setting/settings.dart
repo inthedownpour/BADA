@@ -247,6 +247,15 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
   }
 
   Widget _buildUserDetails(Map<String, String?> userData) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+    String formatPhoneNumber(String phoneNumber) {
+      if (phoneNumber.length == 11) {
+        return '${phoneNumber.substring(0, 3)}-${phoneNumber.substring(3, 7)}-${phoneNumber.substring(7, 11)}';
+      }
+      return phoneNumber;
+    }
+
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,10 +271,42 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("이름: ${userData['nickname']}"),
-                  Text("전화번호: ${userData['phone']}"),
-                  Text("이메일: ${userData['email']}"),
-                  Text('가입일: ${userData['createdAt'] ?? '미등록'}'),
+                  Row(
+                    children: [
+                      const Icon(Icons.tag),
+                      SizedBox(
+                        width: deviceWidth * 0.02,
+                      ),
+                      Text("${userData['nickname']}"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.phone),
+                      SizedBox(
+                        width: deviceWidth * 0.02,
+                      ),
+                      Text(formatPhoneNumber(userData['phone']!)),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.email),
+                      SizedBox(
+                        width: deviceWidth * 0.02,
+                      ),
+                      Text("${userData['email']}"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Icon(Icons.person),
+                      SizedBox(
+                        width: deviceWidth * 0.02,
+                      ),
+                      Text("${userData['createdAt']}"),
+                    ],
+                  ),
                 ],
               ),
             ),
