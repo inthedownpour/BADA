@@ -28,21 +28,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _lottieController;
-  late final AnimationController _alarmController;
 
   MembersApi membersApi = MembersApi();
-
   final _storage = const FlutterSecureStorage();
   Future<void>? load;
   String? profileUrl;
   String? nickname;
+  int unreadAlarms = 0;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this); // Observer 등록
     _lottieController = AnimationController(vsync: this);
-    _alarmController = AnimationController(vsync: this);
+    _unreadAlarmCount();
   }
 
   Future<void> _loadProfile() async {
@@ -56,11 +55,30 @@ class _HomeScreenState extends State<HomeScreen>
     await _storage.write(key: 'nickname', value: nickname);
   }
 
+  Future<void> _unreadAlarmCount() async {
+    String? token = await _storage.read(key: 'accessToken');
+    if (token != null) {
+      final res = await http.get(
+        Uri.parse('https://j10b207.p.ssafy.io/api/alarmLog/list/count'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (res.statusCode == 200) {
+        setState(() {
+          unreadAlarms = int.parse(res.body);
+        });
+      } else {
+        debugPrint('main_s 74 ${res.statusCode}');
+      }
+    }
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this); // Observer를 해제합니다.
     _lottieController.dispose();
-    _alarmController.dispose();
     super.dispose();
   }
 
@@ -169,15 +187,10 @@ class _HomeScreenState extends State<HomeScreen>
                         );
                       },
                     ),
-                    MainSmall(
+                    MainSmall2(
                       label: '알림',
                       buttonImage: Lottie.asset(
                         'assets/lottie/notification.json',
-                        controller: _lottieController,
-                        onLoaded: ((p0) {
-                          _lottieController.duration = p0.duration;
-                          _alarmController.stop();
-                        }),
                       ),
                       onPressed: () {
                         Navigator.push(
@@ -187,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         );
                       },
+                      unreadAlarm: unreadAlarms.toString(),
                     ),
                   ],
                 ),
