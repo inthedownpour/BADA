@@ -28,6 +28,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController _lottieController;
+  late final AnimationController _alarmController;
+
   MembersApi membersApi = MembersApi();
 
   final _storage = const FlutterSecureStorage();
@@ -40,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this); // Observer 등록
     _lottieController = AnimationController(vsync: this);
+    _alarmController = AnimationController(vsync: this);
   }
 
   Future<void> _loadProfile() async {
@@ -57,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this); // Observer를 해제합니다.
     _lottieController.dispose();
-
+    _alarmController.dispose();
     super.dispose();
   }
 
@@ -173,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen>
                         controller: _lottieController,
                         onLoaded: ((p0) {
                           _lottieController.duration = p0.duration;
-                          _lottieController.repeat();
+                          _alarmController.stop();
                         }),
                       ),
                       onPressed: () {
@@ -243,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen>
                         controller: _lottieController,
                         onLoaded: ((p0) {
                           _lottieController.duration = p0.duration;
-                          _lottieController.repeat();
+                          _lottieController.forward();
                         }),
                       ),
                       onPressed: () {
