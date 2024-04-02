@@ -1,5 +1,6 @@
 import 'package:bada/screens/main/my_place/model/my_place_model.dart';
 import 'package:bada/screens/main/my_place/screen/map_search.dart';
+import 'package:bada/widgets/appbar.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
@@ -78,12 +79,11 @@ class _MyPlaceState extends State<MyPlace> {
 
   @override
   Widget build(BuildContext context) {
+    var deviceWidth = MediaQuery.of(context).size.width;
+    var deviceHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('내 장소'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
+      appBar: const CustomAppBar(title: '내 장소'),
       body: Container(
         padding: const EdgeInsets.all(20),
         color: Colors.white,
@@ -142,7 +142,9 @@ class _MyPlaceState extends State<MyPlace> {
                       );
                     }
                   } else {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
                 },
               ),

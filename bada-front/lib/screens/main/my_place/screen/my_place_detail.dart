@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bada/widgets/appbar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -49,7 +50,8 @@ class _PlaceDetailState extends State<PlaceDetail> {
     setState(() {
       controller.setCenter(LatLng(widget.placeLatitude, widget.placeLongitude));
       debugPrint(
-          "위도(가로) : ${widget.placeLatitude}, 경도(세로) : ${widget.placeLongitude}");
+        "위도(가로) : ${widget.placeLatitude}, 경도(세로) : ${widget.placeLongitude}",
+      );
       markers.add(
         Marker(
           markerId: 'searched_location',
@@ -78,11 +80,7 @@ class _PlaceDetailState extends State<PlaceDetail> {
     final deviceHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.placeName),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
+      appBar: CustomAppBar(title: widget.placeName),
       body: Column(
         children: [
           Container(

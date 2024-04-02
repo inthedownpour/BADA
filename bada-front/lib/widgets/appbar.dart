@@ -11,11 +11,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
+    final deviceHeight = MediaQuery.of(context).size.height;
+
     return AppBar(
-      title: Text(title),
+      title: Text(title,
+          style: const TextStyle(
+              color: Colors.black, fontWeight: FontWeight.bold)),
       centerTitle: true,
       backgroundColor: Colors.white,
       leading: IconButton(
+        iconSize: deviceWidth * 0.1,
         icon: const Icon(CupertinoIcons.back), // iOS style back arrow
         onPressed: () => Navigator.of(context).pop(), // Pop the current route
       ),
