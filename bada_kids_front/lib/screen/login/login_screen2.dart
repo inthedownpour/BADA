@@ -85,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen2> {
     );
 
     debugPrint(
-        'name: ${_nameController.text},\n phone: $_phone,\n profileUrl: null,\n code: ${widget.authCode},\n fcmToken: $_token');
+        'name: ${_nameController.text},\n phone: $_phone,\n profileUrl: $_profileUrl,\n code: ${widget.authCode},\n fcmToken: $_token');
 
     if (response.statusCode == 200) {
       // JSON 형식의 응답 본문을 디코드합니다.
