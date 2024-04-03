@@ -5,7 +5,6 @@ import 'package:bada/screens/main/main_screen.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -46,14 +45,11 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.kakao;
-                  await profileProvider
-                      .initProfile(loginPlatform); // 소셜 로그인 진행 및 정보 가져오기
-                  bool hasProfile = await profileProvider
-                      .profileDbCheck(); // 데이터베이스에 아이디가 있는지 확인하고 있으면 response로 받은 accessToken Storage에 저장
-                  // 아이디가 데이터베이스에 있는 경우
+                  await profileProvider.initProfile(loginPlatform);
+                  bool hasProfile = await profileProvider.profileDbCheck();
+
                   if (hasProfile) {
-                    await profileProvider
-                        .saveProfileToStorage(); // 프로필 정보를 DB에서 가져온 뒤 Storage에 저장
+                    await profileProvider.saveProfileToStorage();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -61,8 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                   } else {
-                    // 아이디가 데이터베이스에 없는 경우
-                    // 소셜 로그인만 진행하고 DB에 없을 때 = 앱 처음 사용할 때
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -84,14 +78,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 onTap: () async {
                   LoginPlatform loginPlatform = LoginPlatform.naver;
 
-                  await profileProvider
-                      .initProfile(loginPlatform); // 소셜 로그인 진행 및 정보 가져오기
-                  bool hasProfile = await profileProvider
-                      .profileDbCheck(); // 데이터베이스에 아이디가 있는지 확인하고 있으면 response로 받은 accessToken Storage에 저장
-                  // 아이디가 데이터베이스에 있는 경우
+                  await profileProvider.initProfile(loginPlatform);
+                  bool hasProfile = await profileProvider.profileDbCheck();
                   if (hasProfile) {
-                    await profileProvider
-                        .saveProfileToStorage(); // 프로필 정보를 DB에서 가져온 뒤 Storage에 저장
+                    await profileProvider.saveProfileToStorage();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -99,7 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
                   } else {
-                    // 아이디가 데이터베이스에 없는 경우
                     Navigator.push(
                       context,
                       MaterialPageRoute(

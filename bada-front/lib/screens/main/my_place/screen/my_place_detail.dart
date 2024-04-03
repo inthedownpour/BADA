@@ -97,7 +97,6 @@ class _PlaceDetailState extends State<PlaceDetail> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        // showIconPicker(context);
                         _showIconSelection();
                       },
                       child: SizedBox(
@@ -250,6 +249,8 @@ class _PlaceDetailState extends State<PlaceDetail> {
   }
 
   void _showIconSelection() {
+    debugPrint('252 iconSelectino');
+
     final deviceHeight = MediaQuery.of(context).size.height;
 
     showModalBottomSheet(

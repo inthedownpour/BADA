@@ -4,7 +4,6 @@ import 'package:flutter_naver_login/flutter_naver_login.dart';
 class NaverLogin {
   Future<bool> login() async {
     try {
-      // 네이버 로그인을 시도합니다.
       NaverLoginResult result = await FlutterNaverLogin.logIn();
       if (result.status == NaverLoginStatus.loggedIn) {
         debugPrint('네이버 로그인 성공 ${result.account}');

@@ -8,7 +8,6 @@ import 'package:bada/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class CreateFamily extends StatefulWidget {
@@ -41,7 +40,6 @@ class _CreateFamilyState extends State<CreateFamily> {
 
   Future<void> _inputPhoneNumber() async {
     var phone = await SmsAutoFill().hint;
-    // await changePhoneNumber();
     if (phone != null && phone.startsWith('+82')) {
       phone = '0${phone.substring(3)}';
     }
@@ -146,7 +144,7 @@ class _CreateFamilyState extends State<CreateFamily> {
                   Button714_150(
                     label: Text(widget.buttonName),
                     onPressed: () async {
-                      final fcmToken = await getFcmToken(); // FCM 토큰 얻기
+                      final fcmToken = await getFcmToken();
                       if (fcmToken != null) {
                         debugPrint('FCM 토큰: $fcmToken');
                         await userData.setPhoneAndFamilyName(
@@ -161,10 +159,9 @@ class _CreateFamilyState extends State<CreateFamily> {
                           social: userData.social!,
                           familyName: _familyNameController.text,
                           profileUrl: userData.profileImage!,
-                          fcmToken: fcmToken, // FCM 토큰을 signUp 함수에 전달
+                          fcmToken: fcmToken,
                         );
                       } else {
-                        // FCM 토큰을 얻지 못한 경우의 처리
                         debugPrint('FCM 토큰을 얻지 못했습니다.');
                       }
                     },
@@ -210,7 +207,6 @@ class _CreateFamilyState extends State<CreateFamily> {
       final accessToken = responseBody['accessToken'];
       final refreshToken = responseBody['refreshToken'];
 
-      // Use the TokenStorage class to save the tokens
       final tokenStorage = TokenStorage();
       await tokenStorage.saveToken(accessToken, refreshToken);
 
@@ -221,7 +217,6 @@ class _CreateFamilyState extends State<CreateFamily> {
         ),
       );
     } else {
-      // Handle failure
       debugPrint('Failed to sign up: ${response.body}');
     }
   }
