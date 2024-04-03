@@ -2,7 +2,6 @@ import 'package:bada/api_request/member_api.dart';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/login/screen/initial_screen.dart';
 import 'package:bada/screens/login/login_screen.dart';
-import 'package:bada/screens/main/setting/screen/alarm_setting.dart';
 import 'package:bada/screens/main/setting/screen/authentication_screen.dart';
 import 'package:bada/screens/main/setting/screen/terms_of_policy.dart';
 import 'package:bada/widgets/appbar.dart';
@@ -40,7 +39,6 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _lottieController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
@@ -116,21 +114,6 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
                     ),
                   ),
                   SizedBox(height: UIhelper.scaleHeight(context) * 40),
-                  InkResponse(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AlarmSetting(),
-                        ),
-                      );
-                    },
-                    containedInkWell: true,
-                    child: const Text(
-                      '알림 설정',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
                   SizedBox(height: UIhelper.scaleHeight(context) * 40),
                   InkResponse(
                     onTap: () {
