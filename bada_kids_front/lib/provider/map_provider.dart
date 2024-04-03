@@ -196,6 +196,7 @@ class MapProvider with ChangeNotifier {
   }
 
   Future<void> initCurrentLocationUpdate() async {
+    debugPrint('디버깅 시작');
     ProfileProvider profileProvider = ProfileProvider.instance;
     var accessToken = profileProvider.accessToken;
     // 요청 URL

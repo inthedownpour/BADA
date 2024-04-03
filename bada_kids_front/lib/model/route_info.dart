@@ -1,12 +1,8 @@
 class RouteInfo {
-  final double startLng;
-  final double startLat;
-  final double endLng;
-  final double endLat;
-  final String addressName;
-  final String placeName;
+  final double startLng, startLat, endLng, endLat;
+  final String addressName, placeName, destinationIcon;
   final List<Point> pointList;
-
+  final int placeId;
   RouteInfo({
     required this.startLng,
     required this.startLat,
@@ -15,6 +11,8 @@ class RouteInfo {
     required this.addressName,
     required this.placeName,
     required this.pointList,
+    required this.destinationIcon,
+    required this.placeId,
   });
 
   factory RouteInfo.fromJson(Map<String, dynamic> json) {
@@ -28,6 +26,8 @@ class RouteInfo {
       endLat: json['endLat'],
       addressName: json['addressName'],
       placeName: json['placeName'],
+      destinationIcon: json['destinationIcon'],
+      placeId: json['placeId'],
       pointList: pointList,
     );
   }

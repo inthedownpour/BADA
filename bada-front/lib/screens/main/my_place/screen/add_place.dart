@@ -69,6 +69,14 @@ class _AddPlaceState extends State<AddPlace> {
     );
   }
 
+  Future<String> sliceNumber(String coord) async {
+    double number = double.parse(coord);
+
+    String formattedNumber = number.toStringAsFixed(5);
+
+    return formattedNumber;
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
@@ -211,10 +219,15 @@ class _AddPlaceState extends State<AddPlace> {
                 if (!_checkPlace)
                   ElevatedButton(
                     onPressed: () async {
+                      String placeLatitude = await sliceNumber(widget.y);
+                      String placeLongitude = await sliceNumber(widget.x);
+                      debugPrint(placeLatitude);
+                      debugPrint(placeLongitude);
+
                       await _postPlace(
                         placeName: _titleController.text,
-                        placeLatitude: widget.y,
-                        placeLongitude: widget.x,
+                        placeLatitude: placeLatitude,
+                        placeLongitude: placeLongitude,
                         placeCategoryCode: widget.categoryGroupCode ?? '',
                         placeCategoryName: widget.categoryGroupName ?? '',
                         placePhoneNumber: widget.phone ?? '',
@@ -291,6 +304,7 @@ class _AddPlaceState extends State<AddPlace> {
         }),
       );
       if (response.statusCode == 200) {
+        debugPrint('307번줄 성공');
         setState(() {
           _checkPlace = true;
         });
