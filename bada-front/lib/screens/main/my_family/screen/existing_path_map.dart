@@ -286,7 +286,8 @@ class _ExistingPathMapState extends State<ExistingPathMap> {
                   top: 10,
                   right: 10,
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      await _requestCurrentLocation();
                       // markerId가 'currentLocation'인 마커를 markers 집합에서 제거
                       markers.removeWhere(
                         (marker) => marker.markerId == 'currentLocation',

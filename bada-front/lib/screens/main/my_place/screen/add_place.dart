@@ -156,6 +156,21 @@ class _AddPlaceState extends State<AddPlace> {
                             height: 35,
                           ),
                         ),
+                      if (!_checkPlace)
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: () {
+                              if (!_checkPlace) _showIconSelection();
+                            },
+                            child: Container(
+                              width: 35,
+                              height: 35,
+                              color: Colors.transparent, // 투명한 컨테이너
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
