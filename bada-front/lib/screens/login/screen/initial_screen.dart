@@ -33,7 +33,6 @@ class InitialScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: UIhelper.scaleHeight(context) * 20),
-
             Button714_150(
               label: const Text(
                 '가족 그룹 만들기',
@@ -70,7 +69,6 @@ class InitialScreen extends StatelessWidget {
             SizedBox(
               height: UIhelper.scaleHeight(context) * 20,
             ),
-            // const Button714_150(label: '그룹 참가하기')
           ],
         ),
       ),
