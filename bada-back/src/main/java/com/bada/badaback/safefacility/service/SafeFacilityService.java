@@ -206,10 +206,12 @@ public class SafeFacilityService {
 
     /**
      * layer를 까서 만든다. 현재 고려할 레이어 now와 now-1에서 선택했던 index
-     *
      * @param layer
      * @param now
+     * @param beforeTile
+     * @param route
      * @return
+     * @throws IOException
      */
     private List<String> PassCCTV(List<List<Tile>> layer, int now, Tile beforeTile, List<String> route) throws IOException {
         // now는 현재 레이어의 숫자이다.
