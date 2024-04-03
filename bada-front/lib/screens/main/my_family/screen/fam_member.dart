@@ -273,7 +273,7 @@ class _FamilyMember2State extends State<FamilyMember2>
                 );
               },
               child: CircleAvatar(
-                backgroundColor: Colors.black,
+                backgroundColor: Colors.white,
                 radius: 35,
                 backgroundImage: widget.profileUrl != null
                     ? NetworkImage(widget.profileUrl!)
