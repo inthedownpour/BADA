@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:bada_kids_front/model/route_info.dart';
 import 'package:bada_kids_front/model/screen_size.dart';
 import 'package:bada_kids_front/provider/map_provider.dart';
@@ -248,12 +249,9 @@ class _PathFindState extends State<PathFind>
                 const SizedBox(
                   width: 10,
                 ),
-                IconButton(
-                  icon: const Icon(Icons.close, size: 30),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )
+                const SizedBox(
+                  width: 10,
+                ),
               ],
             ),
             centerTitle: true,
@@ -265,92 +263,114 @@ class _PathFindState extends State<PathFind>
               padding: const EdgeInsets.only(right: 0),
             ),
           ),
-          body: Stack(
+          body: Column(
             children: [
-              KakaoMap(
-                onMapCreated: ((controller) async {
-                  mapController = controller;
-                  if (verticalForLevel > 0.127 || horizontalForLevel > 0.096) {
-                    mapController.setLevel(9);
-                  } else if (verticalForLevel > 0.0676 ||
-                      horizontalForLevel > 0.0518) {
-                    mapController.setLevel(8);
-                  } else if (verticalForLevel > 0.0395 ||
-                      horizontalForLevel > 0.0246) {
-                    mapController.setLevel(7);
-                  } else if (verticalForLevel > 0.0177 ||
-                      horizontalForLevel > 0.014) {
-                    mapController.setLevel(6);
-                  } else if (verticalForLevel > 0.009 ||
-                      horizontalForLevel > 0.00551) {
-                    mapController.setLevel(5);
-                  } else if (verticalForLevel > 0.0049 ||
-                      horizontalForLevel > 0.0023) {
-                    mapController.setLevel(4);
-                  } else {
-                    mapController.setLevel(3);
-                  }
+              SizedBox(
+                height: UIhelper.deviceHeight(context) * 0.75,
+                child: KakaoMap(
+                  onMapCreated: ((controller) async {
+                    mapController = controller;
+                    if (verticalForLevel > 0.127 ||
+                        horizontalForLevel > 0.096) {
+                      mapController.setLevel(9);
+                    } else if (verticalForLevel > 0.0676 ||
+                        horizontalForLevel > 0.0518) {
+                      mapController.setLevel(8);
+                    } else if (verticalForLevel > 0.0395 ||
+                        horizontalForLevel > 0.0246) {
+                      mapController.setLevel(7);
+                    } else if (verticalForLevel > 0.0177 ||
+                        horizontalForLevel > 0.014) {
+                      mapController.setLevel(6);
+                    } else if (verticalForLevel > 0.009 ||
+                        horizontalForLevel > 0.00551) {
+                      mapController.setLevel(5);
+                    } else if (verticalForLevel > 0.0049 ||
+                        horizontalForLevel > 0.0023) {
+                      mapController.setLevel(4);
+                    } else {
+                      mapController.setLevel(3);
+                    }
 
-                  polylines.add(
-                    Polyline(
-                      polylineId: 'path_${polylines.length}',
-                      points: pathPoints,
-                      strokeColor: Colors.blue,
-                      strokeOpacity: 1,
-                      strokeWidth: 5,
-                      strokeStyle: StrokeStyle.solid,
-                    ),
-                  );
-                  setState(() {});
-                }),
-                markers: markers.toList(),
-                polylines: polylines.toList(),
-                center: middle,
+                    polylines.add(
+                      Polyline(
+                        polylineId: 'path_${polylines.length}',
+                        points: pathPoints,
+                        strokeColor: Colors.blue,
+                        strokeOpacity: 1,
+                        strokeWidth: 5,
+                        strokeStyle: StrokeStyle.solid,
+                      ),
+                    );
+                    setState(() {});
+                  }),
+                  markers: markers.toList(),
+                  polylines: polylines.toList(),
+                  center: middle,
+                ),
               ),
-              Positioned(
-                bottom: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color: Colors.white,
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  height: UIhelper.deviceHeight(context) * 0.25,
-                  width: UIhelper.deviceWidth(context),
-                  child: Column(
-                    children: [
-                      const Text('준비중입니다.'),
-                      Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              arrived();
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Debug Alert'),
-                                    content: const Text(
-                                        'Arrived method has been called.'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text('OK'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: const Text('도착'),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.white,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                height: UIhelper.deviceHeight(context) * 0.15,
+                width: UIhelper.deviceWidth(context),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          widget.destinationIcon,
+                          width: UIhelper.deviceWidth(context) * 0.12,
+                          height: UIhelper.deviceHeight(context) * 0.12,
+                        ),
+                        Column(
+                          children: [
+                            const Text('목적지'),
+                            SizedBox(
+                              height: UIhelper.deviceHeight(context) * 0.02,
+                            ),
+                            Text(
+                              widget.destinationName,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            arrived();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Debug Alert'),
+                                  content: const Text(
+                                    'Arrived method has been called.',
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: const Text('도착'),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               )
             ],
