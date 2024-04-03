@@ -4,6 +4,7 @@ import 'package:bada/screens/main/main_screen.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,6 +27,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> _checkTokenAndNavigate() async {
     String? accessToken = await _storage.read(key: 'accessToken');
     await Future.delayed(const Duration(seconds: 2));
+    debugPrint(await KakaoSdk.origin);
+    debugPrint('앱 키 : ${KakaoSdk.appKey}');
 
     if (accessToken == null) {
       debugPrint('토큰 못잡음');

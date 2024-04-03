@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:bada_kids_front/model/appbar.dart';
 import 'package:bada_kids_front/model/buttons.dart';
 import 'package:bada_kids_front/screen/main/home_screen.dart';
 import 'package:bada_kids_front/model/screen_size.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
@@ -22,20 +24,31 @@ class LoginScreen2 extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen2> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   String? _token;
   String? _phone;
 
+  Future<bool>? _load;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _requestToken();
-    _requestPhone();
+    _load = _loadData();
   }
 
-  void _requestToken() async {
+  Future<bool> _loadData() async {
+    await _requestToken();
+    await _requestPhone();
+    setState(() {
+      _phoneController.text = _phone!;
+    });
+    return true;
+  }
+
+  Future<void> _requestToken() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -43,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen2> {
     debugPrint("FCM Token: $_token");
   }
 
-  void _requestPhone() async {
+  Future<void> _requestPhone() async {
     _phone = await SmsAutoFill().hint;
     if (_phone != null && _phone!.startsWith('+82')) {
       _phone = '0${_phone!.substring(3)}';
@@ -108,70 +121,97 @@ class _LoginScreenState extends State<LoginScreen2> {
     double deviceHeight = UIhelper.deviceHeight(context);
     double deviceWidth = UIhelper.deviceWidth(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: EdgeInsets.only(top: deviceHeight * 0.03),
-          child: const Text('이름 입력'),
-        ),
-        centerTitle: true,
-        leading: Padding(
-          // 여기에 Padding 추가
-          padding: EdgeInsets.only(top: deviceHeight * 0.03), // 상단 패딩 적용
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(), // 뒤로가기 기능 구현
+    return FutureBuilder(
+      future: _load,
+      builder: (context, snapshot) {
+        return Scaffold(
+          appBar: const CustomAppBar(
+            title: '정보 입력',
           ),
-        ),
-      ),
-      body: Container(
-        padding: EdgeInsets.fromLTRB(deviceWidth * 0.07, deviceHeight * 0.05,
-            deviceWidth * 0.07, deviceHeight * 0.05),
-        child: Column(
-          children: [
-            TextField(
-              controller: _nameController,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color(0xff696DFF).withOpacity(0.2),
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(13),
+          body: Container(
+            padding: EdgeInsets.fromLTRB(deviceWidth * 0.07,
+                deviceHeight * 0.05, deviceWidth * 0.07, deviceHeight * 0.05),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('이름',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    )),
+                SizedBox(height: deviceHeight * 0.01), // 여백 추가 (높이 1%)
+                TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: const Color(0xff696DFF).withOpacity(0.2),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(13),
+                      ),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintText: '이름을 입력해주세요',
+                    hintStyle: TextStyle(
+                      color: const Color(0xff696DFF).withOpacity(0.5),
+                    ),
+                    contentPadding: EdgeInsets.fromLTRB(
+                        deviceWidth * 0.04,
+                        deviceHeight * 0.02,
+                        deviceWidth * 0.04,
+                        deviceHeight * 0.02),
                   ),
-                  borderSide: BorderSide.none,
                 ),
-                hintText: '이름을 입력해주세요',
-                hintStyle: TextStyle(
-                  color: const Color(0xff696DFF).withOpacity(0.5),
+                SizedBox(
+                  height: deviceHeight * 0.05,
                 ),
-                contentPadding: EdgeInsets.fromLTRB(
-                    deviceWidth * 0.04,
-                    deviceHeight * 0.02,
-                    deviceWidth * 0.04,
-                    deviceHeight * 0.02),
-              ),
+                const Text('휴대전화 번호',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    )),
+                SizedBox(height: deviceHeight * 0.01), // 여백 추가 (높이 1%)
+                TextField(
+                  controller: _phoneController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: const Color(0xff696DFF).withOpacity(0.2),
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(13),
+                      ),
+                      borderSide: BorderSide.none,
+                    ),
+                    hintText: '휴대전화 번호를 입력해주세요',
+                    hintStyle: TextStyle(
+                      color: const Color(0xff696DFF).withOpacity(0.5),
+                    ),
+                    contentPadding: EdgeInsets.fromLTRB(
+                        deviceWidth * 0.04,
+                        deviceHeight * 0.02,
+                        deviceWidth * 0.04,
+                        deviceHeight * 0.02),
+                  ),
+                ),
+                SizedBox(height: deviceHeight * 0.38),
+                Button714_150(
+                  label: const Text(
+                    '다음으로',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    login();
+                  },
+                ),
+              ],
             ),
-            SizedBox(height: deviceHeight * 0.6),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     login();
-            //   },
-            //   child: const Text('다음으로'),
-            // ),
-            Button714_150(
-              label: const Text(
-                '다음으로',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () {
-                login();
-              },
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

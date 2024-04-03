@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk_auth.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
@@ -30,9 +31,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await dotenv.load(fileName: '.env');
-
-  AuthRepository.initialize(appKey: dotenv.env['KAKAO_MAP_API'] ?? '');
+  AuthRepository.initialize(appKey: 'df2ba2e6b329394c54fb12ed4ba6fbdc');
 
   KakaoSdk.init(
     nativeAppKey: '9d4c295f031b5c1f50269e353e895e12',

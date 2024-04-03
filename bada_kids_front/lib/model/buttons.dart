@@ -398,6 +398,9 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
           (context),
           MaterialPageRoute(
             builder: (context) => PathFind(
+              destinationName: widget.placeName,
+              destinationIcon: widget.icon,
+              placeId: widget.myPlaceId,
               destination: destination,
               placeName: widget.placeName,
               addressName: widget.addressName,
@@ -461,7 +464,10 @@ class _MyPlaceButtonState extends State<MyPlaceButton> {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => PathFind(
+                        destinationName: widget.placeName,
+                        destinationIcon: widget.icon,
                         destination: destination,
+                        placeId: widget.myPlaceId,
                         placeName: widget.placeName,
                         addressName: widget.addressName,
                       ),

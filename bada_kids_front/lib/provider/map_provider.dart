@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:bada_kids_front/provider/profile_provider.dart';
+import 'package:bada_kids_front/screen/main/api/alarm_api.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -16,12 +18,18 @@ class MapProvider with ChangeNotifier {
   bool _isFunctionAsync = false;
   LatLng? startLatLng;
   LatLng? endLatLng;
+  late String destinationName;
+  late String destinationIcon;
+  late int destinationId;
+  List<LatLng> currentPassedPoints = [];
 
   // private static 인스턴스
   static final MapProvider _instance = MapProvider._internal();
 
   // private 생성자
   MapProvider._internal() {
+    AlarmApi alarmApi = AlarmApi();
+    ProfileProvider profileProvider = ProfileProvider.instance;
     setCurrentLocation();
     _locationUpdateTimer =
         Timer.periodic(const Duration(seconds: 5), (timer) async {
@@ -32,15 +40,103 @@ class MapProvider with ChangeNotifier {
         await setCurrentLocation();
         if (isLocationServiceEnabled) {
           await currentLocationUpdate();
-          if (endLatLng != null &&
-              _currentLocation.latitude > endLatLng!.latitude - 0.0012 &&
-              _currentLocation.latitude < endLatLng!.latitude + 0.0012 &&
-              _currentLocation.longitude > endLatLng!.longitude - 0.0006 &&
-              _currentLocation.longitude < endLatLng!.longitude + 0.0006) {
-            await deleteCurrentLocationUpdate();
+          double distance = haversine(
+              currentPassedPoints.first.latitude,
+              currentPassedPoints.first.longitude,
+              currentPassedPoints.last.latitude,
+              currentPassedPoints.last.longitude); // 5분 전 위치와 현재 위치 사이의 거리
+
+          // 5분간 정지해있는 경우
+          if (currentPassedPoints.length == 59) {
+            // 5분 전 위치와 현재 위치 사이의 거리가 0.0012도 이내이고 0.0006도 이내인 경우
+            if ((currentPassedPoints.first.latitude -
+                            currentPassedPoints.last.latitude)
+                        .abs() <
+                    0.0012 &&
+                currentPassedPoints.first.longitude -
+                        currentPassedPoints.last.longitude <
+                    0.0006) {
+              await alarmApi.sendAlarm(
+                familyCode: profileProvider.familyCode,
+                childeName: profileProvider.name,
+                type: 'STAY',
+                phone: profileProvider.phone,
+                profileUrl: profileProvider.profileUrl,
+                destinationName: destinationName,
+                destinationIcon: destinationIcon,
+                destinationId: destinationId,
+                latitude: currentLocation.latitude.toStringAsFixed(5),
+                longitude: currentLocation.longitude.toStringAsFixed(5),
+                memberId: profileProvider.memberId,
+              );
+            }
+            // 시속 30km 이상으로 이동한 경우
+            if (distance > 2.5) {
+              await alarmApi.sendAlarm(
+                familyCode: profileProvider.familyCode,
+                childeName: profileProvider.name,
+                type: 'TOO FAST',
+                phone: profileProvider.phone,
+                profileUrl: profileProvider.profileUrl,
+                destinationName: destinationName,
+                destinationIcon: destinationIcon,
+                destinationId: destinationId,
+                latitude: currentLocation.latitude.toStringAsFixed(5),
+                longitude: currentLocation.longitude.toStringAsFixed(5),
+                memberId: profileProvider.memberId,
+              );
+            }
+            // 경로를 이탈한 경우
+            if ((_currentLocation.latitude - endLatLng!.latitude).abs() >
+                    (startLatLng!.latitude - endLatLng!.latitude).abs() +
+                        0.0012 ||
+                (_currentLocation.longitude - endLatLng!.longitude).abs() >
+                    (startLatLng!.longitude - endLatLng!.longitude).abs() +
+                        0.0006 ||
+                (_currentLocation.latitude - startLatLng!.latitude).abs() >
+                    (startLatLng!.latitude - endLatLng!.latitude).abs() +
+                        0.0012 ||
+                (_currentLocation.longitude - startLatLng!.longitude).abs() >
+                    (startLatLng!.longitude - endLatLng!.longitude).abs() +
+                        0.0006) {
+              await alarmApi.sendAlarm(
+                familyCode: profileProvider.familyCode,
+                childeName: profileProvider.name,
+                type: 'OFF COURSE',
+                phone: profileProvider.phone,
+                profileUrl: profileProvider.profileUrl,
+                destinationName: destinationName,
+                destinationIcon: destinationIcon,
+                destinationId: destinationId,
+                latitude: currentLocation.latitude.toStringAsFixed(5),
+                longitude: currentLocation.longitude.toStringAsFixed(5),
+                memberId: profileProvider.memberId,
+              );
+            }
+            // 목적지에 도착한 경우
+            if (_currentLocation.latitude > endLatLng!.latitude - 0.0012 &&
+                _currentLocation.latitude < endLatLng!.latitude + 0.0012 &&
+                _currentLocation.longitude > endLatLng!.longitude - 0.0006 &&
+                _currentLocation.longitude < endLatLng!.longitude + 0.0006) {
+              await deleteCurrentLocationUpdate();
+
+              await alarmApi.sendAlarm(
+                familyCode: profileProvider.familyCode,
+                childeName: profileProvider.name,
+                type: 'ARRIVE',
+                phone: profileProvider.phone,
+                profileUrl: profileProvider.profileUrl,
+                destinationName: destinationName,
+                destinationIcon: destinationIcon,
+                destinationId: destinationId,
+                latitude: currentLocation.latitude.toStringAsFixed(5),
+                longitude: currentLocation.longitude.toStringAsFixed(5),
+                memberId: profileProvider.memberId,
+              );
+            }
           }
+          _isFunctionAsync = false; // 비동기 함수 끝
         }
-        _isFunctionAsync = false; // 비동기 함수 끝
       }
     });
   }
@@ -52,7 +148,23 @@ class MapProvider with ChangeNotifier {
   LatLng get currentLocation => _currentLocation;
   bool get isLocationServiceEnabled => _isLocationServiceEnabled;
 
-  // void startCurrentLocationUpdate() {}
+  double haversine(double lat1, double lon1, double lat2, double lon2) {
+    const double R = 6371.0; // 지구의 반지름(km)
+    double lat1Rad = lat1 * (pi / 180.0);
+    double lon1Rad = lon1 * (pi / 180.0);
+    double lat2Rad = lat2 * (pi / 180.0);
+    double lon2Rad = lon2 * (pi / 180.0);
+
+    double dLat = lat2Rad - lat1Rad;
+    double dLon = lon2Rad - lon1Rad;
+
+    double a = pow(sin(dLat / 2), 2) +
+        cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    double distance = R * c;
+    return distance;
+  }
 
   Future<void> setCurrentLocation([VoidCallback? onCompleted]) async {
     // 위치 서비스 활성화 여부 확인
@@ -78,7 +190,7 @@ class MapProvider with ChangeNotifier {
       desiredAccuracy: LocationAccuracy.high,
     );
     _currentLocation = LatLng(position.latitude, position.longitude);
-    print('map_provider 58줄 ${_currentLocation.longitude}');
+    debugPrint('map_provider 58줄 ${_currentLocation.longitude}');
     notifyListeners(); // 위치 정보가 업데이트되면 리스너에게 알림
     onCompleted?.call();
   }
@@ -107,14 +219,30 @@ class MapProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         // 성공적으로 요청을 보냈을 때의 처리
         _isLocationServiceEnabled = true;
-        print('서버 응답: ${response.body}');
+        debugPrint('여기까진 성공');
+        AlarmApi alarmApi = AlarmApi();
+        await alarmApi.sendAlarm(
+          familyCode: profileProvider.familyCode,
+          childeName: profileProvider.name,
+          type: 'DEPART',
+          phone: profileProvider.phone,
+          profileUrl: profileProvider.profileUrl,
+          destinationName: destinationName,
+          destinationIcon: destinationIcon,
+          destinationId: destinationId,
+          latitude: currentLocation.latitude.toStringAsFixed(5),
+          longitude: currentLocation.longitude.toStringAsFixed(5),
+          memberId: profileProvider.memberId,
+        );
+
+        debugPrint('서버 응답: ${response.body}');
       } else {
         // 서버 응답이 200이 아닐 때의 처리
-        print('요청 실패: ${response.statusCode}');
+        debugPrint('요청 실패map provider 234: ${response.statusCode}');
       }
     } catch (e) {
       // 요청 중 오류가 발생했을 때의 처리
-      print('에러 발생: $e');
+      debugPrint('에러 발생: $e');
     }
   }
 
@@ -141,14 +269,18 @@ class MapProvider with ChangeNotifier {
       var response = await http.patch(url, headers: headers, body: requestBody);
       if (response.statusCode == 200) {
         // 성공적으로 요청을 보냈을 때의 처리
-        print('서버 응답: ${response.body}');
+        debugPrint('서버 응답: ${response.body}');
+        if (currentPassedPoints.length == 60) {
+          currentPassedPoints.removeAt(0);
+        }
+        currentPassedPoints.add(currentLocation);
       } else {
         // 서버 응답이 200이 아닐 때의 처리
-        print('요청 실패: ${response.statusCode}');
+        debugPrint('요청 실패 map provider 272: ${response.statusCode}');
       }
     } catch (e) {
       // 요청 중 오류가 발생했을 때의 처리
-      print('에러 발생: $e');
+      debugPrint('에러 발생: $e');
     }
   }
 
@@ -170,14 +302,14 @@ class MapProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         // 성공적으로 요청을 보냈을 때의 처리
         _isLocationServiceEnabled = false;
-        print('서버 응답: ${response.body}');
+        debugPrint('서버 응답: ${response.body}');
       } else {
         // 서버 응답이 200이 아닐 때의 처리
-        print('요청 실패: ${response.statusCode}');
+        debugPrint('요청 실패 map provider 301: ${response.statusCode}');
       }
     } catch (e) {
       // 요청 중 오류가 발생했을 때의 처리
-      print('에러 발생: $e');
+      debugPrint('에러 발생: $e');
     }
   }
 

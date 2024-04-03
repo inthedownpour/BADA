@@ -22,8 +22,9 @@ class _AlarmTestState extends State<AlarmTest> {
 
   late LatLng currentLocation;
   late Future<String?> fcmToken;
+  Future<bool>? _load;
 
-  Future<void> _loadProfileFromBackEnd() async {
+  Future<bool> _loadProfileFromBackEnd() async {
     String? accessToken = await _storage.read(key: 'accessToken');
     debugPrint('accessToken: $accessToken');
 
@@ -43,52 +44,64 @@ class _AlarmTestState extends State<AlarmTest> {
         _memberId = data['memberId'];
         _phone = data['phone'];
         _profileUrl = data['profileUrl'];
+        currentLocation = mapProvider.currentLocation;
+
         fcmToken = FirebaseMessaging.instance.getToken();
       });
+      return true;
+    } else {
+      debugPrint('Failed to load data');
+      return false;
     }
   }
-
-  Future<void> getCurrentLocation() async {}
 
   @override
   void initState() {
     super.initState();
-    _loadProfileFromBackEnd();
-    currentLocation = mapProvider.currentLocation;
+    _load = _loadProfileFromBackEnd();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('테스트'),
-        backgroundColor: Colors.white,
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                sendAlarm(
-                  familyCode: _familyCode!,
-                  memberId: _memberId!,
-                  childeName: _name!,
-                  latitude: currentLocation.latitude.toString(),
-                  longitude: currentLocation.longitude.toString(),
-                  type: 'DEFAULT',
-                  phone: _phone ?? '',
-                  profileUrl: _profileUrl ?? '',
-                  destinationName: '10시35분 테스트',
-                  destinationIcon: 'assets/img/bag.png',
-                );
-              },
-              child: const Text('test'),
+    return FutureBuilder(
+        future: _load,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('테스트'),
+              backgroundColor: Colors.white,
+              centerTitle: true,
             ),
-          ],
-        ),
-      ),
-    );
+            body: Center(
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      sendAlarm(
+                        familyCode: _familyCode!,
+                        memberId: _memberId!,
+                        childeName: _name!,
+                        latitude: currentLocation.latitude.toString(),
+                        longitude: currentLocation.longitude.toString(),
+                        type: 'DEFAULT',
+                        phone: _phone ?? '',
+                        profileUrl: _profileUrl ?? '',
+                        destinationName: '10시35분 테스트',
+                        destinationIcon: 'assets/img/bag.png',
+                      );
+                    },
+                    child: const Text('test'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   Future<void> sendAlarm({
@@ -105,9 +118,6 @@ class _AlarmTestState extends State<AlarmTest> {
   }) async {
     var url = Uri.parse('https://j10b207.p.ssafy.io/api/kafka/alarm');
 
-    // var accessToken = _storage.read(key: 'accessToken');
-    var currLocation = mapProvider.currentLocation;
-
     var response = await http.post(
       url,
       headers: <String, String>{
@@ -115,13 +125,13 @@ class _AlarmTestState extends State<AlarmTest> {
         // 'Authorization': 'Bearer $accessToken'
       },
       body: jsonEncode(<String, dynamic>{
-        "type": "DEPART",
+        "type": type,
         "memberId": memberId,
         "familyCode": familyCode,
         "myPlaceId": 10,
-        "latitude": currLocation.latitude,
-        "longitude": currLocation.longitude,
-        "content": "용준씨 어디계세요 지금 찾고 있습니다. 13시 46분",
+        "latitude": latitude,
+        "longitude": longitude,
+        "content": '보낸 시각은 : ${DateTime.now().toString()}',
         "childName": childeName,
         "phone": phone,
         "profileUrl": profileUrl,

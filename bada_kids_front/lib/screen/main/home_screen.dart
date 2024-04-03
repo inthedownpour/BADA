@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:bada_kids_front/model/buttons.dart';
 import 'package:bada_kids_front/model/member.dart';
@@ -39,16 +40,22 @@ class _HomeScreenState extends State<HomeScreen>
   String? _name;
   int? _memberId;
   int? _movingState;
-  Future<void>? _load;
+  Future<bool>? _load;
 
-  Future<void> _loadProfile() async {
-    await _profileProvider.loadProfile();
-    setState(() {
-      _profileUrl = _profileProvider.profileUrl;
-      _name = _profileProvider.name;
-      _memberId = _profileProvider.memberId;
-      _movingState = _profileProvider.movingState;
-    });
+  Future<bool> _loadProfile() async {
+    try {
+      await _profileProvider.loadProfile();
+      setState(() {
+        _profileUrl = _profileProvider.profileUrl;
+        _name = _profileProvider.name;
+        _memberId = _profileProvider.memberId;
+        _movingState = _profileProvider.movingState;
+      });
+      return true;
+    } catch (e) {
+      debugPrint('프로필 정보를 불러오는데 실패했습니다.');
+      return false;
+    }
   }
 
   late final AnimationController _lottieController;
@@ -61,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen>
     _mapProvider = MapProvider.instance;
     _profileProvider = ProfileProvider.instance;
 
-    _load = _loadProfile().then((value) => setState(() {}));
+    _load = _loadProfile();
   }
 
   @override
@@ -79,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen>
     if (state == AppLifecycleState.resumed) {
       _lottieController.repeat();
       _profileProvider = ProfileProvider.instance;
-      _load = _loadProfile().then((value) => setState(() {}));
+      _load = _loadProfile();
     }
   }
 
@@ -91,6 +98,11 @@ class _HomeScreenState extends State<HomeScreen>
     return FutureBuilder(
       future: _load,
       builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Stack(
           children: [
             Scaffold(
@@ -228,17 +240,24 @@ class _HomeScreenState extends State<HomeScreen>
                   Text(
                     '$_name님',
                     style: const TextStyle(
-                        color: Colors.black,
-                        decoration: TextDecoration.none,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.black,
+                      decoration: TextDecoration.none,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    maxLines: 1,
                   ),
                   const Text(
                     '안녕하세요!',
                     style: TextStyle(
-                        color: Colors.black,
-                        decoration: TextDecoration.none,
-                        fontSize: 20),
+                      color: Colors.black,
+                      decoration: TextDecoration.none,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    maxLines: 1,
                   ),
                 ],
               ),

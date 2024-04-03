@@ -20,7 +20,6 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> with TickerProviderStateMixin {
   final _storage = const FlutterSecureStorage();
-  late final AnimationController _lottieController;
   Future<void>? _load;
   String? accessToken;
 
@@ -36,6 +35,8 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
       'phone': phone,
     };
   }
+
+  late final AnimationController _lottieController;
 
   @override
   void initState() {

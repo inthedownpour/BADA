@@ -245,29 +245,23 @@ class _MapSearchState extends State<MapSearch>
                         final formattedDate =
                             '${date.month.toString().padLeft(2, '0')}.${date.day.toString().padLeft(2, '0')}';
                         return ListTile(
-                          title: Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: UIhelper.scaleWidth(context) * 250,
-                                  child: Text(
-                                    keyword,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: UIhelper.scaleWidth(context) * 250,
+                                child: Text(
+                                  keyword,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(
-                                  width: UIhelper.scaleWidth(context) * 10,
-                                ),
-                                Text(
-                                  formattedDate,
-                                  style: const TextStyle(color: Colors.black26),
-                                ),
-                              ],
-                            ),
+                              ),
+                              Text(
+                                formattedDate,
+                                style: const TextStyle(color: Colors.black26),
+                              ),
+                            ],
                           ),
                           onTap: () {
-                            // 검색어를 클릭했을 때의 동작
                             _controller.text = keyword;
                             setState(() {
                               _searchResult =
