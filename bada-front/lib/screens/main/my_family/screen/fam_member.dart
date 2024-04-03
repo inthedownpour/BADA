@@ -284,7 +284,7 @@ class _FamilyMember2State extends State<FamilyMember2>
             ),
             Text(
               widget.name,
-              style: const TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 14),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
