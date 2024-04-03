@@ -68,6 +68,34 @@ public class KafkaProducerService {
 
       kafkaTemplate.send(topic, alarmDto);
       return "아이 목적지에 도착 : send alarm";
+
+    } else if (alarmDto.getType().equals("TOO FAST")) {
+      Member member = memberFindService.findById(alarmDto.getMemberId());
+      MyPlace myPlace = myPlaceFindService.findById(alarmDto.getMyPlaceId());
+
+      alarmDto.setContent(member.getName() + "님에게서 비정상적인 속도가 감지되었습니다. 아이 확인이 필요합니다.");
+      alarmDto.setChildName(member.getName());
+      alarmDto.setPhone(member.getPhone());
+      alarmDto.setProfileUrl(member.getProfileUrl());
+      alarmDto.setDestinationName(myPlace.getPlaceName());
+      alarmDto.setDestinationIcon(myPlace.getIcon());
+
+      kafkaTemplate.send(topic, alarmDto);
+      return "아이 비정상속도 감지 : send alarm";
+
+    } else if (alarmDto.getType().equals("STAY")) {
+      Member member = memberFindService.findById(alarmDto.getMemberId());
+      MyPlace myPlace = myPlaceFindService.findById(alarmDto.getMyPlaceId());
+
+      alarmDto.setContent(member.getName() + "님이 현재 5분이상 정지해있습니다. 아이 확인이 필요합니다.");
+      alarmDto.setChildName(member.getName());
+      alarmDto.setPhone(member.getPhone());
+      alarmDto.setProfileUrl(member.getProfileUrl());
+      alarmDto.setDestinationName(myPlace.getPlaceName());
+      alarmDto.setDestinationIcon(myPlace.getIcon());
+
+      kafkaTemplate.send(topic, alarmDto);
+      return "아이 정지상태 감지 : send alarm";
     }
 
     /**
@@ -75,12 +103,12 @@ public class KafkaProducerService {
      * 현재 알림트리거 서비스 : 겅로 이탈여부 : 작동 불가 데이터베이스 데이터 없음 주석 수정 필요
      *  **/
     if (
-//        !alarmTriggerService.inPath(
-//            alarmDto.getMemberId(),
-//            Double.parseDouble(alarmDto.getLatitude()),
-//            Double.parseDouble(alarmDto.getLongitude())
-//        )
-        true
+        !alarmTriggerService.inPath(
+            alarmDto.getMemberId(),
+            Double.parseDouble(alarmDto.getLatitude()),
+            Double.parseDouble(alarmDto.getLongitude())
+        )
+//        true
     ) {
       log.info("!!!!!!!!!! 아이 경로 이탈 감지 !!!!!!!!!");
 
