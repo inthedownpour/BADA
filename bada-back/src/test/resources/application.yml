@@ -1,0 +1,27 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    show_sql: true
+    properties:
+      hibernate: dialect=org.hibernate.dialect.MySQL8Dialect
+      dialect:
+        storage_engine: innodb
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
+      username: sa
+
+  kafka:
+    bootstrapAddress: ${EC2_HOST}:9092
+    consumer:
+      auto-offset-reset: earliest
+    topics:
+      now-topic: test-topic # alarm-topic
+      alarm-topic: alarm-topic
+
+  #application-secret.yml
+  profiles:
+    include: secret
