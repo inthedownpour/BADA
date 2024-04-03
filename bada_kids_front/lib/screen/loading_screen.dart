@@ -76,14 +76,15 @@ class _LoadingScreenState extends State<LoadingScreen>
               ),
               Stack(
                 children: [
-                  Lottie.asset(
-                    'assets/lottie/walking-cloud.json',
-                    width: deviceWidth * 0.7,
-                    controller: _lottieController,
-                    onLoaded: ((p0) {
-                      _lottieController.duration = p0.duration;
-                      _lottieController.repeat();
-                    }),
+                  Transform(
+                    // Apply a transformation that scales by -1 in the x axis to flip horizontally
+                    transform: Matrix4.identity()..scale(-1.0, 1.0),
+                    alignment:
+                        Alignment.center, // Ensure the transform is centered
+                    child: Lottie.asset(
+                      'assets/lottie/walking-cloud.json',
+                      width: deviceWidth * 0.7,
+                    ),
                   ),
                   Lottie.asset(
                     'assets/lottie/walking-pencil.json',

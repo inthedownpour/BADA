@@ -1,10 +1,9 @@
 import 'dart:convert';
-
 import 'package:bada_kids_front/model/route_info.dart';
+import 'package:bada_kids_front/model/screen_size.dart';
 import 'package:bada_kids_front/provider/map_provider.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:bada_kids_front/provider/profile_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:http/http.dart' as http;
@@ -44,7 +43,56 @@ class _PathFindState extends State<PathFind>
   late double horizontalForLevel;
   StrokeStyle strokeStyle = StrokeStyle.solid;
 
-  // 현재 위치 정보와 목적지 위치 정보를 POST 요청으로 보내기
+  Future<void> postArrive() async {
+    ProfileProvider profile = ProfileProvider.instance;
+
+    var url = Uri.parse('https://j10b207.p.ssafy.io/api/kafka/alarm');
+    var response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        "type": 'ARRIVE',
+        "memberId": profile.memberId,
+        "familyCode": profile.familyCode,
+        "myPlaceId": widget.placeId,
+        "latitude": currentLocation.latitude,
+        "longitude": currentLocation.longitude,
+        "content": '보낸 시각은 : ${DateTime.now().toString()}',
+        "childName": profile.name,
+        "phone": profile.phone,
+        "profileUrl": profile.profileUrl,
+        "destinationName": widget.destinationName,
+        "destinationIcon": widget.destinationIcon
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint('79 성공');
+    }
+  }
+
+  Future<void> arrived() async {
+    FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+    var token = await secureStorage.read(key: 'accessToken');
+    var url1 = Uri.parse('https://j10b207.p.ssafy.io/api/route');
+    var url2 = Uri.parse('https://j10b207.p.ssafy.io/api/currentLocation');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    var res1 = await http.delete(url1, headers: headers);
+    var res2 = await http.delete(url2, headers: headers);
+
+    if (res1.statusCode == 200 && res2.statusCode == 200) {
+      postArrive();
+    } else {
+      debugPrint('1. ${res1.statusCode} 2.${res2.statusCode}');
+    }
+  }
+
   Future<bool> requestPath() async {
     FlutterSecureStorage secureStorage = const FlutterSecureStorage();
     MapProvider mapProvider = MapProvider.instance;
@@ -61,8 +109,8 @@ class _PathFindState extends State<PathFind>
       "startLat": currentLocation.latitude.toStringAsFixed(5),
       "endLng": destination.longitude.toStringAsFixed(5),
       "endLat": destination.latitude.toStringAsFixed(5),
-      "placeName": widget.placeName, // "목적지 이름"
-      "addressName": widget.addressName, // "출발지 이름"
+      "placeName": widget.placeName,
+      "addressName": widget.addressName,
     });
     debugPrint("startLng: ${currentLocation.longitude.toStringAsFixed(5)}");
     debugPrint("startLat: ${currentLocation.latitude.toStringAsFixed(5)}");
@@ -80,16 +128,13 @@ class _PathFindState extends State<PathFind>
 
       RouteInfo routeInfo = RouteInfo.fromJson(responseData);
 
-      // 시작점 추가
       pathPoints.add(LatLng(routeInfo.startLat, routeInfo.startLng));
 
-      // 경로 추가
       List<Point> pointList = routeInfo.pointList;
       for (var point in pointList) {
         pathPoints.add(LatLng(point.latitude, point.longitude));
       }
 
-      // 종점 추가
       pathPoints.add(LatLng(routeInfo.endLat, routeInfo.endLng));
 
       setState(() {});
@@ -105,11 +150,9 @@ class _PathFindState extends State<PathFind>
       mapProvider.destinationId = widget.placeId;
       mapProvider.initCurrentLocationUpdate();
 
-      debugPrint('전부 성공적으로 처리되었습니다.');
       return true;
     } else {
-      // 오류가 발생했을 때의 로직
-      debugPrint('리퀘스트 실패 : ${response.statusCode}.');
+      debugPrint('리퀘스트 실패 167 : ${response.statusCode}.');
       return false;
     }
   }
@@ -118,7 +161,7 @@ class _PathFindState extends State<PathFind>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this); // Observer를 해제합니다.
+    WidgetsBinding.instance.removeObserver(this);
     _lottieController.dispose();
 
     super.dispose();
@@ -127,7 +170,6 @@ class _PathFindState extends State<PathFind>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    // 앱이 다시 활성화될 때 애니메이션을 재시작합니다.
     if (state == AppLifecycleState.resumed) {
       _lottieController.forward();
     }
@@ -136,11 +178,15 @@ class _PathFindState extends State<PathFind>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this); // Observer 등록
+
+    WidgetsBinding.instance.addObserver(this);
+
     _lottieController = AnimationController(vsync: this);
+
     MapProvider mapProvider = MapProvider.instance;
 
     destination = widget.destination;
+
     currentLocation = mapProvider.currentLocation;
     middle = LatLng(
       (destination.latitude + currentLocation.latitude) / 2,
@@ -172,16 +218,14 @@ class _PathFindState extends State<PathFind>
             backgroundColor: const Color(0xff4d7cfe),
             foregroundColor: Colors.white,
             title: Row(
-              // Flex 대신 Row 사용
-              mainAxisAlignment: MainAxisAlignment.center, // 가운데 정렬
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  // Flexible 대신 Expanded 사용
                   child: Center(
                     child: Text(
                       widget.addressName,
                       style: const TextStyle(fontSize: 18),
-                      overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
@@ -193,12 +237,11 @@ class _PathFindState extends State<PathFind>
                   width: 5,
                 ),
                 Expanded(
-                  // Flexible 대신 Expanded 사용
                   child: Center(
                     child: Text(
                       widget.placeName,
                       style: const TextStyle(fontSize: 18),
-                      overflow: TextOverflow.ellipsis, // 텍스트 오버플로우 시 생략
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
@@ -215,53 +258,102 @@ class _PathFindState extends State<PathFind>
             ),
             centerTitle: true,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios), // 원하는 아이콘으로 변경
+              icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
-                Navigator.pop(context); // 현재 화면을 닫고 이전 화면으로 돌아가기
+                Navigator.pop(context);
               },
               padding: const EdgeInsets.only(right: 0),
             ),
           ),
-          body: KakaoMap(
-            onMapCreated: ((controller) async {
-              mapController = controller;
-              if (verticalForLevel > 0.127 || horizontalForLevel > 0.096) {
-                mapController.setLevel(9);
-              } else if (verticalForLevel > 0.0676 ||
-                  horizontalForLevel > 0.0518) {
-                mapController.setLevel(8);
-              } else if (verticalForLevel > 0.0395 ||
-                  horizontalForLevel > 0.0246) {
-                mapController.setLevel(7);
-              } else if (verticalForLevel > 0.0177 ||
-                  horizontalForLevel > 0.014) {
-                mapController.setLevel(6);
-              } else if (verticalForLevel > 0.009 ||
-                  horizontalForLevel > 0.00551) {
-                mapController.setLevel(5);
-              } else if (verticalForLevel > 0.0049 ||
-                  horizontalForLevel > 0.0023) {
-                mapController.setLevel(4);
-              } else {
-                mapController.setLevel(3);
-              }
+          body: Stack(
+            children: [
+              KakaoMap(
+                onMapCreated: ((controller) async {
+                  mapController = controller;
+                  if (verticalForLevel > 0.127 || horizontalForLevel > 0.096) {
+                    mapController.setLevel(9);
+                  } else if (verticalForLevel > 0.0676 ||
+                      horizontalForLevel > 0.0518) {
+                    mapController.setLevel(8);
+                  } else if (verticalForLevel > 0.0395 ||
+                      horizontalForLevel > 0.0246) {
+                    mapController.setLevel(7);
+                  } else if (verticalForLevel > 0.0177 ||
+                      horizontalForLevel > 0.014) {
+                    mapController.setLevel(6);
+                  } else if (verticalForLevel > 0.009 ||
+                      horizontalForLevel > 0.00551) {
+                    mapController.setLevel(5);
+                  } else if (verticalForLevel > 0.0049 ||
+                      horizontalForLevel > 0.0023) {
+                    mapController.setLevel(4);
+                  } else {
+                    mapController.setLevel(3);
+                  }
 
-              // 경로를 지도에 그리기 위한 Polyline 객체 생성
-              polylines.add(
-                Polyline(
-                  polylineId: 'path_${polylines.length}',
-                  points: pathPoints,
-                  strokeColor: Colors.blue,
-                  strokeOpacity: 1,
-                  strokeWidth: 5,
-                  strokeStyle: StrokeStyle.solid,
+                  polylines.add(
+                    Polyline(
+                      polylineId: 'path_${polylines.length}',
+                      points: pathPoints,
+                      strokeColor: Colors.blue,
+                      strokeOpacity: 1,
+                      strokeWidth: 5,
+                      strokeStyle: StrokeStyle.solid,
+                    ),
+                  );
+                  setState(() {});
+                }),
+                markers: markers.toList(),
+                polylines: polylines.toList(),
+                center: middle,
+              ),
+              Positioned(
+                bottom: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  height: UIhelper.deviceHeight(context) * 0.25,
+                  width: UIhelper.deviceWidth(context),
+                  child: Column(
+                    children: [
+                      const Text('준비중입니다.'),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              arrived();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Debug Alert'),
+                                    content: const Text(
+                                        'Arrived method has been called.'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('OK'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: const Text('도착'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              );
-              setState(() {});
-            }),
-            markers: markers.toList(),
-            polylines: polylines.toList(),
-            center: middle,
+              )
+            ],
           ),
         );
       },
