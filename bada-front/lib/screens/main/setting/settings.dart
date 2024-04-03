@@ -61,6 +61,11 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
     return FutureBuilder(
       future: _load,
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Scaffold(
           appBar: const CustomAppBar(
             title: '설정',
@@ -77,19 +82,14 @@ class _SettingsState extends State<Settings> with TickerProviderStateMixin {
                         .infinity, // Make the Container fit the screen width
                     child: FutureBuilder<Map<String, String?>>(
                       future: _fetchUserData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                      builder: (context, snapshot2) {
+                        if (snapshot2.connectionState != ConnectionState.done) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
-                        } else if (snapshot.hasError) {
-                          return Center(
-                            child: Text('Error: ${snapshot.error}'),
-                          );
                         } else {
                           // Data loaded
-                          final data = snapshot.data!;
+                          final data = snapshot2.data!;
                           return _buildUserDetails(data);
                         }
                       },

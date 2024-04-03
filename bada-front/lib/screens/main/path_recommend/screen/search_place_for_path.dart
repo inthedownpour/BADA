@@ -48,6 +48,11 @@ class _SearchPlaceForPathState extends State<SearchPlaceForPath> {
     return FutureBuilder(
       future: load,
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Scaffold(
           appBar: AppBar(
             title: const Text('검색'),

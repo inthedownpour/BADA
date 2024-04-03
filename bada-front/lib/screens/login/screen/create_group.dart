@@ -72,6 +72,9 @@ class _CreateFamilyState extends State<CreateFamily> {
       body: FutureBuilder(
         future: _inputPhoneNumberFuture,
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
           return Container(
             padding: const EdgeInsets.all(20),
             child: Center(

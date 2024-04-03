@@ -63,7 +63,7 @@ android {
         release {
             keyAlias 'release'
             keyPassword 'ssafy1'
-            storeFile file('C:/chang/S10P22B207/bada_front/release.jks')
+            storeFile file('./release.jks')
             storePassword 'ssafy1'
         }
     }

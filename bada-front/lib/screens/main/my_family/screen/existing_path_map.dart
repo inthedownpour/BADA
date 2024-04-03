@@ -162,7 +162,7 @@ class _ExistingPathMapState extends State<ExistingPathMap> {
     return FutureBuilder(
       future: _loadPath,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
           // Future가 완료되지 않은 경우
           return const Center(
             child: CircularProgressIndicator(),

@@ -36,13 +36,20 @@ class _HomeScreenState extends State<HomeScreen>
   String? nickname;
   int? memberId;
   int unreadAlarms = 0;
+  Future<bool>? _load;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this); // Observer 등록
     _lottieController = AnimationController(vsync: this);
-    _unreadAlarmCount();
+    _load = _initializeApp();
+  }
+
+  Future<bool> _initializeApp() async {
+    await _loadProfile();
+    await _unreadAlarmCount();
+    return true;
   }
 
   Future<void> _loadProfile() async {
@@ -100,8 +107,13 @@ class _HomeScreenState extends State<HomeScreen>
     final deviceHeight = MediaQuery.of(context).size.height;
 
     return FutureBuilder(
-      future: _loadProfile(),
+      future: _load,
       builder: (constext, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Scaffold(
           backgroundColor: Colors.white,
           body: Container(
