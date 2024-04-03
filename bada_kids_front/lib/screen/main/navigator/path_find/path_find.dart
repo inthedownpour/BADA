@@ -5,6 +5,7 @@ import 'package:bada_kids_front/model/screen_size.dart';
 import 'package:bada_kids_front/provider/map_provider.dart';
 import 'package:bada_kids_front/provider/profile_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:http/http.dart' as http;
@@ -128,20 +129,26 @@ class _PathFindState extends State<PathFind>
       debugPrint('responseData: $responseData');
 
       RouteInfo routeInfo = RouteInfo.fromJson(responseData);
+      debugPrint('path 추가 완료 132');
 
       pathPoints.add(LatLng(routeInfo.startLat, routeInfo.startLng));
+      debugPrint('path 추가 완료 135');
 
       List<Point> pointList = routeInfo.pointList;
       for (var point in pointList) {
         pathPoints.add(LatLng(point.latitude, point.longitude));
       }
+      debugPrint('path 추가 완료 141');
 
       pathPoints.add(LatLng(routeInfo.endLat, routeInfo.endLng));
+      debugPrint('path 추가 완료 145');
 
       setState(() {});
       for (var point in pathPoints) {
         debugPrint('point: $point');
       }
+
+      debugPrint('path 추가 완료 152');
 
       debugPrint('Request successful: ${response.body}');
       mapProvider.startLatLng = currentLocation;
@@ -149,11 +156,11 @@ class _PathFindState extends State<PathFind>
       mapProvider.destinationName = widget.placeName;
       mapProvider.destinationIcon = widget.destinationIcon;
       mapProvider.destinationId = widget.placeId;
-      mapProvider.initCurrentLocationUpdate();
+      await mapProvider.initCurrentLocationUpdate();
 
       return true;
     } else {
-      debugPrint('리퀘스트 실패 167 : ${response.statusCode}.');
+      debugPrint('리퀘스트 실패 167 : ${response.statusCode}. 지금 158');
       return false;
     }
   }
@@ -215,162 +222,237 @@ class _PathFindState extends State<PathFind>
           );
         }
         return Scaffold(
-          appBar: AppBar(
-            backgroundColor: const Color(0xff4d7cfe),
-            foregroundColor: Colors.white,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      widget.addressName,
-                      style: const TextStyle(fontSize: 18),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-                const Icon(
-                  Icons.arrow_forward,
-                  size: 20,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      widget.placeName,
-                      style: const TextStyle(fontSize: 18),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-              ],
-            ),
-            centerTitle: true,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              padding: const EdgeInsets.only(right: 0),
-            ),
-          ),
-          body: Column(
+          // appBar: AppBar(
+          //   backgroundColor: const Color.fromARGB(255, 132, 138, 154),
+          //   foregroundColor: Colors.white,
+          //   title: Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       Expanded(
+          //         child: Center(
+          //           child: Text(
+          //             widget.addressName,
+          //             style: const TextStyle(fontSize: 18),
+          //             overflow: TextOverflow.ellipsis,
+          //           ),
+          //         ),
+          //       ),
+          //       const Icon(
+          //         Icons.arrow_forward,
+          //         size: 20,
+          //       ),
+          //       const SizedBox(
+          //         width: 5,
+          //       ),
+          //       Expanded(
+          //         child: Center(
+          //           child: Text(
+          //             widget.placeName,
+          //             style: const TextStyle(fontSize: 18),
+          //             overflow: TextOverflow.ellipsis,
+          //           ),
+          //         ),
+          //       ),
+          //       const SizedBox(
+          //         width: 10,
+          //       ),
+          //       const SizedBox(
+          //         width: 10,
+          //       ),
+          //     ],
+          //   ),
+          //   centerTitle: true,
+          //   leading: IconButton(
+          //     icon: const Icon(Icons.arrow_back_ios),
+          //     onPressed: () {
+          //       Navigator.pop(context);
+          //     },
+          //     padding: const EdgeInsets.only(right: 0),
+          //   ),
+          // ),
+          body: Stack(
             children: [
-              SizedBox(
-                height: UIhelper.deviceHeight(context) * 0.75,
-                child: KakaoMap(
-                  onMapCreated: ((controller) async {
-                    mapController = controller;
-                    if (verticalForLevel > 0.127 ||
-                        horizontalForLevel > 0.096) {
-                      mapController.setLevel(9);
-                    } else if (verticalForLevel > 0.0676 ||
-                        horizontalForLevel > 0.0518) {
-                      mapController.setLevel(8);
-                    } else if (verticalForLevel > 0.0395 ||
-                        horizontalForLevel > 0.0246) {
-                      mapController.setLevel(7);
-                    } else if (verticalForLevel > 0.0177 ||
-                        horizontalForLevel > 0.014) {
-                      mapController.setLevel(6);
-                    } else if (verticalForLevel > 0.009 ||
-                        horizontalForLevel > 0.00551) {
-                      mapController.setLevel(5);
-                    } else if (verticalForLevel > 0.0049 ||
-                        horizontalForLevel > 0.0023) {
-                      mapController.setLevel(4);
-                    } else {
-                      mapController.setLevel(3);
-                    }
+              Column(
+                children: [
+                  SizedBox(
+                    height: UIhelper.deviceHeight(context) * 0.85,
+                    child: KakaoMap(
+                      onMapCreated: ((controller) async {
+                        mapController = controller;
+                        if (verticalForLevel > 0.127 ||
+                            horizontalForLevel > 0.096) {
+                          mapController.setLevel(9);
+                        } else if (verticalForLevel > 0.0676 ||
+                            horizontalForLevel > 0.0518) {
+                          mapController.setLevel(8);
+                        } else if (verticalForLevel > 0.0395 ||
+                            horizontalForLevel > 0.0246) {
+                          mapController.setLevel(7);
+                        } else if (verticalForLevel > 0.0177 ||
+                            horizontalForLevel > 0.014) {
+                          mapController.setLevel(6);
+                        } else if (verticalForLevel > 0.009 ||
+                            horizontalForLevel > 0.00551) {
+                          mapController.setLevel(5);
+                        } else if (verticalForLevel > 0.0049 ||
+                            horizontalForLevel > 0.0023) {
+                          mapController.setLevel(4);
+                        } else {
+                          mapController.setLevel(3);
+                        }
 
-                    polylines.add(
-                      Polyline(
-                        polylineId: 'path_${polylines.length}',
-                        points: pathPoints,
-                        strokeColor: Colors.blue,
-                        strokeOpacity: 1,
-                        strokeWidth: 5,
-                        strokeStyle: StrokeStyle.solid,
-                      ),
-                    );
-                    setState(() {});
-                  }),
-                  markers: markers.toList(),
-                  polylines: polylines.toList(),
-                  center: middle,
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Colors.white,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                height: UIhelper.deviceHeight(context) * 0.15,
-                width: UIhelper.deviceWidth(context),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                        polylines.add(
+                          Polyline(
+                            polylineId: 'path_${polylines.length}',
+                            points: pathPoints,
+                            strokeColor: Colors.blue,
+                            strokeOpacity: 1,
+                            strokeWidth: 5,
+                            strokeStyle: StrokeStyle.solid,
+                          ),
+                        );
+                        setState(() {});
+                      }),
+                      markers: markers.toList(),
+                      polylines: polylines.toList(),
+                      center: middle,
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.white,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    height: UIhelper.deviceHeight(context) * 0.15,
+                    width: UIhelper.deviceWidth(context),
+                    child: Column(
                       children: [
-                        Image.asset(
-                          widget.destinationIcon,
-                          width: UIhelper.deviceWidth(context) * 0.12,
-                          height: UIhelper.deviceHeight(context) * 0.12,
-                        ),
-                        Column(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text('목적지'),
-                            SizedBox(
-                              height: UIhelper.deviceHeight(context) * 0.02,
+                            Image.asset(
+                              widget.destinationIcon,
+                              width: UIhelper.deviceWidth(context) * 0.12,
+                              height: UIhelper.deviceHeight(context) * 0.12,
                             ),
-                            Text(
-                              widget.destinationName,
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            Column(
+                              children: [
+                                const Text('목적지'),
+                                SizedBox(
+                                  height: UIhelper.deviceHeight(context) * 0.02,
+                                ),
+                                Text(
+                                  widget.destinationName,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            arrived();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('Debug Alert'),
-                                  content: const Text(
-                                    'Arrived method has been called.',
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      child: const Text('OK'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
+                            ElevatedButton(
+                              onPressed: () {
+                                arrived();
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Debug Alert'),
+                                      content: const Text(
+                                        'Arrived method has been called.',
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('OK'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                               },
-                            );
-                          },
-                          child: const Text('도착'),
-                        ),
+                              child: const Text('도착'),
+                            ),
+                          ],
+                        )
                       ],
-                    )
-                  ],
+                    ),
+                  )
+                ],
+              ),
+              Positioned(
+                top: 0,
+                child: Container(
+                  color: const Color.fromARGB(225, 79, 79, 255),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  width: UIhelper.deviceWidth(context),
+                  height: UIhelper.deviceHeight(context) * 0.13,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: UIhelper.deviceHeight(context) * 0.05,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                              icon: const Icon(
+                                Icons.arrow_back_ios_new,
+                                size: 30,
+                                color: Colors.white,
+                              )),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                widget.addressName,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.arrow_forward,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                widget.placeName,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],
