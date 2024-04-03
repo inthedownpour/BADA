@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:bada/models/user_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http_parser/http_parser.dart' as mime;
@@ -31,6 +33,29 @@ class MembersApi {
       return false;
     }
 
+    // 이미지 압축 및 해상도 조정
+    XFile? compressedFile;
+    if (filePath != null) {
+      debugPrint(filePath);
+      var targetPath = '';
+      if (filePath.endsWith('.jpg')) {
+        targetPath = filePath.replaceAll('.jpg', '_compressed.jpg');
+      } else if (filePath.endsWith('.jpeg')) {
+        targetPath = filePath.replaceAll('.jpeg', '_compressed.jpeg');
+      }
+      debugPrint(targetPath);
+      compressedFile = (await FlutterImageCompress.compressAndGetFile(
+        filePath,
+        targetPath,
+        quality: 30, // JPEG의 품질, 0~100 사이의 값
+        minWidth: 800, // 결과 이미지의 최대 너비
+        minHeight: 600, // 결과 이미지의 최대 높이
+      ));
+      if (compressedFile != null) {
+        filePath = compressedFile.path;
+      }
+    }
+
     debugPrint('액세스 토큰 : $accessToken');
     debugPrint('childId : $childId');
     debugPrint('name : $nickname');
@@ -53,7 +78,7 @@ class MembersApi {
           await http.MultipartFile.fromPath(
             'file', // 서버에서 요구하는 필드명
             filePath,
-            contentType: mime.MediaType('image', 'jpeg'),
+            contentType: mime.MediaType('image', 'jpg'),
           ),
         );
         debugPrint(request.fields.toString());

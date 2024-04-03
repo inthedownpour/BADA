@@ -117,7 +117,7 @@ class _VerificationCodeState extends State<VerificationCode> {
               child: Text(
                 char,
                 style: const TextStyle(
-                  fontSize: 36,
+                  fontSize: 31,
                   fontWeight: FontWeight.bold,
                 ),
               ),
