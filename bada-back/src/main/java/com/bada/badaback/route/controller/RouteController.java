@@ -2,6 +2,7 @@ package com.bada.badaback.route.controller;
 
 import com.bada.badaback.global.annotation.ExtractPayload;
 import com.bada.badaback.member.service.MemberService;
+import com.bada.badaback.route.dto.RoutePlaceResponseDto;
 import com.bada.badaback.route.dto.RouteRequestDto;
 import com.bada.badaback.route.dto.RouteResponseDto;
 import com.bada.badaback.route.service.RouteService;
@@ -29,11 +30,11 @@ public class RouteController {
      * @throws IOException
      */
     @PostMapping
-    public ResponseEntity<RouteResponseDto> creteRoute(@ExtractPayload Long memberId, @RequestBody @Valid RouteRequestDto routeRequestDto) throws IOException {
+    public ResponseEntity<RoutePlaceResponseDto> creteRoute(@ExtractPayload Long memberId, @RequestBody @Valid RouteRequestDto routeRequestDto) throws IOException {
         routeService.createRoute(memberId, routeRequestDto);
-        RouteResponseDto routeResponseDto = routeService.getRoute(memberId, memberId);
+        RoutePlaceResponseDto routePlaceResponseDto = routeService.getRoute(memberId, memberId);
         memberService.updateMovingState(memberId, 1);
-        return ResponseEntity.ok(routeResponseDto);
+        return ResponseEntity.ok(routePlaceResponseDto);
     }
 
     /**
@@ -43,9 +44,9 @@ public class RouteController {
      * @return
      */
     @GetMapping("/{childId}")
-    public ResponseEntity<RouteResponseDto> getRoute(@ExtractPayload Long memberId, @PathVariable("childId") Long childId) {
+    public ResponseEntity<RoutePlaceResponseDto> getRoute(@ExtractPayload Long memberId, @PathVariable("childId") Long childId) {
         log.info("===============childId로 경로 조회 Controller==================");
-        RouteResponseDto routeResponseDto = routeService.getRoute(memberId, childId);
+        RoutePlaceResponseDto routeResponseDto = routeService.getRoute(memberId, childId);
         log.info("==================Service에서 결과 도착======================");
         log.info("결과: {}",routeResponseDto);
         return ResponseEntity.ok(routeResponseDto);

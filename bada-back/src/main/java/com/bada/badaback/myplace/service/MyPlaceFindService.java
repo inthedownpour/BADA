@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -17,5 +19,9 @@ public class MyPlaceFindService {
     public MyPlace findById(Long id) {
         return myPlaceRepository.findById(id)
                 .orElseThrow(() -> BaseException.type(MyPlaceErrorCode.MYPLACE_NOT_FOUND));
+    }
+
+    public List<MyPlace> findRoutePlace(String lat, String lng){
+        return myPlaceRepository.findRoutePlace(lat, lng);
     }
 }

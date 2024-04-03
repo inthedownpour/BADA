@@ -2,6 +2,7 @@ package com.bada.badaback.route.controller;
 
 import com.bada.badaback.auth.exception.AuthErrorCode;
 import com.bada.badaback.common.ControllerTest;
+import com.bada.badaback.route.dto.RoutePlaceResponseDto;
 import com.bada.badaback.route.dto.RouteRequestDto;
 import com.bada.badaback.route.dto.RouteResponseDto;
 import org.junit.jupiter.api.DisplayName;
@@ -187,7 +188,7 @@ class RouteControllerTest extends ControllerTest {
         return new RouteRequestDto("36.421518", "127.391538", "36.421914", "127.38412", "출발", "도착");
     }
 
-    private RouteResponseDto createRouteResponseDto() {
-        return new RouteResponseDto(36.421518, 127.391538, 36.421914, 127.38412, "출발", "도착", new ArrayList<>());
+    private RoutePlaceResponseDto createRouteResponseDto() {
+        return new RoutePlaceResponseDto(36.421518, 127.391538, 36.421914, 127.38412, "출발", "도착",1L,"ccc.png" ,new ArrayList<>());
     }
 }
