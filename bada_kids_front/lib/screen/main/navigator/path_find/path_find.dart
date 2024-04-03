@@ -10,13 +10,19 @@ import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:http/http.dart' as http;
 
 class PathFind extends StatefulWidget {
+  final String destinationName;
+  final String destinationIcon;
   final LatLng destination;
   final String addressName;
   final String placeName;
+  final int placeId;
   const PathFind({
     super.key,
+    required this.destinationName,
+    required this.destinationIcon,
     required this.destination,
     required this.placeName,
+    required this.placeId,
     required this.addressName,
   });
 
@@ -58,10 +64,10 @@ class _PathFindState extends State<PathFind>
       "placeName": widget.placeName, // "목적지 이름"
       "addressName": widget.addressName, // "출발지 이름"
     });
-    debugPrint("startLng: ${currentLocation.longitude}");
-    debugPrint("startLat: ${currentLocation.latitude}");
-    debugPrint("endLng: ${destination.longitude}");
-    debugPrint("endLat: ${destination.latitude}");
+    debugPrint("startLng: ${currentLocation.longitude.toStringAsFixed(5)}");
+    debugPrint("startLat: ${currentLocation.latitude.toStringAsFixed(5)}");
+    debugPrint("endLng: ${destination.longitude.toStringAsFixed(5)}");
+    debugPrint("endLat: ${destination.latitude.toStringAsFixed(5)}");
     debugPrint("placeName: ${widget.placeName}");
     debugPrint("addressName: ${widget.addressName}");
 
@@ -94,6 +100,9 @@ class _PathFindState extends State<PathFind>
       debugPrint('Request successful: ${response.body}');
       mapProvider.startLatLng = currentLocation;
       mapProvider.endLatLng = destination;
+      mapProvider.destinationName = widget.placeName;
+      mapProvider.destinationIcon = widget.destinationIcon;
+      mapProvider.destinationId = widget.placeId;
       mapProvider.initCurrentLocationUpdate();
 
       debugPrint('전부 성공적으로 처리되었습니다.');

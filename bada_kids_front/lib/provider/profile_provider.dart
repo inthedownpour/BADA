@@ -10,6 +10,7 @@ class ProfileProvider with ChangeNotifier {
   String? _profileUrl;
   String? _name;
   String? _phone;
+  String? _familyCode;
   int? _memberId;
   int? _movingState;
 
@@ -23,7 +24,8 @@ class ProfileProvider with ChangeNotifier {
   static ProfileProvider get instance => _instance;
   String? get profileUrl => _instance._profileUrl;
   String get name => _instance._name!;
-  String? get phone => _instance._phone;
+  String get phone => _instance._phone!;
+  String get familyCode => _instance._familyCode!;
   int get memberId => _instance._memberId!;
   String get accessToken => _instance._accessToken!;
   int get movingState => _instance._movingState!;
@@ -48,6 +50,7 @@ class ProfileProvider with ChangeNotifier {
       _name = data['name'];
       _memberId = data['memberId'];
       _phone = data['phone'];
+      _familyCode = data['familyCode'];
       _movingState = data['movingState'];
     }
   }

@@ -77,6 +77,12 @@ class _AlarmState extends State<Alarm> with TickerProviderStateMixin {
       case 'OFF COURSE':
         return '경로 이탈했습니다';
 
+      case 'STAY':
+        return '장시간 정지해있습니다';
+
+      case 'TOO FAST':
+        return '이동 속도가 빠릅니다';
+
       default:
         return '알림입니다';
     }

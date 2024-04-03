@@ -18,7 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
     double deviceHeight = UIhelper.deviceHeight(context);
     double deviceWidth = UIhelper.deviceWidth(context);
     // TODO : 테스트용 코드 나중에 지울 것
-    _authCodeController.text = '9F1WF';
+    _authCodeController.text = 'YZ435';
 
     return Scaffold(
       appBar: AppBar(

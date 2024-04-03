@@ -250,7 +250,7 @@ class MainSmall2State extends State<MainSmall2> with TickerProviderStateMixin {
                   controller: _alarmController,
                   onLoaded: ((p0) {
                     _alarmController.duration = p0.duration;
-                    if (widget.unreadAlarm == 0) {
+                    if (widget.unreadAlarm == '0') {
                       _alarmController.stop();
                     } else {
                       _alarmController.repeat();

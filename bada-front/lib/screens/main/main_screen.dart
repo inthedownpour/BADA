@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void>? load;
   String? profileUrl;
   String? nickname;
+  int? memberId;
   int unreadAlarms = 0;
 
   @override
@@ -49,8 +50,10 @@ class _HomeScreenState extends State<HomeScreen>
       setState(() {
         profileUrl = value.profileUrl;
         nickname = value.name;
+        memberId = value.memberId;
       });
     });
+    await _storage.write(key: 'memberId', value: memberId.toString());
     await _storage.write(key: 'profileImage', value: profileUrl);
     await _storage.write(key: 'nickname', value: nickname);
   }
@@ -114,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen>
                     Stack(
                       children: [
                         SizedBox(
-                          width: 200,
+                          width: 270,
                           child: Row(
                             children: [
                               GestureDetector(
@@ -146,12 +149,26 @@ class _HomeScreenState extends State<HomeScreen>
                               SizedBox(
                                 width: UIhelper.scaleWidth(context) * 20,
                               ),
-                              Text(
-                                '안녕하세요, \n${nickname ?? '사용자'}님!',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    '안녕하세요,',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${nickname ?? '사용자'}님!',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    maxLines: 1,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
