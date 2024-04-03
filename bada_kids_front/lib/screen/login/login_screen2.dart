@@ -29,6 +29,8 @@ class _LoginScreenState extends State<LoginScreen2> {
 
   String? _token;
   String? _phone;
+  final String _profileUrl =
+      'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/default_profile.png';
 
   Future<bool>? _load;
 
@@ -76,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen2> {
       body: jsonEncode({
         "name": _nameController.text,
         "phone": _phone,
-        "profileUrl": null,
+        "profileUrl": _profileUrl,
         "code": widget.authCode, // StatefulWidget에서 전달받은 authCode 사용
         "fcmToken": _token, // 실제 FCM 토큰 값으로 교체해야 합니다.
       }),
