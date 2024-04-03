@@ -79,12 +79,9 @@ public class TmapApiService {
 //            log.info("결과3 {}", totalDistance);
 
 //       String totalDistance =
-//            log.info("=============길이를 구한다===============");
-//            log.info("길이 : {} km", Double.parseDouble(totalDistance) / 1000);
-//
-//
-//            log.info("==========길이 줄임============");
-//            log.info("layer: {}", layer);
+            log.info("=============길이를 구한다===============");
+            log.info("layer: {}", layer);
+            log.info("길이 : {} km", Double.parseDouble(totalDistance) / 1000);
 
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject jsonObject2 = jsonParser.parse(String.valueOf(jsonArray.get(i))).getAsJsonObject().get("geometry").getAsJsonObject();
@@ -106,7 +103,7 @@ public class TmapApiService {
                 }
             }
 
-            if (Double.parseDouble(totalDistance) > 1000 && layer > 4) {
+            if (Double.parseDouble(totalDistance) > 1000 && layer > 3) {
                 layer--;
                 pointList = new ArrayList<>();
             } else {
