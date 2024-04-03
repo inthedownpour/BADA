@@ -257,21 +257,15 @@ class _ForeGroundAlarmState extends State<ForeGroundAlarm>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Lottie.asset(
-                    getIconPath(title),
-                    width: UIhelper.scaleWidth(context) * 100,
-                    height: UIhelper.scaleHeight(context) * 100,
-                    controller: _alarmController,
-                    onLoaded: ((p0) {
-                      _alarmController.duration = p0.duration;
-                    }),
-                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
                       SizedBox(
-                        width: UIhelper.scaleWidth(context) * 280,
                         child: Text(
-                          '"$childName"님이 ${getAlarmContext(title)}}',
+                          '"$childName"님이 ${getAlarmContext(title)}',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -281,13 +275,18 @@ class _ForeGroundAlarmState extends State<ForeGroundAlarm>
                           maxLines: 3,
                         ),
                       ),
+                      Lottie.asset(
+                        getIconPath(title),
+                        width: UIhelper.scaleWidth(context) * 50,
+                        height: UIhelper.scaleHeight(context) * 50,
+                      ),
                     ],
                   ),
                   SizedBox(
                     height: UIhelper.deviceHeight(context) * 0.01,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       TextButton(
                         style: TextButton.styleFrom(
@@ -296,13 +295,6 @@ class _ForeGroundAlarmState extends State<ForeGroundAlarm>
                         ),
                         onPressed: widget.onConfirm,
                         child: const Text('확인하기'),
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.blue,
-                        ),
-                        onPressed: widget.onClose,
-                        child: const Text('닫기'),
                       ),
                     ],
                   ),

@@ -34,11 +34,25 @@ class _LoginScreenState extends State<LoginScreen2> {
 
   Future<bool>? _load;
 
+  bool _isValidPhone = false;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _load = _loadData();
+    _phoneController.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    final text = _phoneController.text;
+    bool shouldEnable = text.length >= 10 &&
+        text.replaceAll(RegExp(r'[^0-9]'), '').length >= 10;
+    if (_isValidPhone != shouldEnable) {
+      setState(() {
+        _isValidPhone = shouldEnable;
+      });
+    }
   }
 
   Future<bool> _loadData() async {
@@ -64,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen2> {
       _phone = '0${_phone!.substring(3)}';
     } else {
       // `_phone`가 `null`이거나 '+82'로 시작하지 않는 경우의 처리를 추가하세요.
+      _phone = '';
       debugPrint('전화번호를 가져올 수 없거나, 올바른 형식이 아닙니다.');
     }
   }
@@ -77,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen2> {
       },
       body: jsonEncode({
         "name": _nameController.text,
-        "phone": _phone,
+        "phone": _phone ?? '000-0000-0000',
         "profileUrl": _profileUrl,
         "code": widget.authCode, // StatefulWidget에서 전달받은 authCode 사용
         "fcmToken": _token, // 실제 FCM 토큰 값으로 교체해야 합니다.
@@ -116,6 +131,13 @@ class _LoginScreenState extends State<LoginScreen2> {
       // 요청 처리 실패
       debugPrint("실패: ${response.body}");
     }
+  }
+
+  @override
+  void dispose() {
+    _phoneController.removeListener(_updateButtonState);
+    _phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -198,17 +220,21 @@ class _LoginScreenState extends State<LoginScreen2> {
                   ),
                 ),
                 SizedBox(height: deviceHeight * 0.38),
-                Button714_150(
-                  label: const Text(
-                    '다음으로',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  onPressed: () {
-                    login();
-                  },
-                ),
+                _isValidPhone
+                    ? Button714_150(
+                        label: const Text(
+                          '다음으로',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          if (_phoneController.text.isNotEmpty) {
+                            login();
+                          }
+                        },
+                      )
+                    : const Button714_150(
+                        label: Text('핸드폰 번호를 입력해주세요'),
+                      ),
               ],
             ),
           ),
