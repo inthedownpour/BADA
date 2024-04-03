@@ -49,11 +49,37 @@ class _ExistingPathMapState extends State<ExistingPathMap>
   double? verticalForLevel;
   double? horizontalForLevel;
   bool isCctvActivated = false;
+  List<kakao.Marker> cctvList = [];
+
+  Future<List<kakao.Marker>> loadCctvData() async {
+    // assets에서 JSON 파일 읽기
+    String jsonString =
+        await rootBundle.loadString('assets/safe_facility/cctv.json');
+    List<dynamic> jsonResponse = jsonDecode(jsonString);
+
+    // JSON 데이터를 LatLng 리스트로 변환
+    List<kakao.Marker> cctvList = jsonResponse
+        .map(
+          (item) => kakao.Marker(
+            markerId: 'cctv',
+            latLng: kakao.LatLng(
+              double.parse(item['facility_latitude']),
+              double.parse(item['facility_longitude']),
+            ),
+            width: 30,
+            height: 30,
+          ),
+        )
+        .toList();
+
+    return cctvList;
+  }
 
   // 경로 찾기 + 현재 위치 찾기
   Future<bool> _loadExistingPath() async {
     await _requestCurrentLocation();
     await _requestPath();
+    cctvList = await loadCctvData();
     return true;
   }
 
@@ -159,6 +185,7 @@ class _ExistingPathMapState extends State<ExistingPathMap>
       return true; // RouteInfo 객체를 반환
     } else {
       debugPrint('요청 실패: HTTP 상태 코드 ${response.statusCode}');
+      debugPrint('response 메세지: ${utf8.decode(response.bodyBytes)}');
       return false; // 실패 시 false 반환
     }
   }
@@ -380,18 +407,20 @@ class _ExistingPathMapState extends State<ExistingPathMap>
                       } else {
                         isCctvActivated = !isCctvActivated;
                         // cctv 리스트 마커 추가
-                        markers.add(
-                          kakao.Marker(
-                            markerId: 'cctv',
-                            latLng: kakao.LatLng(37.5665, 126.9780),
-                            markerImageSrc:
-                                'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/cctv2.png',
-                            offsetX: 12,
-                            offsetY: 12,
-                            width: 30,
-                            height: 30,
-                          ),
-                        );
+                        for (var cctv in cctvList) {
+                          markers.add(
+                            kakao.Marker(
+                              markerId: 'cctv',
+                              latLng: cctv.latLng,
+                              markerImageSrc:
+                                  'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/cctv2.png',
+                              offsetX: 12,
+                              offsetY: 12,
+                              width: 30,
+                              height: 30,
+                            ),
+                          );
+                        }
                       }
                       setState(() {});
                     },

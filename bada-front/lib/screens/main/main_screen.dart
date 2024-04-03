@@ -96,7 +96,9 @@ class _HomeScreenState extends State<HomeScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     // 앱이 다시 활성화될 때 애니메이션을 재시작합니다.
+
     if (state == AppLifecycleState.resumed) {
+      _load = _initializeApp();
       _lottieController.repeat();
     }
   }
@@ -109,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen>
     return FutureBuilder(
       future: _load,
       builder: (constext, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState != ConnectionState.done) {
           return const Center(
             child: CircularProgressIndicator(),
           );
@@ -140,6 +142,8 @@ class _HomeScreenState extends State<HomeScreen>
                                       builder: (context) => ProfileEdit(
                                         nickname: nickname,
                                         profileUrl: profileUrl,
+                                        memberId: memberId,
+                                        onProfileChanged: _loadProfile,
                                       ),
                                     ),
                                   );
@@ -201,6 +205,8 @@ class _HomeScreenState extends State<HomeScreen>
                                   builder: (context) => ProfileEdit(
                                     nickname: nickname,
                                     profileUrl: profileUrl,
+                                    memberId: memberId,
+                                    onProfileChanged: _loadProfile,
                                   ),
                                 ),
                               );

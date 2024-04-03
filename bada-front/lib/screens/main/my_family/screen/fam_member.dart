@@ -84,6 +84,8 @@ class _FamilyMemberState extends State<FamilyMember>
                             builder: (context) => ProfileEdit(
                               nickname: widget.name,
                               profileUrl: widget.profileUrl,
+                              memberId: widget.memberId,
+                              onProfileChanged: () => setState(() {}),
                             ),
                           ),
                         );

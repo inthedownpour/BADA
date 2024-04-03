@@ -20,7 +20,7 @@ class MainLarge extends StatefulWidget {
     this.foregroundColor = Colors.black,
     this.buttonImage,
     this.imageWidth = 120,
-    this.imageHeight = 120,
+    this.imageHeight = 100,
     this.padRight = 10,
     this.padBottom = 10,
     this.onPressed,
@@ -302,7 +302,7 @@ class _Button714_300State extends State<Button714_300> {
       foregroundColor: widget.foregroundColor,
       textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900),
       fixedSize: Size(
-        UIhelper.scaleWidth(context) * 368,
+        UIhelper.scaleWidth(context) * 365,
         UIhelper.scaleHeight(context) * 180,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
