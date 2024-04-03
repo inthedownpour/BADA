@@ -115,11 +115,6 @@ class _HomeScreenState extends State<HomeScreen>
                       'assets/lottie/walking-cloud.json',
                       width: UIhelper.scaleWidth(context) * 400,
                       height: UIhelper.scaleHeight(context) * 400,
-                      controller: _lottieController,
-                      onLoaded: ((p0) {
-                        _lottieController.duration = p0.duration;
-                        _lottieController.repeat();
-                      }),
                     ),
                   ),
                   Positioned(
@@ -146,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen>
                       children: [
                         SizedBox(height: deviceHeight * 0.185),
                         Button714_300(
-                          label: '안심 경로 찾기',
+                          label: '출발하기',
                           onPressed: () {
                             _profileProvider.movingState == 1
                                 ? Navigator.push(
