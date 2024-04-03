@@ -86,7 +86,6 @@ class _AddPlaceState extends State<AddPlace> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         actions: <Widget>[
-          // 여기서 오른쪽 여백을 추가합니다.
           SizedBox(width: deviceWidth * 0.08),
         ],
       ),
@@ -140,7 +139,7 @@ class _AddPlaceState extends State<AddPlace> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          if (!_checkPlace) _showIconSelection;
+                          if (!_checkPlace) _showIconSelection();
                         },
                         child: Image.asset(
                           _selectedIcon,
@@ -214,7 +213,7 @@ class _AddPlaceState extends State<AddPlace> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff7B79FF),
                       foregroundColor: Colors.white,
-                      fixedSize: Size(deviceWidth * 0.85, deviceHeight * 0.05),
+                      fixedSize: Size(deviceWidth * 0.80, deviceHeight * 0.05),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -227,7 +226,7 @@ class _AddPlaceState extends State<AddPlace> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[300],
                       foregroundColor: Colors.black,
-                      fixedSize: Size(deviceWidth * 0.85, deviceHeight * 0.05),
+                      fixedSize: Size(deviceWidth * 0.80, deviceHeight * 0.05),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -277,7 +276,6 @@ class _AddPlaceState extends State<AddPlace> {
         }),
       );
       if (response.statusCode == 200) {
-        print('add_place 225번줄, 성공');
         setState(() {
           _checkPlace = true;
         });
@@ -291,36 +289,41 @@ class _AddPlaceState extends State<AddPlace> {
   }
 
   void _showIconSelection() {
+    final deviceHeight = MediaQuery.of(context).size.height;
+
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 1.0,
+        return Container(
+          padding: EdgeInsets.only(top: deviceHeight * 0.05),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: CategoryIconMapper.allIcons.length,
+            itemBuilder: (context, index) {
+              String key = CategoryIconMapper.allIcons.keys.elementAt(index);
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedIcon = CategoryIconMapper.allIcons[key]!;
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Image.asset(
+                      CategoryIconMapper.allIcons[key]!,
+                      width: 60,
+                    ),
+                    Text(key),
+                  ],
+                ),
+              );
+            },
           ),
-          itemCount: CategoryIconMapper.allIcons.length,
-          itemBuilder: (context, index) {
-            String key = CategoryIconMapper.allIcons.keys.elementAt(index);
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  _selectedIcon = CategoryIconMapper.allIcons[key]!;
-                });
-                Navigator.of(context).pop();
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Image.asset(
-                    CategoryIconMapper.allIcons[key]!,
-                    width: 60,
-                  ),
-                  Text(key),
-                ],
-              ),
-            );
-          },
         );
       },
     );

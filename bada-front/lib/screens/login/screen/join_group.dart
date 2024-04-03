@@ -1,15 +1,12 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:bada/functions/secure_storage.dart';
 import 'package:bada/screens/main/main_screen.dart';
 import 'package:bada/widgets/buttons.dart';
 import 'package:bada/widgets/screensize.dart';
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
@@ -29,10 +26,9 @@ class JoinFamily extends StatefulWidget {
 class _JoinFamilyState extends State<JoinFamily> {
   final TextEditingController _familyCodeController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TokenStorage _tokenStorage = TokenStorage();
   Future<void>? _inputPhoneNumberFuture;
-  bool isMessageVisible = false; // 메시지 보이기/숨기기 상태
-  bool _isRequestFailed = false; // 요청 실패 상태 관리
+  bool isMessageVisible = false;
+  bool _isRequestFailed = false;
 
   @override
   void dispose() {
@@ -40,14 +36,12 @@ class _JoinFamilyState extends State<JoinFamily> {
     super.dispose();
   }
 
-  // fcm 토큰 가져오기
   Future<String?> getFcmToken() async {
     return await FirebaseMessaging.instance.getToken();
   }
 
   Future<void> _inputPhoneNumber() async {
     var phone = await SmsAutoFill().hint;
-    // await changePhoneNumber();
     if (phone != null && phone.startsWith('+82')) {
       phone = '0${phone.substring(3)}';
     }
@@ -103,35 +97,33 @@ class _JoinFamilyState extends State<JoinFamily> {
                       ),
                       SizedBox(
                         width: UIhelper.scaleWidth(context) * 5,
-                      ), // 인증 코드와 메시지 사이의 간격
+                      ),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           InkWell(
                             onTap: () {
                               setState(() {
-                                isMessageVisible =
-                                    !isMessageVisible; // 메시지 상태 토글
+                                isMessageVisible = !isMessageVisible;
                               });
                             },
                             child: Icon(
                               Icons.help_outline_rounded,
                               color: const Color(0xff696DFF),
-                              size: deviceWidth * 0.05, // 아이콘의 크기 조정
+                              size: deviceWidth * 0.05,
                             ),
                           ),
                           Visibility(
-                            visible:
-                                isMessageVisible, // 메시지 상태에 따라 Visibility 조정
+                            visible: isMessageVisible,
                             child: Container(
                               margin: const EdgeInsets.only(
                                 left: 8,
-                              ), // 아이콘과 메시지 사이의 간격
+                              ),
                               child: const Text(
                                 '부모 앱 설정 -> 인증코드 발급',
                                 style: TextStyle(
                                   color: Color(0xff696DFF),
-                                  fontSize: 12, // 메시지의 폰트 크기 조정
+                                  fontSize: 12,
                                 ),
                               ),
                             ),
@@ -153,8 +145,7 @@ class _JoinFamilyState extends State<JoinFamily> {
                         borderSide: BorderSide(
                           color: _isRequestFailed
                               ? Colors.red
-                              : const Color(0xff696DFF)
-                                  .withOpacity(0.4), // 요청 실패 시 빨간색
+                              : const Color(0xff696DFF).withOpacity(0.4),
                           width: 1.0,
                         ),
                       ),
@@ -165,8 +156,7 @@ class _JoinFamilyState extends State<JoinFamily> {
                         borderSide: BorderSide(
                           color: _isRequestFailed
                               ? Colors.red
-                              : const Color(0xff696DFF)
-                                  .withOpacity(0.4), // 요청 실패 시 빨간색
+                              : const Color(0xff696DFF).withOpacity(0.4),
                           width: 1.0,
                         ),
                       ),
@@ -212,7 +202,7 @@ class _JoinFamilyState extends State<JoinFamily> {
                   Button714_150(
                     label: const Text('참가하기'),
                     onPressed: () async {
-                      final fcmToken = await getFcmToken(); // FCM 토큰 얻기
+                      final fcmToken = await getFcmToken();
                       if (fcmToken != null) {
                         await joinSignUp(
                           name: userData.nickname!,
@@ -275,7 +265,6 @@ class _JoinFamilyState extends State<JoinFamily> {
       );
       await userData.saveProfileToStorageWithoutRequest();
 
-      // Use the TokenStorage class to save the tokens
       final tokenStorage = TokenStorage();
       await tokenStorage.saveToken(accessToken, refreshToken);
       Navigator.pushReplacement(
@@ -285,7 +274,6 @@ class _JoinFamilyState extends State<JoinFamily> {
         ),
       );
     } else if (response.statusCode == 404) {
-      // 인증 코드 불일치
       setState(() {
         _isRequestFailed = true;
       });
@@ -293,7 +281,6 @@ class _JoinFamilyState extends State<JoinFamily> {
         const SnackBar(content: Text('인증코드를 확인해주세요.')),
       );
     } else {
-      // Handle failure
       debugPrint('Failed to sign up: ${response.body}');
     }
   }
