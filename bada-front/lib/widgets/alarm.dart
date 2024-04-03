@@ -145,7 +145,7 @@ class _AlarmState extends State<Alarm> with TickerProviderStateMixin {
   }
 }
 
-class ForeGroundAlarm extends StatelessWidget {
+class ForeGroundAlarm extends StatefulWidget {
   final FcmMessage fcmMessage;
 
   final VoidCallback onConfirm, onClose;
@@ -158,14 +158,72 @@ class ForeGroundAlarm extends StatelessWidget {
   });
 
   @override
+  State<ForeGroundAlarm> createState() => _ForeGroundAlarmState();
+}
+
+class _ForeGroundAlarmState extends State<ForeGroundAlarm>
+    with TickerProviderStateMixin {
+  late final AnimationController _alarmController;
+
+  @override
+  void initState() {
+    super.initState();
+    _alarmController = AnimationController(vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _alarmController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final title = fcmMessage.notification.title;
-    final body = fcmMessage.notification.body;
-    final childName = fcmMessage.data.childName;
-    final profileUrl = fcmMessage.data.profileUrl;
-    final phone = fcmMessage.data.phone;
-    final destinationName = fcmMessage.data.destinationName;
-    final destinationIcon = fcmMessage.data.destinationIcon;
+    String getIconPath(String type) {
+      switch (type) {
+        case 'DEPART':
+          return 'assets/lottie/departure.json';
+
+        case 'ARRIVE':
+          return 'assets/lottie/arrival3.json';
+
+        case 'OFF COURSE':
+          return 'assets/lottie/off-road2.json';
+
+        default:
+          return 'assets/lottie/arrival2.json';
+      }
+    }
+
+    String getAlarmContext(String type) {
+      switch (type) {
+        case 'DEPART':
+          return '출발했습니다';
+
+        case 'ARRIVE':
+          return '도착했습니다';
+
+        case 'OFF COURSE':
+          return '경로 이탈했습니다';
+
+        case 'STAY':
+          return '장시간 정지해있습니다';
+
+        case 'TOO FAST':
+          return '이동 속도가 빠릅니다';
+
+        default:
+          return '알림입니다';
+      }
+    }
+
+    final title = widget.fcmMessage.notification.title;
+    final body = widget.fcmMessage.notification.body;
+    final childName = widget.fcmMessage.data.childName;
+    final profileUrl = widget.fcmMessage.data.profileUrl;
+    final phone = widget.fcmMessage.data.phone;
+    final destinationName = widget.fcmMessage.data.destinationName;
+    final destinationIcon = widget.fcmMessage.data.destinationIcon;
 
     return Container(
       padding: const EdgeInsets.all(10),
@@ -199,19 +257,21 @@ class ForeGroundAlarm extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
+                  Lottie.asset(
+                    getIconPath(title),
+                    width: UIhelper.scaleWidth(context) * 100,
+                    height: UIhelper.scaleHeight(context) * 100,
+                    controller: _alarmController,
+                    onLoaded: ((p0) {
+                      _alarmController.duration = p0.duration;
+                    }),
                   ),
                   Row(
                     children: [
                       SizedBox(
                         width: UIhelper.scaleWidth(context) * 280,
                         child: Text(
-                          '"$childName"님께서 $destinationName으로 출발하였습니다!',
+                          '"$childName"님이 ${getAlarmContext(title)}}',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -234,14 +294,14 @@ class ForeGroundAlarm extends StatelessWidget {
                           foregroundColor: Colors.white,
                           backgroundColor: Colors.blue,
                         ),
-                        onPressed: onConfirm,
+                        onPressed: widget.onConfirm,
                         child: const Text('확인하기'),
                       ),
                       TextButton(
                         style: TextButton.styleFrom(
                           foregroundColor: Colors.blue,
                         ),
-                        onPressed: onClose,
+                        onPressed: widget.onClose,
                         child: const Text('닫기'),
                       ),
                     ],
