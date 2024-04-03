@@ -25,11 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RouteSearchControllerTest extends ControllerTest {
     @Nested
     @DisplayName("경로 검색 API 테스트 [POST /api/path]")
-    class searchRouteTest{
-        private static final String BASE_URL ="/api/path";
+    class searchRouteTest {
+        private static final String BASE_URL = "/api/path";
+
         @Test
         @DisplayName("Authorization_Header에 RefreshToken이 없으면 예외가 발생한다")
-        void throwExceptionByInvalidPermission() throws Exception{
+        void throwExceptionByInvalidPermission() throws Exception {
             //when
             final RouteRequestDto requestDto = createRouteRequestDto();
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -58,13 +59,13 @@ class RouteSearchControllerTest extends ControllerTest {
             //given
             doReturn(createRouteResponseDto())
                     .when(routeSearchService)
-                    .searchRoute(anyLong(),any(),any(),any(),any(),any(),any());
+                    .searchRoute(anyLong(), any(), any(), any(), any(), any(), any());
 
             //when
             final RouteRequestDto requestDto = createRouteRequestDto();
             MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
                     .post(BASE_URL)
-                    .header(AUTHORIZATION,BEARER_TOKEN+ACCESS_TOKEN)
+                    .header(AUTHORIZATION, BEARER_TOKEN + ACCESS_TOKEN)
                     .content(convertObjectToJson(requestDto))
                     .contentType(MediaType.APPLICATION_JSON);
 
@@ -76,12 +77,12 @@ class RouteSearchControllerTest extends ControllerTest {
         }
     }
 
-    private RouteRequestDto createRouteRequestDto(){
-        return new RouteRequestDto("36.421518","127.391538","36.421914","127.38412","츌발지 이름", "도착지 이름");
+    private RouteRequestDto createRouteRequestDto() {
+        return new RouteRequestDto("36.421518", "127.391538", "36.421914", "127.38412", "츌발지 이름", "도착지 이름");
     }
 
-    private RouteResponseDto createRouteResponseDto(){
-        return new RouteResponseDto(36.421518,127.391538,36.421914,127.38412,"출발지 이름","도착지 이름",new ArrayList<>());
+    private RouteResponseDto createRouteResponseDto() {
+        return new RouteResponseDto(36.421518, 127.391538, 36.421914, 127.38412, "출발지 이름", "도착지 이름", new ArrayList<>());
     }
 
 }
