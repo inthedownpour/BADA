@@ -55,6 +55,11 @@ class _FamilyMemberState extends State<FamilyMember>
     return FutureBuilder(
       future: null,
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Column(
           children: [
             Container(

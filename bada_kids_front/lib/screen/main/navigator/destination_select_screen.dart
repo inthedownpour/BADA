@@ -96,14 +96,6 @@ class _DestinationSelectScreenState extends State<DestinationSelectScreen> {
                 },
               ),
             ),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AlarmTest()));
-                },
-                child: const Text('테스팅'))
           ],
         ),
       ),

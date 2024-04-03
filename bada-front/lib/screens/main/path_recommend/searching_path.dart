@@ -177,6 +177,11 @@ class _SearchingPathState extends State<SearchingPath> {
     return FutureBuilder(
       future: _loadPathSearchHistory(),
       builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return Scaffold(
           appBar: const CustomAppBar(title: '경로 검색'),
           body: _isLoading
@@ -297,8 +302,10 @@ class _SearchingPathState extends State<SearchingPath> {
                               angle: 90 *
                                   3.141592653589793 /
                                   180, // 라디안으로 변환하여 90도 회전
-                              child: const Icon(Icons.compare_arrows_rounded,
-                                  size: 30),
+                              child: const Icon(
+                                Icons.compare_arrows_rounded,
+                                size: 30,
+                              ),
                             ),
                             onPressed: () {
                               // 출발지와 도착지를 서로 바꾸기
@@ -365,7 +372,8 @@ class _SearchingPathState extends State<SearchingPath> {
                                       _destinationController.text =
                                           _destinationKeywordList[index];
                                       _departureLatitude = double.parse(
-                                          _departureLatitudeList[index]);
+                                        _departureLatitudeList[index],
+                                      );
                                       _departureLongitude = double.parse(
                                         _departureLongitudeList[index],
                                       );
