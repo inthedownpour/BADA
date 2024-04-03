@@ -1,5 +1,6 @@
 package com.bada.badaback.currentLocation.domain;
 
+import com.bada.badaback.global.BaseTimeEntity;
 import com.bada.badaback.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Table(name="current_location")
-public class CurrentLocation {
+public class CurrentLocation extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "current_location_id")
