@@ -96,17 +96,12 @@ class _FamilyMemberState extends State<FamilyMember>
                             );
                           },
                           child: CircleAvatar(
-                            backgroundColor: Colors.purple,
                             radius: 35,
                             backgroundImage: widget.profileUrl != null
                                 ? NetworkImage(widget.profileUrl!)
                                 : null,
                             child: widget.profileUrl == null
-                                ? const Icon(
-                                    Icons.person,
-                                    size: 50,
-                                    color: Colors.white,
-                                  ) // Example: default icon
+                                ? Image.asset('assets/img/default_profile.png')
                                 : null,
                           ),
                         ),
