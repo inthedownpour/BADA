@@ -5,7 +5,9 @@ import 'dart:io';
 import 'package:bada/provider/profile_provider.dart';
 import 'package:bada/screens/main/my_family/model/current_location.dart';
 import 'package:bada/screens/main/my_family/model/route_info.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -46,6 +48,7 @@ class _ExistingPathMapState extends State<ExistingPathMap>
   kakao.LatLng? destination;
   double? verticalForLevel;
   double? horizontalForLevel;
+  bool isCctvActivated = false;
 
   // 경로 찾기 + 현재 위치 찾기
   Future<bool> _loadExistingPath() async {
@@ -321,7 +324,7 @@ class _ExistingPathMapState extends State<ExistingPathMap>
                   center: middle,
                 ),
                 Positioned(
-                  bottom: 60,
+                  bottom: 150,
                   right: 20,
                   child: GestureDetector(
                     onTap: () async {
@@ -362,6 +365,41 @@ class _ExistingPathMapState extends State<ExistingPathMap>
                           backgroundImage: NetworkImage(childProfileUrl!),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 80,
+                  right: 20,
+                  child: GestureDetector(
+                    onTap: () async {
+                      if (isCctvActivated) {
+                        isCctvActivated = !isCctvActivated;
+                        markers
+                            .removeWhere((marker) => marker.markerId == 'cctv');
+                      } else {
+                        isCctvActivated = !isCctvActivated;
+                        // cctv 리스트 마커 추가
+                        markers.add(
+                          kakao.Marker(
+                            markerId: 'cctv',
+                            latLng: kakao.LatLng(37.5665, 126.9780),
+                            markerImageSrc:
+                                'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/cctv2.png',
+                            offsetX: 12,
+                            offsetY: 12,
+                            width: 30,
+                            height: 30,
+                          ),
+                        );
+                      }
+                      setState(() {});
+                    },
+                    child: const CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                        'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/cctv1.png',
+                      ),
                     ),
                   ),
                 ),
