@@ -35,7 +35,7 @@ public class AlarmTriggerService {
         log.info("시작 - 도착 거리: "+distance);
         log.info("중간지점 - 현재 위치 거리: "+childDis);
 
-        if (childDis<distance*0.7){
+        if (childDis<distance*0.51){
             return true;
         }else {
             return false;
