@@ -56,8 +56,8 @@ public class MemberService {
         String profileUrl = updateMember.getProfileUrl();
         // 프로필 수정
         if (file != null) {
-            if(profileUrl != null)
-                fileService.deleteFiles(updateMember.getProfileUrl());
+//            if(profileUrl != null)
+//                fileService.deleteFiles(updateMember.getProfileUrl());
             profileUrl = fileService.uploadMemberFiles(file);
         }
 
