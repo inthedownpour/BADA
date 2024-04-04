@@ -45,7 +45,7 @@ flutter:
   assets:
     - assets/img/
     - assets/icons/
-    # - assets/gif/
+    - assets/safe_facility/
     - assets/lottie/
     - .env
     

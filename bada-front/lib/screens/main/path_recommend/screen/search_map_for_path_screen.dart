@@ -130,47 +130,48 @@ class _SearchMapForPathScreenState extends State<SearchMapForPathScreen> {
               color: Colors.white,
               padding: EdgeInsets.fromLTRB(
                 deviceWidth * 0.08,
-                deviceHeight * 0.03,
-                deviceWidth * 0.08,
-                deviceHeight * 0.03,
+                deviceHeight * 0.04,
+                deviceWidth * 0.07,
+                deviceHeight * 0.02,
               ),
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: UIhelper.scaleWidth(context) * 300,
-                            height: UIhelper.scaleHeight(context) * 50,
-                            child: OptionalScrollingText(
-                              text: widget.item.placeName,
-                              style: const TextStyle(fontSize: 24),
-                            ),
-                          ),
-                          SizedBox(height: UIhelper.scaleHeight(context) * 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                width: UIhelper.scaleWidth(context) * 300,
-                                height: UIhelper.scaleHeight(context) * 50,
-                                child: OptionalScrollingText(
-                                  text: widget.item.addressName,
-                                  style: const TextStyle(fontSize: 16),
+                      Expanded(
+                        // Column 위젯을 Expanded로 감싸서 사용 가능한 공간을 모두 차지하도록 함
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: UIhelper.scaleWidth(context) * 260,
+                              height: UIhelper.scaleHeight(context) * 50,
+                              child: OptionalScrollingText(
+                                text: widget.item.placeName,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: UIhelper.scaleHeight(context) * 8,
-                          ),
-                        ],
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: UIhelper.scaleWidth(context) * 260,
+                                  height: UIhelper.scaleHeight(context) * 50,
+                                  child: OptionalScrollingText(
+                                    text: widget.item.addressName,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       Image.asset(
+                        // 아이콘 배치
                         CategoryIconMapper.getIconUrl(
                           widget.item.categoryGroupName,
                         ),
@@ -178,19 +179,33 @@ class _SearchMapForPathScreenState extends State<SearchMapForPathScreen> {
                       ),
                     ],
                   ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final result = DepartureDestination(
-                          pointKeyword: widget.item.placeName,
-                          pointX: double.parse(widget.item.x),
-                          pointY: double.parse(widget.item.y),
-                        );
-                        Navigator.pop(context, result);
-                      },
-                      child: const Text("확인"),
-                    ),
+                  SizedBox(
+                    height: deviceHeight * 0.03,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          final result = DepartureDestination(
+                            pointKeyword: widget.item.placeName,
+                            pointX: double.parse(widget.item.x),
+                            pointY: double.parse(widget.item.y),
+                          );
+                          Navigator.pop(context, result);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff7B79FF),
+                          foregroundColor: Colors.white,
+                          fixedSize:
+                              Size(deviceWidth * 0.85, deviceHeight * 0.05),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text("추가하기"),
+                      ),
+                    ],
                   ),
                 ],
               ),

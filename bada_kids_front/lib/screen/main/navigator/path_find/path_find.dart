@@ -222,54 +222,6 @@ class _PathFindState extends State<PathFind>
           );
         }
         return Scaffold(
-          // appBar: AppBar(
-          //   backgroundColor: const Color.fromARGB(255, 132, 138, 154),
-          //   foregroundColor: Colors.white,
-          //   title: Row(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: [
-          //       Expanded(
-          //         child: Center(
-          //           child: Text(
-          //             widget.addressName,
-          //             style: const TextStyle(fontSize: 18),
-          //             overflow: TextOverflow.ellipsis,
-          //           ),
-          //         ),
-          //       ),
-          //       const Icon(
-          //         Icons.arrow_forward,
-          //         size: 20,
-          //       ),
-          //       const SizedBox(
-          //         width: 5,
-          //       ),
-          //       Expanded(
-          //         child: Center(
-          //           child: Text(
-          //             widget.placeName,
-          //             style: const TextStyle(fontSize: 18),
-          //             overflow: TextOverflow.ellipsis,
-          //           ),
-          //         ),
-          //       ),
-          //       const SizedBox(
-          //         width: 10,
-          //       ),
-          //       const SizedBox(
-          //         width: 10,
-          //       ),
-          //     ],
-          //   ),
-          //   centerTitle: true,
-          //   leading: IconButton(
-          //     icon: const Icon(Icons.arrow_back_ios),
-          //     onPressed: () {
-          //       Navigator.pop(context);
-          //     },
-          //     padding: const EdgeInsets.only(right: 0),
-          //   ),
-          // ),
           body: Stack(
             children: [
               Column(
