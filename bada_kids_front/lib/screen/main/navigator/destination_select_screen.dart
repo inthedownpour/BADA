@@ -1,7 +1,6 @@
 import 'package:bada_kids_front/model/buttons.dart';
 import 'package:bada_kids_front/model/place.dart';
 import 'package:bada_kids_front/model/screen_size.dart';
-import 'package:bada_kids_front/screen/test/alarm-test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 

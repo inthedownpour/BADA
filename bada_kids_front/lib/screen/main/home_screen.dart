@@ -11,7 +11,6 @@ import 'package:bada_kids_front/screen/main/navigator/path_find/existing_route_s
 import 'package:bada_kids_front/screen/main/navigator/fam_member.dart';
 import 'package:bada_kids_front/screen/main/navigator/profile_edit.dart';
 import 'package:bada_kids_front/screen/main/navigator/settings.dart';
-import 'package:bada_kids_front/widget/fam_member.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

@@ -5,6 +5,7 @@ import 'package:bada/screens/main/path_recommend/screen/path_map.dart';
 import 'package:bada/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:kakao_map_plugin/kakao_map_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:bada/screens/main/path_recommend/model/path_search_history.dart';
@@ -34,7 +35,7 @@ class _SearchingPathState extends State<SearchingPath> {
   List<String> _destinationLongitudeList = [];
   bool _isLoading = false;
 
-  Future<void> _loadPathSearchHistory() async {
+  Future<bool> _loadPathSearchHistory() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _departureKeywordList = prefs.getStringList('departureKeywordList') ?? [];
@@ -49,6 +50,7 @@ class _SearchingPathState extends State<SearchingPath> {
       _destinationLongitudeList =
           prefs.getStringList('destinationLongitudeList') ?? [];
     });
+    return true;
   }
 
   Future<void> pathRequest() async {
@@ -154,6 +156,14 @@ class _SearchingPathState extends State<SearchingPath> {
               pathList: pointList,
               departure: _departureController.text,
               destination: _destinationController.text,
+              departureLatLng: LatLng(
+                _departureLatitude,
+                _departureLongitude,
+              ),
+              destinationLatLng: LatLng(
+                _destinationLatitude,
+                _destinationLongitude,
+              ),
             ),
           ),
         );
@@ -169,15 +179,25 @@ class _SearchingPathState extends State<SearchingPath> {
     }
   }
 
+  Future<void>? _init;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _init = _loadPathSearchHistory();
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
 
     return FutureBuilder(
-      future: _loadPathSearchHistory(),
+      future: _init,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.connectionState != ConnectionState.done ||
+            snapshot.hasData == false) {
           return const Center(
             child: CircularProgressIndicator(),
           );

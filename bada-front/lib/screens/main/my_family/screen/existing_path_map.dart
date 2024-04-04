@@ -220,6 +220,8 @@ class _ExistingPathMapState extends State<ExistingPathMap>
         'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/start.png';
     const endSrc =
         'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/end.png';
+    const childrenLocation =
+        'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/defaultprofile.png';
 
     return FutureBuilder(
       future: _loadPath,
@@ -364,7 +366,7 @@ class _ExistingPathMapState extends State<ExistingPathMap>
                         kakao.Marker(
                           markerId: 'currentLocation',
                           latLng: currentLocation!,
-                          markerImageSrc: childProfileUrl!,
+                          markerImageSrc: childrenLocation,
                           offsetX: 12,
                           offsetY: 12,
                           width: 30,

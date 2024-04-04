@@ -86,33 +86,6 @@ class MapProvider with ChangeNotifier {
                 memberId: profileProvider.memberId,
               );
             }
-            // 경로를 이탈한 경우
-            if ((_currentLocation.latitude - endLatLng!.latitude).abs() >
-                    (startLatLng!.latitude - endLatLng!.latitude).abs() +
-                        0.0012 ||
-                (_currentLocation.longitude - endLatLng!.longitude).abs() >
-                    (startLatLng!.longitude - endLatLng!.longitude).abs() +
-                        0.0006 ||
-                (_currentLocation.latitude - startLatLng!.latitude).abs() >
-                    (startLatLng!.latitude - endLatLng!.latitude).abs() +
-                        0.0012 ||
-                (_currentLocation.longitude - startLatLng!.longitude).abs() >
-                    (startLatLng!.longitude - endLatLng!.longitude).abs() +
-                        0.0006) {
-              await alarmApi.sendAlarm(
-                familyCode: profileProvider.familyCode,
-                childeName: profileProvider.name,
-                type: 'OFF COURSE',
-                phone: profileProvider.phone,
-                profileUrl: profileProvider.profileUrl,
-                destinationName: destinationName,
-                destinationIcon: destinationIcon,
-                destinationId: destinationId,
-                latitude: currentLocation.latitude.toStringAsFixed(5),
-                longitude: currentLocation.longitude.toStringAsFixed(5),
-                memberId: profileProvider.memberId,
-              );
-            }
             // 목적지에 도착한 경우
             if (_currentLocation.latitude > endLatLng!.latitude - 0.0012 &&
                 _currentLocation.latitude < endLatLng!.latitude + 0.0012 &&

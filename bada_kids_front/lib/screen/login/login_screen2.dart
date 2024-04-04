@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen2> {
   String? _token;
   String? _phone;
   final String _profileUrl =
-      'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/default_profile.png';
+      'https://bada-bucket.s3.ap-northeast-2.amazonaws.com/flutter/defaultprofile.png';
 
   Future<bool>? _load;
 

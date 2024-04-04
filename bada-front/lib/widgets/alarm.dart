@@ -190,6 +190,12 @@ class _ForeGroundAlarmState extends State<ForeGroundAlarm>
         case 'OFF COURSE':
           return 'assets/lottie/off-road2.json';
 
+        case 'STAY':
+          return 'assets/lottie/cross.json';
+
+        case 'TOO FAST':
+          return 'assets/lottie/quick-moving.json';
+
         default:
           return 'assets/lottie/arrival2.json';
       }
@@ -267,6 +273,7 @@ class _ForeGroundAlarmState extends State<ForeGroundAlarm>
                         child: Text(
                           '"$childName"님이 ${getAlarmContext(title)}',
                           style: const TextStyle(
+                            decoration: TextDecoration.none,
                             fontSize: 16,
                             color: Colors.black,
                             fontWeight: FontWeight.normal,
