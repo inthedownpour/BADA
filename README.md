@@ -1,4 +1,5 @@
 # 바래다줄게 (BADA) - 부모를 위한 아이 안전 등굣길 추천 및 알림 서비스
+<img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/020f291a-8a41-42fd-a22a-7f99e3a7413c" width="700px" height="400px">
 
 <br>
 
@@ -40,14 +41,16 @@
 
 # 활용한 데이터셋
 
-- LocalData([https://www.localdata.go.kr](https://www.localdata.go.kr/))
-    
+- LocalData(https://www.localdata.go.kr)
+<img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/021e1f81-45ac-4db0-af14-6962a2350687" width="700px" height="300px">
 - 공공데이터포털(https://www.data.go.kr/)
-    
+<img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/8900d209-acac-47be-9fb1-ca27b6f5fc8c" width="700px" height="250px">
 - 스마트치안 빅데이터 플랫폼(https://www.bigdata-policing.kr/)
-    
+<img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/89c1c459-9b1f-4a78-9e92-fd1c0052ff7f" width="700px" height="300px">   
 
 <br>
+<br>
+
 # 🛠️ 기술 스택
 
 ### Frontend
@@ -103,66 +106,64 @@
     - 아이 측은 현재 위치를 출발지로, 부모가 등록한 도착지 목록 중에 하나를 도착지로 설정 가능합니다.
 4. **안전 경로 추천** 
     - 출발지와 도착지를 입력하면 cctv, 경찰서, 아동안전 지킴이집을 고려, cctv를 거쳐가도록 하는 경로를 제공
-    - 알고리즘 추가 설명
+    - 추천 알고리즘
         - 처음 설계는 a* 알고리즘을 활용해서 헥사곤을 선택하면서 진행하는 방식을 고려
             
             → 실제 cctv 분포를 보니 빈 헥사곤을 선택하는 과정이 많고, cctv 점수가 부여된 헥사곤 위주로 선택하려고 하니 a* 알고리즘을 무의미 해짐 (도보로 하는 등굣길을 기준으로 하고 있기 때문)
+
             
         
-        1. 출발지와 도착지의 중간 지점을 원점으로 출발지와 중간 지점 사이의 거리를 반지름으로 하는 0~360도 (45도 간격)으로 좌표를 구해 이를 기반으로 폴리 라인에 해당하는 헥사곤 리스트를가져온다
-            - 실제는 원에 가까운 형태로 가져옴. 아래는 헥사곤 하나하나를 가져온다는 것을 보여주기 위한 참고 이미지
+        1. 폴리라인 범위 안 헥사곤 리스트 수집
+        <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/00cd527a-6176-426c-b489-a6a17480f586" width="700px" height="300px">
                 
                 
-        2. 탐색 범위의 cctv 좌표를 헥사곤 주소로 변환, 해당 헥사곤 마다 가중치를 부여
-            1. cctv, 경찰청, 아동안전지킴이집의 좌표를 각각 헥사곤으로 변환해서 그 헥사곤에 각각 가중치 부여
-        3. 5개의 레이어로 나누고 하나의 레이어에서 가중치 높은 cctv를 하나하나 선택
-            - 레이어 범위 내에 있는 cctv가 지금보다 도착지와의 거리를 더 멀어지게 한다면 선택 x
-            - 각각의 레이어에서 최대 1개씩 선택
+        2. 탐색 범위 헥사곤 가중치 부여
+        <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/7fbcb2b6-ade5-423a-847e-876f66895a75" width="
+            700px" height="300px">
+            - cctv, 경찰청, 아동안전지킴이집의 좌표를 각각 헥사곤으로 변환해서 그 헥사곤에 각각 가중치 부여
+    
+
+        3. 레이어별 헥사곤 선택
+            <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/2a2b9343-8edf-4ddf-beb2-0e64074e8379" width="700px" height="300px">
+            > #### ❓ 왜 5개의 레이어를 두나요?
+             <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/5bb66401-2d30-492c-bfa7-6848f1c10b41" width="700px" height="300px">
+
+             > #### ❓ 등굣길로 너무 먼 거리라면?
+             <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/6a24af5a-82a1-4564-a976-380eec81504b" width="700px" height="300px">
+             <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/a909ca70-5f0d-4553-9ec3-ac9d97a664da" width="700px" height="150px">
+             <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/1540a5b1-edf3-4e9d-b632-91c0087eee0e" width="700px" height="250px">
+             
+             - 나온 결과의 총 거리가 1km 내라면 결과 바로 리턴, 아니라면 레이어의 수를 줄여 재탐색
+             
+             - 2개의 레이어로 가면 cctv를 기준으로 경로를 추천한다고 보기 어렵기 때문에, 레이어 3개인 경우는 1km가 넘더라도 결과 리턴
                 
-                
-        4. 3번에서 나온 중간 경유지 리스트를 전달해서 tmap으로부터 pointList를 받음
-            1. 나온 결과의 총 거리가 1km 내라면 결과 바로 리턴
-                - 아래 참고해서 1km를 기준으로 삼았음
+        4. 선택된 헥사곤을 경유지로 경로 반환
+        <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/c22c7460-4356-4658-853b-9a68493ec17d" width="700px" height="300px">
+            
                     
-                    ```
-                    - 대한민국의 초등학교 위치 선정의 가장 중요한 기준은 초등생 통학 거리와 도보 시간입니다
-                    - 학교보건법 시행규칙 제8조에 따르면 초등학교 통학범위는 통학거리로 도보 30분, 1.5KM라 되어있습니다.
-                    
-                    <충남 어린이 통학로 교통 안전 확보 방안>
-                     어린이 보행속도를 분당 50m로 적용시 1,000m는 20분이 소요, 윤용기의 연구에서 제시한 적정거리 800m보다 200m 긴 1,000m범위, 보행시간 20분
-                    정도를 통학로 범위로 설정하는 방안을 검토할 수 있으며 실질적 통학로의 안전성 증대방안 모색이 필요함
-                    
-                    위 사항들을 고려하여, 1km를 통학 거리 추천의 기준으로 삼았으며 이때 중간의 최대 cctv 접촉을 위해 5개의 cctv를 경유하도록 추천하였습니다.
-                    
-                    ```
-                    
-            2. 총 거리가 1km를 넘어간다면 다시 3번으로 이동 
-                1. 4개의 레이어에서 탐색 진행
-                2. 레이어 하나의 범위를 크게 가져갈 수록 선택하는 cctv의 개수가 줄고 우회해서 가는 경우의 수가 줄어들게 되기 때문
-                3. 그래도 넘어간다면 3개의 레이어에서 탐색 진행 - 2개의 레이어로 가면 cctv를 기준으로 경로를 하는 의미가 크게 없기에 3개에서는 1km가 넘더라도 결과 리턴
-        5. 해당 pointList를 프론트에서 받아서 경로를 그림
-5. **알림** 
-    - 아이 폰의 GPS를 기준으로 출발, 도착, 안전 경로에 대한 경로 이탈 알림을 부모에게 보냅니다
-    - 알림 전송 아키텍쳐
-        
-    - 알림 전송 로직 상세
-        - 아이 위치 좌표가 실시간으로 백엔드로 전달
-            - 
-        - 아이의 위치 정보와 타입에 따른 분기 처리
-        - 좌표를 기준으로 경로 범위 이탈 여부 감지
-            - 출발지와 도착지 경로의 원형 형태로 범위를 생성하여 좌표의 값이 범위를 이탈하는 경우에 알림 작성되도록 구현
-        - 범위 이탈 판정 시, Producer로 데이터 생성하여 kafka로 알림 topic으로 데이터 전송
-            - Kafka를 도입하여 이전의 획일화된 알람 생성과 전송 로직을 분리,
-            - Producer 로 알림 전송할 데이터를 kafka broker로 넘겨서 리스펀스가 각자 리턴할 수 있게 구현
-        - Kafka consumer는 알림 topic으로 들어온 메시지를 감지하여 처리
-            - 들어온 알림 데이터를 FCM 템플릿에 맞게 작성
-        - 아이가 속한 패밀리 코드를 기준으로 부모 정보 확보
-            - DB 조회로 패밀리코드와 일치하는 모든 부모 리스트 확보
-        - 해당 부모들에게 알림 데이터를 FCM  푸시 알림으로 전송
-            - Firebase Cloud 로 전송하여 푸시알림을 각 기기로 전송
-        - 부모 모바일 앱 : 푸시알림 (포그라운드, 백그라운드, 앱 종료 상태) 수신
+5. **알림**
+ - 아이 폰의 GPS를 기준으로 출발, 도착, 안전 경로에 대한 경로 이탈 알림 부모에게 전송
+ - 알림 전송 아키텍처
+    <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/ab26c51c-f92d-4af1-940b-c7498d33c752" width="700px" height="300px">
+     <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/ad20c203-bc01-4f01-8a41-5fcc7109e4b3" width="700px" height="130px">
+
+### 아이 위치 좌표가 실시간으로 백엔드로 전달 
+    - 아이의 위치 정보와 타입에 따른 분기 처리
+    - 좌표를 기준으로 경로 범위 이탈 여부 감지
+        - 출발지와 도착지 경로의 원형 형태로 범위를 생성하여 좌표의 값이 범위를 이탈하는 경우에 알림 작성되도록 구현
+    - 범위 이탈 판정 시, Producer로 데이터 생성하여 kafka로 알림 topic으로 데이터 전송
+        - Kafka를 도입하여 이전의 획일화된 알람 생성과 전송 로직을 분리,
+        - Producer 로 알림 전송할 데이터를 kafka broker로 넘겨서 리스펀스가 각자 리턴할 수 있게 구현
+    - Kafka consumer는 알림 topic으로 들어온 메시지를 감지하여 처리
+        - 들어온 알림 데이터를 FCM 템플릿에 맞게 작성
+    - 아이가 속한 패밀리 코드를 기준으로 부모 정보 확보
+        - DB 조회로 패밀리코드와 일치하는 모든 부모 리스트 확보
+    - 해당 부모들에게 알림 데이터를 FCM  푸시 알림으로 전송
+        - Firebase Cloud 로 전송하여 푸시알림을 각 기기로 전송
+    - 부모 모바일 앱 : 푸시알림 (포그라운드, 백그라운드, 앱 종료 상태) 수신
 
 <br>
+
 # 협업 툴
 
 - Git
@@ -173,6 +174,7 @@
 - Discord
 
 <br>
+
 # 협업 환경
 
 - Gitlab
@@ -197,16 +199,20 @@
     - 코드 리뷰가 모두 완료된 브랜치가 생기면 프론트엔드,백엔드 각 지정한 1명이 dev-front, develop-back 브랜치에 merge 진행
 
 <br>
-# 아키텍처
+
+# 시스템 아키텍처
+<img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/87313244-8403-4b44-80ba-5cb6b6d3c7af" width="700px" height="300px">
 
 
 <br>
 
 # ERD
-
+<img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/c64b8c07-9f2a-4c6b-9709-5cbeac78bcc0" width="700px" height="300px">
 
 
 <br>
+<br>
+
 # 팀 구성
 
 | 이름 | 역할 |
@@ -218,6 +224,7 @@
 | 이창헌 | - FrontEnd<br> - 아이 앱 전반 구조 설계 및 디자인<br> - lottie를 이용한 animation 사용과 animationController를 통한 생명주기 관리<br> - 소셜 로그인 API 연결 및 백엔드 Access토큰 처리<br> - 지도 관련 API 연결 및 비동기 처리<br> - 프로필 수정 등 S3에 파일 저장을 위한 http multipart 통신 구현<br> - 각 상황에 따라 FlutterSecureStorage, SharedPreferences, DB 중에 적절한 저장소 선택<br> - flutter 파일 구조 개선 |
 
 <br>
+
 # 프로젝트 산출물
 
 - [요구사항 명세서](https://www.notion.so/4228f33ed79e46b090542d90b5cb794e?pvs=21)
@@ -229,8 +236,30 @@
 
 
 
-# 바래다줄게 실행화면
+# 바래다줄게 실행화면 (부모)
+- 회원가입 및 로그인
+  - 새로운 가족 생성
+  - 기존 가족 그룹 가입
+- 알림
+  - 모든 알림을 확인 가능 (안 읽은 알림 개수 표시)
+- 우리 가족
+  - 아이의 알림 기록 확인 및 프로필 수정
+  - 이동 중인 아이가 있다면 아이의 실시간 위치 확인 가능
+- 내 장소
+  - 아이의 도착지 등록
+- 경로 추천 받기
+  - 출발지와 도착지 기반으로 안전 경로 제공
 
 <br>
 
 # 다녀올게요 실행화면
+- 출발하기 
+  - 내 장소 목록(부모가 지정한 목록) 중 하나를 선택하면 출발
+  - 도착을 누르기 전 까지는 출발하기에 다시 들어가도 출발한 경로를 계속 보여줌
+- 전화하기
+  - 등록된 우리 가족에게 전화걸기 가능 
+
+
+<br>
+<br>
+
