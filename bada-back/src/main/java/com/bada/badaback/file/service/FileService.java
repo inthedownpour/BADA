@@ -82,7 +82,9 @@ public class FileService {
     private void deleteFile(String uploadFileUrl) {
         String fileKey = uploadFileUrl.substring(52);
         try {
-            amazonS3.deleteObject(bucket, fileKey);
+            if(!fileKey.equals("defaultprofile.png")) {
+                amazonS3.deleteObject(bucket, fileKey);
+            }
         } catch (AmazonServiceException e) {
             System.err.println(e.getErrorMessage());
             System.exit(1);
