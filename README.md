@@ -121,11 +121,13 @@
         
         1. 폴리라인 범위 안 헥사곤 리스트 수집
         <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/00cd527a-6176-426c-b489-a6a17480f586" width="700px" height="400px"><br>
+<br>
                 
                 
         2. 탐색 범위 헥사곤 가중치 부여
         <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/7fbcb2b6-ade5-423a-847e-876f66895a75" width="
             700px" height="400px"><br>
+<br>
             - cctv, 경찰청, 아동안전지킴이집의 좌표를 각각 헥사곤으로 변환해서 그 헥사곤에 각각 가중치 부여
     
 
