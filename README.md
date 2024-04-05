@@ -120,37 +120,47 @@
             
         
         1. 폴리라인 범위 안 헥사곤 리스트 수집
+
+        
         <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/00cd527a-6176-426c-b489-a6a17480f586" width="700px" height="400px"><br>
                 
                 
         2. 탐색 범위 헥사곤 가중치 부여
+        
         <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/7fbcb2b6-ade5-423a-847e-876f66895a75" width="
             700px" height="400px"><br>
             - cctv, 경찰청, 아동안전지킴이집의 좌표를 각각 헥사곤으로 변환해서 그 헥사곤에 각각 가중치 부여
     
 
         3. 레이어별 헥사곤 선택
-            <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/2a2b9343-8edf-4ddf-beb2-0e64074e8379" width="700px" height="400px"><br>
+            
+        <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/2a2b9343-8edf-4ddf-beb2-0e64074e8379" width="700px" height="400px"><br>
             > #### ❓ 왜 5개의 레이어를 두나요?
-             <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/5bb66401-2d30-492c-bfa7-6848f1c10b41" width="700px" height="400px"><br>
+             
+        <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/5bb66401-2d30-492c-bfa7-6848f1c10b41" width="700px" height="400px"><br>
 
              > #### ❓ 등굣길로 너무 먼 거리라면?
-             <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/6a24af5a-82a1-4564-a976-380eec81504b" width="700px" height="400px"><br>
-             <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/a909ca70-5f0d-4553-9ec3-ac9d97a664da" width="700px" height="250px"><br>
-             <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/1540a5b1-edf3-4e9d-b632-91c0087eee0e" width="700px" height="350px"><br>
+        
+        <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/6a24af5a-82a1-4564-a976-380eec81504b" width="700px" height="400px"><br>
+             
+        <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/a909ca70-5f0d-4553-9ec3-ac9d97a664da" width="700px" height="250px"><br>
+        
+        <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/1540a5b1-edf3-4e9d-b632-91c0087eee0e" width="700px" height="350px"><br>
              
              - 나온 결과의 총 거리가 1km 내라면 결과 바로 리턴, 아니라면 레이어의 수를 줄여 재탐색
              
              - 2개의 레이어로 가면 cctv를 기준으로 경로를 추천한다고 보기 어렵기 때문에, 레이어 3개인 경우는 1km가 넘더라도 결과 리턴
                 
         4. 선택된 헥사곤을 경유지로 경로 반환
+    
         <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/c22c7460-4356-4658-853b-9a68493ec17d" width="700px" height="400px"><br>
             
                     
 5. **알림**
  - 아이 폰의 GPS를 기준으로 출발, 도착, 안전 경로에 대한 경로 이탈 알림 부모에게 전송
  - 알림 전송 아키텍처
-    <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/ab26c51c-f92d-4af1-940b-c7498d33c752" width="700px" height="400px"><br>
+    
+     <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/ab26c51c-f92d-4af1-940b-c7498d33c752" width="700px" height="400px"><br>
      <img src="https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/ad20c203-bc01-4f01-8a41-5fcc7109e4b3" width="700px" height="230px"><br>
 
 ### 아이 위치 좌표가 실시간으로 백엔드로 전달 
