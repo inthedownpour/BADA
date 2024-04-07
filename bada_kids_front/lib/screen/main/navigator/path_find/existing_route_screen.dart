@@ -398,13 +398,14 @@ class _ExistingRouteScreenState extends State<ExistingRouteScreen>
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('Debug Alert'),
+                                        backgroundColor: Colors.white,
+                                        title: const Text('도착'),
                                         content: const Text(
-                                          'Arrived method has been called.',
+                                          '도착알림을 보냅니다.',
                                         ),
                                         actions: <Widget>[
                                           TextButton(
-                                            child: const Text('OK'),
+                                            child: const Text('확인'),
                                             onPressed: () {
                                               postArrive();
                                               Navigator.of(context).pop();

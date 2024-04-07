@@ -311,13 +311,14 @@ class _PathFindState extends State<PathFind>
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Text('Debug Alert'),
+                                      backgroundColor: Colors.white,
+                                      title: const Text('도착'),
                                       content: const Text(
-                                        'Arrived method has been called.',
+                                        '도착 알림을 보냅니다.',
                                       ),
                                       actions: <Widget>[
                                         TextButton(
-                                          child: const Text('OK'),
+                                          child: const Text('확인'),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                             Navigator.of(context).pop();
