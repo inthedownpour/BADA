@@ -26,98 +26,101 @@ class TutorialList extends StatelessWidget {
       body: Container(
         alignment: Alignment.topCenter,
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.black12,
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black12,
+                ),
+                height: UIhelper.deviceHeight(context) * 0.3,
+                width: UIhelper.deviceWidth(context) * 0.85,
+                child: Text(intro),
               ),
-              height: UIhelper.deviceHeight(context) * 0.3,
-              width: UIhelper.deviceWidth(context) * 0.85,
-              child: Text(intro),
-            ),
-            SizedBox(
-              height: UIhelper.deviceHeight(context) * 0.01,
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.black12,
+              SizedBox(
+                height: UIhelper.deviceHeight(context) * 0.01,
               ),
-              height: UIhelper.deviceHeight(context) * 0.1,
-              width: UIhelper.deviceWidth(context) * 0.85,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RoutingLogic(),
-                    ),
-                  );
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('경로 추천 원리'),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black12,
+                ),
+                height: UIhelper.deviceHeight(context) * 0.1,
+                width: UIhelper.deviceWidth(context) * 0.85,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RoutingLogic(),
+                      ),
+                    );
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('경로 추천 원리'),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: UIhelper.deviceHeight(context) * 0.01,
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.black12,
+              SizedBox(
+                height: UIhelper.deviceHeight(context) * 0.01,
               ),
-              height: UIhelper.deviceHeight(context) * 0.1,
-              width: UIhelper.deviceWidth(context) * 0.85,
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RoutingLogic(),
-                    ),
-                  );
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('만든이'),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black12,
+                ),
+                height: UIhelper.deviceHeight(context) * 0.1,
+                width: UIhelper.deviceWidth(context) * 0.85,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RoutingLogic(),
+                      ),
+                    );
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('만든이'),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: UIhelper.deviceHeight(context) * 0.01,
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.black12,
+              SizedBox(
+                height: UIhelper.deviceHeight(context) * 0.01,
               ),
-              height: UIhelper.deviceHeight(context) * 0.1,
-              width: UIhelper.deviceWidth(context) * 0.85,
-              child: GestureDetector(
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('B207 최종 결과물'),
-                    Icon(Icons.arrow_forward_ios),
-                  ],
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black12,
+                ),
+                height: UIhelper.deviceHeight(context) * 0.1,
+                width: UIhelper.deviceWidth(context) * 0.85,
+                child: GestureDetector(
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('B207 최종 결과물'),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
