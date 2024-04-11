@@ -84,6 +84,7 @@ class _PlaceDetailState extends State<PlaceDetail> {
       body: Column(
         children: [
           Container(
+            color: Colors.white,
             padding: EdgeInsets.fromLTRB(
               deviceWidth * 0.05,
               deviceHeight * 0.02,
@@ -257,6 +258,7 @@ class _PlaceDetailState extends State<PlaceDetail> {
       context: context,
       builder: (BuildContext context) {
         return Container(
+          color: Colors.white,
           padding: EdgeInsets.only(top: deviceHeight * 0.05),
           child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
