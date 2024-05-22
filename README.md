@@ -229,22 +229,41 @@
 - 회원가입 및 로그인
   - 새로운 가족 생성
   - 기존 가족 그룹 가입
+
+    ![기존 가족 그룹 가입](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/ea8b5768-34e1-420c-877a-055a9827fcbc)
 - 알림
-  - 모든 알림을 확인 가능 (안 읽은 알림 개수 표시)
+  - 메인 -> 알링에서 모든 알림 확인 가능 (메인에서 안 읽은 알림 개수 표시)
+  - 아이 상황에 대한 알림 제공
+    |경로 이탈|장시간 정지|고속이동|
+    |---|---|---|
+    |![경로이탈](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/a37d57f8-095a-464c-aef0-2f7377dfed3d)|![장시간정지](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/f126d263-660b-48fc-a398-91b41f2203e6)|![고속이동](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/20b1e673-b497-4591-b489-fe4efa69a79a)|
+
 - 우리 가족
   - 아이의 알림 기록 확인 및 프로필 수정
   - 이동 중인 아이가 있다면 아이의 실시간 위치 확인 가능
+
+    ![우리 가족](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/90707fec-4d08-423c-aa51-c1214db0bdd2)
 - 내 장소
   - 아이의 도착지 등록
-- 경로 추천 받기
-  - 출발지와 도착지 기반으로 안전 경로 제공
+
+    ![내장소목록](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/3c873797-f277-4318-af7b-92ed05ebaffb)
+- 경로 검색
+  - 출발지와 도착지 기반으로 추천되는 안전 경로 확인
+
+    ![경로 검색](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/4dc10eaa-51af-4df1-a912-316d6329c262)
 
 <br>
 
 # 다녀올게요 실행화면
+- 회원가입 및 로그인
+    - 부모 앱 인증번호를 이용해 회원가입 진행
+
+        ![아이회원가입](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/847989c3-23db-4720-861e-510863046ca4)
 - 출발하기 
   - 내 장소 목록(부모가 지정한 목록) 중 하나를 선택하면 출발
   - 도착을 누르기 전 까지는 출발하기에 다시 들어가도 출발한 경로를 계속 보여줌
+
+    ![아이출발하기](https://github.com/Sunkyoung-Yoon/SunKyoung-Yoon/assets/97610532/be09e881-cccd-4729-805c-b761eeb7f647)
 - 전화하기
   - 등록된 우리 가족에게 전화걸기 가능 
 
